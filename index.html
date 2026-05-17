@@ -138,7 +138,7 @@
             <li><a href="index.html" class="active">Home</a></li>
             <li><a href="tasks.html">Manage Tasks</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact us</a></li>
+            <li><a href="contact.html">Contact</a></li>
         </ul>
         <!-- Auth area: shows Sign In OR user chip + sign out -->
         <div class="nav-auth">
@@ -263,9 +263,9 @@
 
     <!-- ── NOVA AI JS ── -->
     <script>
-    const GEMINI_API_KEY = 'AIzaSyBMVwjEBNfOp4JP7NjcZ3RFP48EhhjW0hc';
-    const GEMINI_API = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
-
+// 🔒 API key is hidden — routed through Supabase Edge Function (gemini-proxy)
+        const SUPABASE_PROJECT_URL = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';
+        const GEMINI_API = `${SUPABASE_PROJECT_URL}/functions/v1/gemini-proxy`;
     let aiOpen = false;
     let aiHistory = [];
     let currentUserName = '';
@@ -346,7 +346,7 @@ Your role here on the homepage:
 
             const res = await fetch(GEMINI_API, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
                 body: JSON.stringify({
                     system_instruction: { parts: [{ text: systemPrompt }] },
                     contents,
@@ -452,7 +452,7 @@ Your role here on the homepage:
                 }));
                 const res = await fetch(GEMINI_API, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
                     body: JSON.stringify({
                         system_instruction: { parts: [{ text: systemPrompt }] },
                         contents,
