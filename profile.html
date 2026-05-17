@@ -17,7 +17,7 @@
             --radius: 16px; --radius-sm: 10px;
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--bg); min-height: 100vh; overflow-x: hidden; cursor: none; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(135deg, rgba(8,12,18,0.65) 0%, rgba(8,14,22,0.75) 50%, rgba(10,8,18,0.70) 100%), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: none; }
 
         #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: screen; }
         #cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(88,166,255,0.5); pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
@@ -29,7 +29,7 @@
         /* ── NAVBAR ── */
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: rgba(8,12,18,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
         .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -.5px; text-decoration: none; }
-        .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent3)); display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 0 20px rgba(88,166,255,0.4); }
+        .logo-icon { width: 50px; height: 50px; border-radius: 10px; object-fit: contain; box-shadow: 0 0 20px rgba(88,166,255,0.4); }
         .nav-links { display: flex; gap: 4px; list-style: none; }
         .nav-links li a { display: block; padding: 9px 18px; border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: all .25s; border: 1px solid transparent; }
         .nav-links li a:hover { color: var(--text); background: var(--surface-hi); border-color: var(--border); }
@@ -214,6 +214,12 @@
             .profile-page { padding:100px 20px 60px; }
             footer { padding:30px 20px; }
         }
+        /* ── BACKGROUND GLOW ── */
+        .bg-glow { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bg-glow::before { content: ""; position: absolute; top: -15%; left: -15%; width: 65%; height: 65%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(88,166,255,0.16) 0%, rgba(31,111,235,0.08) 35%, transparent 65%); animation: glowPulse 8s ease-in-out infinite; filter: blur(40px); }
+        .bg-glow::after  { content: ""; position: absolute; bottom: -15%; right: -15%; width: 60%; height: 60%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(163,113,247,0.14) 0%, rgba(88,166,255,0.06) 35%, transparent 65%); animation: glowPulse 10s ease-in-out infinite reverse; filter: blur(40px); }
+        .bg-glow-center { position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 60vh; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(88,166,255,0.05) 0%, rgba(163,113,247,0.03) 40%, transparent 70%); pointer-events: none; z-index: 0; filter: blur(60px); animation: glowPulse 12s ease-in-out infinite; }
+        @keyframes glowPulse { 0%,100%{opacity:.65;transform:scale(1)} 50%{opacity:1;transform:scale(1.06)} }
     </style>
 </head>
 <body>
@@ -222,6 +228,8 @@
 <div id="cursor-ring"></div>
 <canvas id="blob-canvas"></canvas>
 <div class="noise"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-center"></div>
 <div class="tooltip" id="tooltip"></div>
 
 <!-- AUTH GATE -->
@@ -235,7 +243,7 @@
 <!-- NAVBAR -->
 <nav class="navbar">
     <a href="index.html" class="nav-logo">
-        <div class="logo-icon">🚀</div> TaskNova
+        <img class="logo-icon" src="assets/logo.png" alt="TaskNova logo" width="36" height="36"> TaskNova
     </a>
     <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
@@ -879,31 +887,8 @@
     function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 
-<!-- BLOB + CURSOR -->
+<!-- CURSOR -->
 <script>
-    const canvas = document.getElementById('blob-canvas'), ctx = canvas.getContext('2d');
-    let W, H, mouse = {x:-500,y:-500}, blobT = 0;
-    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-    resize(); window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    class Blob {
-        constructor(x,y,r,color,speed,pts){this.cx=x;this.cy=y;this.baseR=r;this.color=color;this.speed=speed;this.pts=pts;this.noiseOffsets=Array.from({length:pts},()=>Math.random()*1000);}
-        noise(x,y){const X=Math.floor(x)&255,Y=Math.floor(y)&255;return(Math.sin(X*127.1+Y*311.7)*.5+.5+Math.sin(X*269.5+Y*183.3)*.25+.25)*.5;}
-        draw(t,m){
-            ctx.beginPath();const step=(Math.PI*2)/this.pts;
-            for(let i=0;i<=this.pts;i++){const a=i*step,n=this.noise(Math.cos(a)+this.noiseOffsets[i%this.pts]+t*this.speed*.3,Math.sin(a)+this.noiseOffsets[i%this.pts]+t*this.speed*.3);
-            const r=this.baseR*(0.75+n*0.5),dx=(this.cx+Math.cos(a)*r)-m.x,dy=(this.cy+Math.sin(a)*r)-m.y;
-            const dist=Math.sqrt(dx*dx+dy*dy),repel=dist<180?(180-dist)/180*30:0;
-            const x=this.cx+Math.cos(a)*(r+repel),y=this.cy+Math.sin(a)*(r+repel);
-            i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
-            ctx.closePath();ctx.fillStyle=this.color;ctx.fill();
-        }
-    }
-    let blobs=[];
-    function initBlobs(){blobs=[];blobs.push(new Blob(W*.15,H*.4,Math.min(W,H)*.32,'rgba(31,111,235,0.1)',0.4,8));blobs.push(new Blob(W*.85,H*.3,Math.min(W,H)*.28,'rgba(88,166,255,0.07)',0.35,9));blobs.push(new Blob(W*.55,H*.8,Math.min(W,H)*.24,'rgba(163,113,247,0.09)',0.5,8));}
-    initBlobs();window.addEventListener('resize',initBlobs);
-    function animBlobs(){ctx.clearRect(0,0,W,H);blobT+=0.008;blobs.forEach(b=>b.draw(blobT,mouse));requestAnimationFrame(animBlobs);}
-    animBlobs();
     const cursorEl=document.getElementById('cursor'),ringEl=document.getElementById('cursor-ring');
     let cx=0,cy=0,rx=0,ry=0;
     document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cursorEl.style.left=cx+'px';cursorEl.style.top=cy+'px';});
