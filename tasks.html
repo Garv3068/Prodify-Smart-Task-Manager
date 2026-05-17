@@ -339,7 +339,7 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="tasks.html" class="active">Manage Tasks</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact us</a></li>
+            <li><a href="contact.html">Contact</a></li>
         </ul>
         <div class="nav-auth">
             <a href="profile.html" class="nav-user-chip" id="navUserChip" title="View profile" style="text-decoration:none">
@@ -462,7 +462,7 @@
             <div class="ai-avatar">🤖</div>
             <div class="ai-header-info">
                 <div class="ai-header-name">Nova AI</div>
-                <div class="ai-header-status">Online · Powered by Gemini</div>
+                <div class="ai-header-status">Online · Powered by Groq</div>
             </div>
             <button class="ai-close" onclick="toggleAI()">✕</button>
         </div>
@@ -1111,12 +1111,12 @@
     </script>
 
     <!-- ══════════════════════════════════════════════════════════════ -->
-    <!--  🤖  FEATURE 3: AI ASSISTANT (Gemini-powered)                -->
+    <!--  🤖  FEATURE 3: AI ASSISTANT (Groq-powered)                  -->
     <!-- ══════════════════════════════════════════════════════════════ -->
     <script>
-const GEMINI_API_KEY = 'AIzaSyBMVwjEBNfOp4JP7NjcZ3RFP48EhhjW0hc'; // 🔑 Keep your key secure
-const GEMINI_API = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
-
+    const GROQ_API_KEY = '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'; // 🔑 Replace with your key from https://console.groq.com/keys
+    const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
+    const GROQ_MODEL = 'llama-3.3-70b-versatile';
 let aiOpen = false;
 let aiHistory = [];
 
@@ -1409,25 +1409,26 @@ If they want to drop/delete a task:
 For regular chat, encouragement, or inquiries, respond naturally using friendly paragraphs and occasional emojis. Keep your sentences diverse and engaging.`;
 
     try {
-        const geminiContents = aiHistory.map(m => ({
-            role: m.role === 'model' ? 'model' : 'user',
-            parts: [{ text: m.content }]
-        }));
+        const messages = [
+            { role: 'system', content: systemPrompt },
+            ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
+        ];
 
-        const res = await fetch(GEMINI_API, {
+        const res = await fetch(GROQ_API, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
             body: JSON.stringify({
-                system_instruction: { parts: [{ text: systemPrompt }] },
-                contents: geminiContents,
-                generationConfig: { maxOutputTokens: 800, temperature: 0.82 }
+                model: GROQ_MODEL,
+                messages,
+                max_tokens: 800,
+                temperature: 0.82
             })
         });
 
         const data = await res.json();
         if (data.error) throw new Error(data.error.message);
 
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "Hmm, my connection flickered for a second. Mind repeating that?";
+        const reply = data.choices?.[0]?.message?.content?.trim() || "Hmm, my connection flickered for a second. Mind repeating that?";
         document.getElementById(thinkId)?.remove();
 
         let handled = false;
@@ -1517,7 +1518,7 @@ function addAIMessage(sender, text, isThinking = false) {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  🎙️  VOICE CONVERSATION with Nova (Gemini-powered)
+//  🎙️  VOICE CONVERSATION with Nova (Groq-powered)
 // ══════════════════════════════════════════════════════════════
 (function() {
     let aiVoiceActive = false;
@@ -1563,7 +1564,7 @@ function addAIMessage(sender, text, isThinking = false) {
             addAIMessage('user', transcript);
             document.getElementById('aiInput').value = '';
 
-            // Route through existing AI logic (which handles add/delete/complete + Gemini)
+            // Route through existing AI logic (which handles add/delete/complete + Groq)
             // We replicate the sendAI flow but capture the bot reply for TTS
             await sendAIVoice(transcript);
             setVoiceState('idle');
@@ -1663,25 +1664,26 @@ If they want to drop/delete a task:
 For regular chat, respond in 1-2 short natural sentences without any markdown formatting.`;
 
         try {
-            const geminiContents = aiHistory.map(m => ({
-                role: m.role === 'model' ? 'model' : 'user',
-                parts: [{ text: m.content }]
-            }));
+            const messages = [
+                { role: 'system', content: systemPrompt },
+                ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
+            ];
 
-            const res = await fetch(GEMINI_API, {
+            const res = await fetch(GROQ_API, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                 body: JSON.stringify({
-                    system_instruction: { parts: [{ text: systemPrompt }] },
-                    contents: geminiContents,
-                    generationConfig: { maxOutputTokens: 300, temperature: 0.8 }
+                    model: GROQ_MODEL,
+                    messages,
+                    max_tokens: 300,
+                    temperature: 0.8
                 })
             });
 
             const data = await res.json();
             if (data.error) throw new Error(data.error.message);
 
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "Sorry, I had a connection issue. Could you try again?";
+            const reply = data.choices?.[0]?.message?.content?.trim() || "Sorry, I had a connection issue. Could you try again?";
             document.getElementById(thinkId)?.remove();
 
             let handled = false;
