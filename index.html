@@ -233,7 +233,7 @@
             <div class="ai-avatar">🤖</div>
             <div class="ai-header-info">
                 <div class="ai-header-name">Nova AI</div>
-                <div class="ai-header-status">Online · Powered by Gemini</div>
+                <div class="ai-header-status">Online · Powered by Groq</div>
             </div>
             <button class="ai-close" onclick="toggleAI()">✕</button>
         </div>
@@ -263,9 +263,9 @@
 
     <!-- ── NOVA AI JS ── -->
     <script>
-// 🔒 API key is hidden — routed through Supabase Edge Function (gemini-proxy)
-        const SUPABASE_PROJECT_URL = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';
-        const GEMINI_API = `${SUPABASE_PROJECT_URL}/functions/v1/gemini-proxy`;
+const GROQ_API_KEY = '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'; // 🔑 Replace with your key from https://console.groq.com/keys
+        const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
+        const GROQ_MODEL = 'llama-3.3-70b-versatile';
     let aiOpen = false;
     let aiHistory = [];
     let currentUserName = '';
@@ -339,25 +339,26 @@ Your role here on the homepage:
 - You do NOT have access to the user's tasks from this page — they need to go to tasks.html for that`;
 
         try {
-            const contents = aiHistory.map(m => ({
-                role: m.role === 'model' ? 'model' : 'user',
-                parts: [{ text: m.content }]
-            }));
+            const messages = [
+                { role: 'system', content: systemPrompt },
+                ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
+            ];
 
-            const res = await fetch(GEMINI_API, {
+            const res = await fetch(GROQ_API, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                 body: JSON.stringify({
-                    system_instruction: { parts: [{ text: systemPrompt }] },
-                    contents,
-                    generationConfig: { maxOutputTokens: 500, temperature: 0.85 }
+                    model: GROQ_MODEL,
+                    messages,
+                    max_tokens: 500,
+                    temperature: 0.85
                 })
             });
 
             const data = await res.json();
             if (data.error) throw new Error(data.error.message);
 
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+            const reply = data.choices?.[0]?.message?.content?.trim()
                 || "Hmm, something flickered on my end. Mind trying that again?";
 
             document.getElementById(thinkId)?.remove();
@@ -446,22 +447,23 @@ Your role here on the homepage:
             const systemPrompt = `You are Nova, a warm AI assistant on the TaskNova homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. TaskNova helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
 
             try {
-                const contents = aiHistory.map(m => ({
-                    role: m.role === 'model' ? 'model' : 'user',
-                    parts: [{ text: m.content }]
-                }));
-                const res = await fetch(GEMINI_API, {
+                const messages = [
+                    { role: 'system', content: systemPrompt },
+                    ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
+                ];
+                const res = await fetch(GROQ_API, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                     body: JSON.stringify({
-                        system_instruction: { parts: [{ text: systemPrompt }] },
-                        contents,
-                        generationConfig: { maxOutputTokens: 150, temperature: 0.8 }
+                        model: GROQ_MODEL,
+                        messages,
+                        max_tokens: 150,
+                        temperature: 0.8
                     })
                 });
                 const data = await res.json();
                 if (data.error) throw new Error(data.error.message);
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "Sorry, I had a hiccup. Could you say that again?";
+                const reply = data.choices?.[0]?.message?.content?.trim() || "Sorry, I had a hiccup. Could you say that again?";
                 document.getElementById(thinkId)?.remove();
                 addAIMessage('bot', reply);
                 aiHistory.push({ role: 'model', content: reply });
