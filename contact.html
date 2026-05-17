@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskNova – Contact Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #080c12; --surface: rgba(255,255,255,0.04); --surface-hi: rgba(255,255,255,0.08);
+            --border: rgba(255,255,255,0.08); --border-hi: rgba(88,166,255,0.35);
+            --accent: #58a6ff; --accent2: #1f6feb; --accent3: #a371f7;
+            --text: #f0f6fc; --muted: rgba(240,246,252,0.5);
+            --danger: #ff4d4d; --success: #2ea043; --warn: #e3b341;
+            --radius: 16px; --radius-sm: 10px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(rgba(8,12,18,0.72), rgba(8,12,18,0.78)), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: none; }
+        #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
+        #cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(88,166,255,0.5); pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
+        #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px 200px; }
+
+        /* ── NAVBAR ── */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,12,18,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+        .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -.5px; text-decoration: none; }
+        .logo-icon { width: 50px; height: 50px; border-radius: 10px; object-fit: contain; box-shadow: 0 0 20px rgba(88,166,255,0.4); }
+        .nav-links { display: flex; gap: 4px; list-style: none; }
+        .nav-links li a { display: block; padding: 9px 18px; border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: all .25s; border: 1px solid transparent; }
+        .nav-links li a:hover, .nav-links li a.active { color: var(--text); background: var(--surface-hi); border-color: var(--border); }
+        .nav-links li a.active { color: var(--accent); }
+        .nav-auth { display: flex; align-items: center; gap: 10px; }
+        .nav-cta { padding: 10px 22px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #080c12; font-weight: 700; font-size: 14px; text-decoration: none; transition: all .25s; box-shadow: 0 4px 20px rgba(88,166,255,0.3); white-space: nowrap; }
+        .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(88,166,255,0.5); }
+        .nav-user-chip { display: none; align-items: center; gap: 8px; padding: 6px 14px 6px 8px; border-radius: 20px; background: var(--surface-hi); border: 1px solid var(--border); }
+        .nav-user-chip.show { display: flex; }
+        .nav-user-chip:hover { border-color: rgba(88,166,255,0.4); background: rgba(88,166,255,0.08); cursor: pointer; }
+        .nav-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent3)); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; font-family: 'Syne', sans-serif; color: #080c12; flex-shrink: 0; }
+        .nav-username { font-size: 13px; font-weight: 500; color: var(--text); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .nav-signout-btn { padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,77,77,0.3); background: transparent; color: var(--danger); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .2s; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+        .nav-signout-btn:hover { background: rgba(255,77,77,0.1); border-color: var(--danger); }
+
+        /* ── PAGE LAYOUT ── */
+        .contact-section { padding: 120px 40px 80px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 10; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px; background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.2); font-size: 12px; font-weight: 500; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; animation: fadeUp .8s ease both; }
+        .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease infinite; }
+        @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(30px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes shimmer { to { background-position: 200% center; } }
+
+        /* ── PAGE HEADER ── */
+        .page-header { text-align: center; margin-bottom: 72px; }
+        .page-title { font-family: 'Syne', sans-serif; font-size: clamp(34px, 5vw, 52px); font-weight: 800; letter-spacing: -1.5px; color: var(--text); margin-bottom: 16px; animation: fadeUp .8s ease .1s both; }
+        .page-title span { background: linear-gradient(135deg, var(--accent) 0%, var(--accent3) 50%, var(--accent) 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 4s linear infinite; }
+        .page-sub { color: var(--muted); max-width: 500px; margin: 0 auto; font-size: 16px; line-height: 1.7; font-weight: 300; animation: fadeUp .8s ease .2s both; }
+
+        /* ── GRID ── */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 32px; align-items: start; }
+
+        /* ── INFO CARDS (LEFT COL) ── */
+        .info-col { display: flex; flex-direction: column; gap: 16px; animation: fadeUp .8s ease .3s both; }
+        .info-card { padding: 24px 28px; border-radius: 20px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); transition: all .35s cubic-bezier(.4,0,.2,1); position: relative; overflow: hidden; }
+        .info-card::before { content:''; position:absolute; inset:0; border-radius:20px; background: linear-gradient(135deg, rgba(88,166,255,0.05), rgba(163,113,247,0.05)); opacity:0; transition: opacity .35s; }
+        .info-card:hover { border-color: rgba(88,166,255,0.25); transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,0.4); }
+        .info-card:hover::before { opacity:1; }
+        .info-card-icon { font-size: 28px; margin-bottom: 14px; display: block; }
+        .info-card-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -.2px; }
+        .info-card-value { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); font-weight: 500; }
+        .info-card-desc { font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+        /* Stat chips row */
+        .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .stat-chip { padding: 18px 20px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); text-align: center; transition: all .3s; }
+        .stat-chip:hover { border-color: rgba(88,166,255,0.3); background: rgba(88,166,255,0.04); }
+        .stat-num { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: .8px; text-transform: uppercase; }
+
+        /* Social links */
+        .social-row { display: flex; gap: 10px; margin-top: 4px; flex-wrap: wrap; }
+        .social-btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 10px; border: 1px solid var(--border); color: var(--muted); font-size: 13px; text-decoration: none; transition: all .25s; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.07); transform: translateY(-2px); }
+
+        /* ── FORM CARD (RIGHT COL) ── */
+        .form-card { padding: 40px 36px; border-radius: 24px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); backdrop-filter: blur(10px); animation: fadeUp .8s ease .4s both; position: relative; overflow: hidden; }
+        .form-card::after { content: ''; position: absolute; top: -80px; right: -80px; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(88,166,255,0.07) 0%, transparent 70%); pointer-events: none; }
+        .form-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 6px; letter-spacing: -.5px; }
+        .form-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 30px; line-height: 1.5; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+        .field label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; }
+        .field input, .field select, .field textarea {
+            width: 100%; padding: 13px 16px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+            color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: all .25s; resize: none;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--border-hi); background: rgba(88,166,255,0.05); box-shadow: 0 0 0 3px rgba(88,166,255,0.1); }
+        .field input::placeholder, .field textarea::placeholder { color: rgba(240,246,252,0.25); }
+        .field select option { background: #0d1117; color: var(--text); }
+
+        /* Topic chips */
+        .topic-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+        .chip { padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border); color: var(--muted); font-size: 12px; font-weight: 500; cursor: pointer; transition: all .2s; user-select: none; }
+        .chip:hover { border-color: rgba(88,166,255,0.4); color: var(--accent); }
+        .chip.selected { background: rgba(88,166,255,0.12); border-color: var(--accent); color: var(--accent); }
+        .chip-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+
+        /* Priority toggle */
+        .priority-row { display: flex; gap: 8px; margin-bottom: 18px; }
+        .prio-btn { flex: 1; padding: 10px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .2s; font-family: 'DM Sans', sans-serif; text-align: center; }
+        .prio-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+        .prio-btn.active-low { background: rgba(46,160,67,0.15); border-color: var(--success); color: var(--success); }
+        .prio-btn.active-mid { background: rgba(227,179,65,0.15); border-color: var(--warn); color: var(--warn); }
+        .prio-btn.active-high { background: rgba(255,77,77,0.15); border-color: var(--danger); color: var(--danger); }
+
+        /* Submit btn */
+        .submit-btn { width: 100%; padding: 16px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #080c12; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; border: none; cursor: pointer; transition: all .3s; box-shadow: 0 8px 28px rgba(88,166,255,0.3); display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; overflow: hidden; }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 42px rgba(88,166,255,0.5); }
+        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+        /* ── BLOG / FAQ SECTION ── */
+        .section-divider { border: none; border-top: 1px solid var(--border); margin: 80px 0 60px; }
+        .section-heading { text-align: center; margin-bottom: 48px; }
+        .section-heading h2 { font-family: 'Syne', sans-serif; font-size: clamp(26px, 3.5vw, 38px); font-weight: 800; letter-spacing: -1px; color: var(--text); margin-bottom: 12px; }
+        .section-heading p { color: var(--muted); font-size: 15px; max-width: 440px; margin: 0 auto; line-height: 1.6; }
+
+        /* Blog cards */
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 80px; }
+        .blog-card { padding: 32px 28px; border-radius: 22px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); transition: all .4s cubic-bezier(.4,0,.2,1); opacity: 0; transform: translateY(40px); cursor: pointer; position: relative; overflow: hidden; }
+        .blog-card.visible { opacity: 1; transform: translateY(0); }
+        .blog-card:hover { border-color: rgba(88,166,255,0.25); transform: translateY(-10px); box-shadow: 0 28px 64px rgba(0,0,0,0.5); }
+        .blog-card-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; margin-bottom: 16px; }
+        .tag-guide { background: rgba(88,166,255,0.1); color: var(--accent); }
+        .tag-tips { background: rgba(163,113,247,0.1); color: var(--accent3); }
+        .tag-news { background: rgba(46,160,67,0.1); color: var(--success); }
+        .blog-card h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -.3px; line-height: 1.3; }
+        .blog-card p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+        .blog-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+        .blog-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--muted); }
+        .blog-read-link { font-size: 13px; color: var(--accent); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; transition: gap .2s; }
+        .blog-read-link:hover { gap: 10px; }
+
+        /* FAQ accordion */
+        .faq-list { display: flex; flex-direction: column; gap: 12px; max-width: 760px; margin: 0 auto 80px; }
+        .faq-item { border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); overflow: hidden; transition: border-color .3s; }
+        .faq-item.open { border-color: rgba(88,166,255,0.25); }
+        .faq-q { padding: 20px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 15px; color: var(--text); transition: color .2s; user-select: none; }
+        .faq-q:hover { color: var(--accent); }
+        .faq-q .faq-icon { font-size: 20px; color: var(--accent); transition: transform .3s; flex-shrink: 0; font-weight: 300; }
+        .faq-item.open .faq-icon { transform: rotate(45deg); }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s; padding: 0 24px; font-size: 14px; color: var(--muted); line-height: 1.75; }
+        .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(30px); background: rgba(22,27,34,0.98); border: 1px solid rgba(88,166,255,0.3); border-radius: 14px; padding: 14px 24px; font-size: 14px; color: var(--text); font-weight: 500; z-index: 500; opacity: 0; transition: all .35s cubic-bezier(.4,0,.2,1); pointer-events: none; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px); white-space: nowrap; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.success { border-color: rgba(46,160,67,0.5); }
+        .toast.error { border-color: rgba(255,77,77,0.5); }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--border); padding: 40px 60px; text-align: center; color: var(--muted); font-size: 13px; position: relative; z-index: 10; }
+        footer a { color: var(--accent); text-decoration: none; transition: .2s; }
+        footer a:hover { color: var(--text); }
+
+        @media(max-width: 900px) {
+            .contact-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+        @media(max-width: 768px) {
+            .navbar { padding: 16px 20px; }
+            .nav-links { display: none; }
+            .contact-section { padding: 110px 20px 60px; }
+            .form-card { padding: 28px 20px; }
+            footer { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+    <canvas id="blob-canvas"></canvas>
+    <div class="noise"></div>
+
+    <!-- ── NAVBAR ── -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="nav-logo">
+            <img class="logo-icon" src="assets/logo.png" alt="TaskNova logo" width="36" height="36"> TaskNova
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tasks.html">Manage Tasks</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+        <div class="nav-auth">
+            <a href="profile.html" class="nav-user-chip" id="navUserChip" title="View profile" style="text-decoration:none">
+                <div class="nav-avatar" id="navAvatar">?</div>
+                <span class="nav-username" id="navUsername"></span>
+            </a>
+            <button class="nav-signout-btn" id="navSignOutBtn" style="display:none;" onclick="navSignOut()">Sign Out</button>
+            <a href="login.html" class="nav-cta" id="navSignInBtn">Sign In →</a>
+        </div>
+    </nav>
+
+    <!-- ── MAIN CONTACT SECTION ── -->
+    <section class="contact-section">
+
+        <!-- Header -->
+        <div class="page-header">
+            <div class="hero-eyebrow"><span class="eyebrow-dot"></span>We'd Love to Hear From You</div>
+            <h1 class="page-title">Get in <span>Touch</span></h1>
+            <p class="page-sub">Have a question, a feature idea, or just want to say hello? Drop us a message and we'll get back to you within 24 hours.</p>
+        </div>
+
+        <!-- Two-column contact grid -->
+        <div class="contact-grid">
+
+            <!-- LEFT: Info cards -->
+            <div class="info-col">
+
+                <div class="info-card">
+                    <span class="info-card-icon">📬</span>
+                    <div class="info-card-title">Email Us</div>
+                    <div class="info-card-value">hello@tasknova.app</div>
+                    <div class="info-card-desc">For general inquiries, bug reports, or partnerships.</div>
+                </div>
+
+                 
+                <div class="info-card">
+                    <span class="info-card-icon">⏱️</span>
+                    <div class="info-card-title">Response Time</div>
+                    <div class="info-card-value">Typically within 24 hours</div>
+                    <div class="info-card-desc">We read every message personally — no bots, promise.</div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stat-row">
+                    <div class="stat-chip">
+                        <div class="stat-num">3</div>
+                        <div class="stat-label">Team Members</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="stat-num">24h</div>
+                        <div class="stat-label">Avg Reply</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="stat-num">∞</div>
+                        <div class="stat-label">Good Vibes</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="stat-num">100%</div>
+                        <div class="stat-label">Open Source</div>
+                    </div>
+                </div>
+
+                <!-- Social -->
+                <div class="info-card">
+                    <span class="info-card-icon">🔗</span>
+                    <div class="info-card-title" style="margin-bottom:14px;">Find Us Online</div>
+                    <div class="social-row">
+                        <a href="#" class="social-btn">⭐ GitHub</a>
+                        <a href="#" class="social-btn">💼 LinkedIn</a>
+                        <a href="#" class="social-btn">🐦 Twitter</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: Contact form -->
+            <div class="form-card">
+                <div class="form-title">Send a Message</div>
+                <div class="form-subtitle">Fill in the details below and one of our team members will respond as soon as possible.</div>
+
+                <!-- Name + Email -->
+                <div class="form-row">
+                    <div class="field">
+                        <label>Your Name</label>
+                        <input type="text" id="fname" placeholder="e.g. Priya Sharma" autocomplete="name">
+                    </div>
+                    <div class="field">
+                        <label>Email Address</label>
+                        <input type="email" id="femail" placeholder="you@example.com" autocomplete="email">
+                    </div>
+                </div>
+
+                <!-- Topic chips -->
+                <div class="field" style="margin-bottom:6px">
+                    <label>Topic</label>
+                </div>
+                <div class="topic-chips" id="topicChips">
+                    <div class="chip selected" data-val="General">💬 General</div>
+                    <div class="chip" data-val="Bug Report">🐛 Bug Report</div>
+                    <div class="chip" data-val="Feature Request">✨ Feature Request</div>
+                    <div class="chip" data-val="Collaboration">🤝 Collaboration</div>
+                    <div class="chip" data-val="Feedback">📝 Feedback</div>
+                </div>
+
+                <!-- Priority -->
+                <div class="field" style="margin-bottom: 6px;"><label>Priority</label></div>
+                <div class="priority-row" id="priorityRow">
+                    <button class="prio-btn active-low" data-p="Low">🟢 Low</button>
+                    <button class="prio-btn" data-p="Medium">🟡 Medium</button>
+                    <button class="prio-btn" data-p="High">🔴 High</button>
+                </div>
+
+                <!-- Subject -->
+                <div class="field">
+                    <label>Subject</label>
+                    <input type="text" id="fsubject" placeholder="Brief summary of your message">
+                </div>
+
+                <!-- Message -->
+                <div class="field">
+                    <label>Message</label>
+                    <textarea id="fmessage" rows="5" placeholder="Tell us everything — the more detail, the better we can help you…"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+                    <span id="submitText">Send Message →</span>
+                </button>
+
+                <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5;">
+                    By submitting this form you agree to our privacy policy. We never share your data.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- ── DIVIDER ── -->
+        <hr class="section-divider">
+
+        <!-- ── BLOG POSTS ── -->
+        <div class="section-heading">
+            <div class="hero-eyebrow" style="margin-bottom:20px;display:inline-flex"><span class="eyebrow-dot"></span>From Our Blog</div>
+            <h2>Latest from <span style="background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">TaskNova</span></h2>
+            <p>Tips, updates, and stories about productivity, AI, and how we're building smarter workflows.</p>
+        </div>
+
+        <div class="blog-grid">
+            <div class="blog-card">
+                <div class="blog-card-tag tag-guide">📘 Guide</div>
+                <h3>How We Built the Nova AI Assistant in 72 Hours</h3>
+                <p>A behind-the-scenes look at how our team designed and integrated the Nova voice assistant using the Gemini API, Web Speech, and a lot of cold coffee.</p>
+                <div class="blog-meta">
+                    <span>Garv Goel</span>
+                    <span class="blog-meta-dot"></span>
+                    <span>May 2026</span>
+                    <span class="blog-meta-dot"></span>
+                    <span>6 min read</span>
+                </div>
+                <a class="blog-read-link" href="#">Read article →</a>
+            </div>
+
+            <div class="blog-card">
+                <div class="blog-card-tag tag-tips">💡 Tips</div>
+                <h3>5 Task Management Habits That Actually Stick</h3>
+                <p>Forget rigid productivity systems — here are five lightweight habits our team uses every day that genuinely make a difference, powered by TaskNova reminders.</p>
+                <div class="blog-meta">
+                    <span>Team TaskNova</span>
+                    <span class="blog-meta-dot"></span>
+                    <span>Apr 2026</span>
+                    <span class="blog-meta-dot"></span>
+                    <span>4 min read</span>
+                </div>
+                <a class="blog-read-link" href="#">Read article →</a>
+            </div>
+
+            <div class="blog-card">
+                <div class="blog-card-tag tag-news">🚀 News</div>
+                <h3>TaskNova v2.0 — What's New and What's Next</h3>
+                <p>We shipped real-time collaboration, gamification rewards, and a redesigned dashboard. Here's a full breakdown of every feature added in our biggest release yet.</p>
+                <div class="blog-meta">
+                    <span>Team TaskNova</span>
+                    <span class="blog-meta-dot"></span>
+                    <span>Mar 2026</span>
+                    <span class="blog-meta-dot"></span>
+                    <span>8 min read</span>
+                </div>
+                <a class="blog-read-link" href="#">Read article →</a>
+            </div>
+        </div>
+
+        <!-- ── DIVIDER ── -->
+        <hr class="section-divider" style="margin-top:0">
+
+        <!-- ── FAQ ── -->
+        <div class="section-heading">
+            <div class="hero-eyebrow" style="margin-bottom:20px;display:inline-flex"><span class="eyebrow-dot"></span>Common Questions</div>
+            <h2>Frequently Asked <span style="background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Questions</span></h2>
+            <p>Can't find your answer here? Use the form above to reach us directly.</p>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    Is TaskNova free to use?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-a">Yes — TaskNova is completely free. It was built as a university group project and is open to everyone. We may add premium features in the future, but the core experience will always remain free.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    Do I need an account to use TaskNova?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-a">You need to sign in to access the Task Manager (to save your data securely). However, the home page, about page, and contact page are fully accessible without an account.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    How does the Nova AI assistant work?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-a">Nova is powered by Google's Gemini API combined with the browser's Web Speech API for voice recognition. It can answer questions about TaskNova, help you manage your tasks, and have natural conversations — all right inside your browser.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    Can I contribute to the project?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-a">Absolutely! TaskNova is a student project and we welcome feedback, ideas, and contributions. Reach out through the contact form above or find us on GitHub.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    Is my data safe with TaskNova?
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-a">We use Supabase for secure authentication and data storage. Your tasks and personal data are private to your account and are never shared or sold to third parties.</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>TaskNova © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
+            <a href="tasks.html">Workspace →</a> &nbsp;|&nbsp; <a href="index.html">Home →</a> &nbsp;|&nbsp; <a href="contact.html">Contact →</a>
+        </p>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL  = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqanlobHdia3BubXJ5dHVxZ3VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTAwMDIsImV4cCI6MjA4OTcyNjAwMn0.a-aqOsOWNg1Alt6elXDHju-2XQDtiROazU_MDBa4thA';
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+        sb.auth.onAuthStateChange((_e, session) => {
+            const chip    = document.getElementById('navUserChip');
+            const avatar  = document.getElementById('navAvatar');
+            const uname   = document.getElementById('navUsername');
+            const signOut = document.getElementById('navSignOutBtn');
+            const signIn  = document.getElementById('navSignInBtn');
+            if (session && session.user) {
+                const meta = session.user.user_metadata || {};
+                const name = meta.full_name || meta.name || session.user.email.split('@')[0];
+                avatar.textContent = name[0].toUpperCase();
+                uname.textContent  = name;
+                chip.classList.add('show');
+                signOut.style.display = 'block';
+                signIn.style.display  = 'none';
+            } else {
+                chip.classList.remove('show');
+                signOut.style.display = 'none';
+                signIn.style.display  = 'block';
+            }
+        });
+
+        async function navSignOut() {
+            await sb.auth.signOut();
+        }
+    </script>
+
+    <script>
+        // Cursor
+        const cursorEl = document.getElementById('cursor'), ringEl = document.getElementById('cursor-ring');
+        let cx = 0, cy = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; cursorEl.style.left = cx + 'px'; cursorEl.style.top = cy + 'px'; });
+        (function animCursor() { rx += (cx - rx) * .12; ry += (cy - ry) * .12; ringEl.style.left = rx + 'px'; ringEl.style.top = ry + 'px'; requestAnimationFrame(animCursor); })();
+
+        // Blob canvas (matches about.html)
+        (function blobBg() {
+            const canvas = document.getElementById('blob-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let W, H;
+            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
+            const blobs = [
+                { x: 0.2, y: 0.3, r: 0.35, color: 'rgba(88,166,255,0.06)', speed: 0.0004 },
+                { x: 0.8, y: 0.6, r: 0.3, color: 'rgba(163,113,247,0.05)', speed: 0.0003 },
+                { x: 0.5, y: 0.8, r: 0.28, color: 'rgba(88,166,255,0.04)', speed: 0.0005 }
+            ];
+            let t = 0;
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                blobs.forEach(b => {
+                    const x = (b.x + Math.sin(t * b.speed * 1000) * 0.08) * W;
+                    const y = (b.y + Math.cos(t * b.speed * 800) * 0.07) * H;
+                    const grad = ctx.createRadialGradient(x, y, 0, x, y, b.r * Math.min(W, H));
+                    grad.addColorStop(0, b.color); grad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(x, y, b.r * Math.min(W, H), 0, Math.PI * 2); ctx.fill();
+                });
+                t = performance.now(); requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
+        // Intersection observer for blog cards
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.blog-card').forEach(el => observer.observe(el));
+
+        // Topic chips
+        const chips = document.querySelectorAll('#topicChips .chip');
+        chips.forEach(c => {
+            c.addEventListener('click', () => {
+                chips.forEach(x => x.classList.remove('selected'));
+                c.classList.add('selected');
+            });
+        });
+
+        // Priority toggle
+        let activePriority = 'Low';
+        const prioBtns = document.querySelectorAll('#priorityRow .prio-btn');
+        prioBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                prioBtns.forEach(b => b.className = 'prio-btn');
+                const p = btn.dataset.p;
+                activePriority = p;
+                btn.classList.add(p === 'Low' ? 'active-low' : p === 'Medium' ? 'active-mid' : 'active-high');
+            });
+        });
+
+        // FAQ accordion
+        function toggleFaq(el) {
+            const item = el.parentElement;
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        }
+
+        // Toast utility
+        function showToast(msg, type = '') {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.className = 'toast show ' + type;
+            setTimeout(() => t.className = 'toast', 3500);
+        }
+
+        // Form submission
+        function handleSubmit() {
+            const name    = document.getElementById('fname').value.trim();
+            const email   = document.getElementById('femail').value.trim();
+            const subject = document.getElementById('fsubject').value.trim();
+            const message = document.getElementById('fmessage').value.trim();
+            const topic   = document.querySelector('#topicChips .chip.selected')?.dataset.val || 'General';
+
+            if (!name) { showToast('⚠️ Please enter your name.', 'error'); return; }
+            if (!email || !email.includes('@')) { showToast('⚠️ Please enter a valid email.', 'error'); return; }
+            if (!subject) { showToast('⚠️ Please add a subject.', 'error'); return; }
+            if (!message || message.length < 10) { showToast('⚠️ Message too short — tell us more!', 'error'); return; }
+
+            const btn = document.getElementById('submitBtn');
+            const txt = document.getElementById('submitText');
+            btn.disabled = true; txt.textContent = 'Sending…';
+
+            // Simulate send (replace with real EmailJS / Supabase call as needed)
+            setTimeout(() => {
+                btn.disabled = false; txt.textContent = 'Send Message →';
+                showToast(`✅ Message sent, ${name.split(' ')[0]}! We'll reply to ${email} soon.`, 'success');
+                document.getElementById('fname').value = '';
+                document.getElementById('femail').value = '';
+                document.getElementById('fsubject').value = '';
+                document.getElementById('fmessage').value = '';
+                chips.forEach(x => x.classList.remove('selected'));
+                chips[0].classList.add('selected');
+            }, 1400);
+        }
+    </script>
+</body>
+</html>
