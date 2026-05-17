@@ -10,7 +10,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --bg: #080c12; --surface: rgba(255,255,255,0.04); --surface-hi: rgba(255,255,255,0.08);
+            --bg: #141212; --surface: rgba(255,255,255,0.04); --surface-hi: rgba(255,255,255,0.08);
             --border: rgba(255,255,255,0.08); --border-hi: rgba(88,166,255,0.35);
             --accent: #58a6ff; --accent2: #1f6feb; --accent3: #a371f7;
             --text: #f0f6fc; --muted: rgba(240,246,252,0.5);
@@ -18,15 +18,15 @@
             --radius: 16px; --radius-sm: 10px;
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--bg); min-height: 100vh; overflow-x: hidden; cursor: none; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(135deg, rgba(8,12,18,0.65) 0%, rgba(8,14,22,0.75) 50%, rgba(10,8,18,0.70) 100%), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: none; }
         #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
         #cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(88,166,255,0.5); pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
-        #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        /* #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; } */
         .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px 200px; }
 
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: rgba(8,12,18,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
         .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -.5px; text-decoration: none; }
-        .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent3)); display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 0 20px rgba(88,166,255,0.4); }
+        .logo-icon { width: 50px; height: 50px; border-radius: 10px; object-fit: contain; box-shadow: 0 0 20px rgba(88,166,255,0.4); }
         .nav-links { display: flex; gap: 4px; list-style: none; }
         .nav-links li a { display: block; padding: 9px 18px; border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: all .25s; border: 1px solid transparent; }
         .nav-links li a:hover, .nav-links li a.active { color: var(--text); background: var(--surface-hi); border-color: var(--border); }
@@ -152,6 +152,167 @@
         footer a { color: var(--accent); text-decoration: none; transition: .2s; }
         footer a:hover { color: var(--text); }
         @media(max-width:768px) { .navbar{padding:16px 20px;} .nav-links{display:none;} .dashboard{padding:22px 16px;} .form-row{flex-direction:column;} }
+/* 
+       // ── BACKGROUND THEME PANEL ──
+        .theme-fab { position:fixed; bottom:28px; right:100px; z-index:500; width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent3)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 4px 20px rgba(88,166,255,0.4); transition:all .3s; }
+        .theme-fab:hover { transform:scale(1.1) rotate(20deg); box-shadow:0 8px 30px rgba(88,166,255,0.6); }
+        .theme-panel { position:fixed; bottom:90px; right:90px; z-index:500; background:rgba(22,27,34,0.98); border:1px solid var(--border-hi); border-radius:20px; padding:20px; width:260px; backdrop-filter:blur(20px); box-shadow:0 20px 60px rgba(0,0,0,0.7); transform:scale(0) translateY(20px); transform-origin:bottom right; opacity:0; transition:all .35s cubic-bezier(0.175,0.885,0.32,1.275); pointer-events:none; }
+        .theme-panel.open { transform:scale(1) translateY(0); opacity:1; pointer-events:all; }
+        .theme-panel-title { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+        .theme-panel-title::after { content:''; flex:1; height:1px; background:var(--border); }
+        .theme-swatches { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
+        .theme-swatch { width:100%; aspect-ratio:1; border-radius:10px; border:2px solid transparent; cursor:pointer; transition:all .2s; position:relative; }
+        .theme-swatch:hover { transform:scale(1.1); }
+        .theme-swatch.active { border-color:white; box-shadow:0 0 0 3px rgba(255,255,255,0.3); }
+        .theme-swatch.active::after { content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700; text-shadow:0 1px 3px rgba(0,0,0,0.5); }
+        .theme-label { font-size:10px; color:var(--muted); text-align:center; margin-top:3px; font-family:'JetBrains Mono',monospace; }
+        .theme-swatch-wrap { display:flex; flex-direction:column; align-items:center; }
+        .theme-intensity { margin-top:4px; }
+        .theme-intensity label { font-size:11px; color:var(--muted); display:block; margin-bottom:6px; }
+        .theme-intensity input[type=range] { width:100%; accent-color:var(--accent); cursor:pointer; }
+        .theme-speed-row { display:flex; gap:6px; margin-top:10px; }
+        .theme-speed-btn { flex:1; padding:6px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:11px; cursor:pointer; transition:all .2s; font-family:'DM Sans',sans-serif; }
+        .theme-speed-btn.active,.theme-speed-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(88,166,255,0.1); }
+*/
+        /* ── VOICE BUTTON ── */
+
+
+        /* ── AI ASSISTANT ── */
+        .ai-fab { position:fixed; bottom:28px; right:28px; z-index:500; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--accent3),var(--accent2)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 6px 24px rgba(163,113,247,0.5); transition:all .3s; }
+        .ai-fab:hover { transform:scale(1.1); box-shadow:0 10px 36px rgba(163,113,247,0.7); }
+        .ai-fab .ai-badge { position:absolute; top:-4px; right:-4px; width:16px; height:16px; border-radius:50%; background:var(--success); border:2px solid var(--bg); animation:pulse 2s ease infinite; }
+        .ai-panel { position:fixed; bottom:100px; right:28px; z-index:499; background:rgba(15,20,28,0.99); border:1px solid rgba(163,113,247,0.3); border-radius:24px; width:360px; max-height:520px; display:flex; flex-direction:column; backdrop-filter:blur(24px); box-shadow:0 24px 80px rgba(0,0,0,0.8); transform:scale(0) translateY(30px); transform-origin:bottom right; opacity:0; transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275); pointer-events:none; overflow:hidden; }
+        .ai-panel.open { transform:scale(1) translateY(0); opacity:1; pointer-events:all; }
+        .ai-header { padding:18px 20px 14px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:12px; flex-shrink:0; }
+        .ai-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--accent3),var(--accent2)); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; box-shadow:0 0 20px rgba(163,113,247,0.4); }
+        .ai-header-info { flex:1; }
+        .ai-header-name { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text); }
+        .ai-header-status { font-size:11px; color:var(--success); display:flex; align-items:center; gap:4px; }
+        .ai-header-status::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--success); }
+        .ai-close { background:none; border:none; color:var(--muted); cursor:pointer; font-size:18px; padding:4px; transition:.2s; }
+        .ai-close:hover { color:var(--text); }
+        .ai-messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; scroll-behavior:smooth; }
+        .ai-messages::-webkit-scrollbar { width:4px; }
+        .ai-messages::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+        .ai-msg { max-width:88%; display:flex; flex-direction:column; gap:4px; }
+        .ai-msg.user { align-self:flex-end; align-items:flex-end; }
+        .ai-msg.bot  { align-self:flex-start; align-items:flex-start; }
+        .ai-bubble { padding:11px 15px; border-radius:16px; font-size:13px; line-height:1.55; word-break:break-word; }
+        .ai-msg.user .ai-bubble { background:linear-gradient(135deg,rgba(88,166,255,0.25),rgba(31,111,235,0.2)); border:1px solid rgba(88,166,255,0.3); color:var(--text); border-bottom-right-radius:4px; }
+        .ai-msg.bot  .ai-bubble { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:var(--text); border-bottom-left-radius:4px; }
+        .ai-msg.bot .ai-bubble.thinking { color:var(--muted); font-style:italic; }
+        .typing-dots { display:inline-flex; gap:4px; align-items:center; padding:2px 0; }
+        .typing-dots span { width:7px; height:7px; border-radius:50%; background:var(--muted); display:inline-block; animation:typingBounce 1.2s ease infinite; }
+        .typing-dots span:nth-child(2) { animation-delay:.2s; }
+        .typing-dots span:nth-child(3) { animation-delay:.4s; }
+        @keyframes typingBounce { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-6px);opacity:1} }
+        .ai-time { font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; padding:0 4px; }
+        .ai-quick-btns { padding:10px 16px; display:flex; gap:6px; flex-wrap:wrap; border-bottom:1px solid rgba(255,255,255,0.05); flex-shrink:0; }
+        .ai-quick-btn { padding:5px 10px; border-radius:20px; border:1px solid rgba(163,113,247,0.3); background:rgba(163,113,247,0.07); color:rgba(163,113,247,0.9); font-size:11px; cursor:pointer; transition:all .2s; white-space:nowrap; font-family:'DM Sans',sans-serif; }
+        .ai-quick-btn:hover { background:rgba(163,113,247,0.18); border-color:var(--accent3); }
+        .ai-input-row { padding:14px 16px; border-top:1px solid rgba(255,255,255,0.06); display:flex; gap:8px; align-items:flex-end; flex-shrink:0; }
+        .ai-input { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:10px 14px; color:var(--text); font-size:13px; font-family:'DM Sans',sans-serif; resize:none; max-height:100px; min-height:40px; line-height:1.4; outline:none; transition:.2s; }
+        .ai-input:focus { border-color:rgba(163,113,247,0.5); background:rgba(255,255,255,0.07); }
+        .ai-send-btn { width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg,var(--accent3),var(--accent2)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; flex-shrink:0; }
+        .ai-send-btn:hover { transform:scale(1.08); }
+        .ai-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+    
+    /* --- AI Chat Message Layout --- */
+    /* user-msg / bot-msg are set by JS; map them onto the existing flex system */
+    .ai-msg.user-msg {
+        align-self: flex-end;
+        align-items: flex-end;
+        max-width: 88%;
+    }
+    .ai-msg.bot-msg {
+        align-self: flex-start;
+        align-items: flex-start;
+        max-width: 88%;
+    }
+    .ai-msg-bubble {
+        padding: 11px 15px;
+        border-radius: 16px;
+        font-size: 13px;
+        line-height: 1.55;
+        word-break: break-word;
+    }
+    .ai-msg.user-msg .ai-msg-bubble {
+        background: linear-gradient(135deg, rgba(88,166,255,0.25), rgba(31,111,235,0.2));
+        border: 1px solid rgba(88,166,255,0.3);
+        color: var(--text);
+        border-bottom-right-radius: 4px;
+    }
+    .ai-msg.bot-msg .ai-msg-bubble {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: var(--text);
+        border-bottom-left-radius: 4px;
+    }
+    .ai-msg.bot-msg .ai-msg-bubble.thinking {
+        color: var(--muted);
+        font-style: italic;
+    }
+
+    /* ── VOICE CONVERSATION IN AI PANEL ── */
+    .ai-voice-btn {
+        width: 38px; height: 38px; border-radius: 12px;
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+        color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center;
+        font-size: 16px; transition: all .25s; flex-shrink: 0;
+    }
+    .ai-voice-btn:hover { background: rgba(163,113,247,0.15); border-color: rgba(163,113,247,0.4); color: var(--accent3); }
+    .ai-voice-btn.voice-on {
+        background: rgba(255,77,77,0.15); border-color: rgba(255,77,77,0.5);
+        color: var(--danger); animation: voiceAIPulse 1s ease infinite;
+    }
+    .ai-voice-btn.voice-processing {
+        background: rgba(88,166,255,0.15); border-color: rgba(88,166,255,0.5);
+        color: var(--accent); animation: voiceAIPulse 0.6s ease infinite;
+    }
+    @keyframes voiceAIPulse {
+        0%,100% { box-shadow: 0 0 0 0 rgba(255,77,77,0.4); }
+        50% { box-shadow: 0 0 0 8px rgba(255,77,77,0); }
+    }
+    .ai-voice-status {
+        font-size: 11px; color: var(--muted); padding: 4px 16px 8px;
+        display: none; align-items: center; gap: 6px; flex-shrink: 0;
+        font-family: 'JetBrains Mono', monospace;
+    }
+    .ai-voice-status.show { display: flex; }
+    .ai-voice-status .vs-dot {
+        width: 6px; height: 6px; border-radius: 50%; background: var(--danger);
+        animation: vsDot 1s ease infinite;
+    }
+    .ai-voice-status .vs-dot.processing { background: var(--accent); }
+    @keyframes vsDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(0.7)} }
+    .ai-voice-wave {
+        display: flex; align-items: center; gap: 2px; height: 16px;
+    }
+    .ai-voice-wave span {
+        width: 3px; border-radius: 2px; background: var(--danger);
+        animation: waveBar 0.8s ease infinite;
+    }
+    .ai-voice-wave span:nth-child(2) { animation-delay: .15s; }
+    .ai-voice-wave span:nth-child(3) { animation-delay: .3s; }
+    .ai-voice-wave span:nth-child(4) { animation-delay: .45s; }
+    .ai-voice-wave span:nth-child(5) { animation-delay: .6s; }
+    @keyframes waveBar {
+        0%,100% { height: 4px; } 50% { height: 14px; }
+    }
+    .voice-tts-btn {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 3px 8px; border-radius: 8px; border: 1px solid rgba(163,113,247,0.2);
+        background: rgba(163,113,247,0.07); color: rgba(163,113,247,0.8);
+        font-size: 10px; cursor: pointer; transition: all .2s; margin-top: 4px;
+        font-family: 'DM Sans', sans-serif;
+    }
+    .voice-tts-btn:hover { background: rgba(163,113,247,0.18); border-color: var(--accent3); }
+        /* ── BACKGROUND GLOW ── */
+        .bg-glow { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bg-glow::before { content: ""; position: absolute; top: -15%; left: -15%; width: 65%; height: 65%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(88,166,255,0.16) 0%, rgba(31,111,235,0.08) 35%, transparent 65%); animation: glowPulse 8s ease-in-out infinite; filter: blur(40px); }
+        .bg-glow::after  { content: ""; position: absolute; bottom: -15%; right: -15%; width: 60%; height: 60%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(163,113,247,0.14) 0%, rgba(88,166,255,0.06) 35%, transparent 65%); animation: glowPulse 10s ease-in-out infinite reverse; filter: blur(40px); }
+        .bg-glow-center { position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 60vh; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(88,166,255,0.05) 0%, rgba(163,113,247,0.03) 40%, transparent 70%); pointer-events: none; z-index: 0; filter: blur(60px); animation: glowPulse 12s ease-in-out infinite; }
+        @keyframes glowPulse { 0%,100%{opacity:.65;transform:scale(1)} 50%{opacity:1;transform:scale(1.06)} }
     </style>
 </head>
 <body>
@@ -159,6 +320,8 @@
     <div id="cursor-ring"></div>
     <canvas id="blob-canvas"></canvas>
     <div class="noise"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-center"></div>
 
     <div id="authGate">
         <div class="gate-icon">🔐</div>
@@ -171,7 +334,7 @@
     </div>
 
     <nav class="navbar">
-        <a href="index.html" class="nav-logo"><div class="logo-icon">🚀</div> TaskNova</a>
+        <a href="index.html" class="nav-logo"><img class="logo-icon" src="assets/logo.png" alt="TaskNova logo" width="36" height="36"> TaskNova</a>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="tasks.html" class="active">Manage Tasks</a></li>
@@ -192,13 +355,13 @@
             <h2 style="font-family:'Syne',sans-serif;text-align:center;color:var(--accent);font-size:32px;font-weight:800;margin-bottom:24px;">Your Live Space</h2>
 
             <div class="notif-pill">
-                <span>📧 Notifications will be sent to:</span>
+                <span>📧 Notifications sent to:</span>
                 <strong id="notifEmailDisplay">—</strong>
             </div>
 
             <div class="search-wrap">
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                <input type="text" id="searchInput" placeholder="Search any task or tags..." oninput="renderTasks()">
+                <input type="text" id="searchInput" placeholder="Search tasks, tags, or priorities..." oninput="renderTasks()">
             </div>
 
             <div class="add-form">
@@ -267,6 +430,64 @@
             <a href="tasks.html">Workspace →</a> &nbsp;|&nbsp; <a href="index.html">Home →</a>
         </p>
     </footer>
+
+    <!-- ── BACKGROUND THEME FAB + PANEL ── -->
+    <!-- <button class="theme-fab" id="themeFab" title="Change Background Theme" onclick="toggleThemePanel()">🎨</button>
+    <div class="theme-panel" id="themePanel">
+        <div class="theme-panel-title">Background Theme</div>
+        <div class="theme-swatches" id="themeSwatches"></div>
+        <div class="theme-intensity">
+            <label>Intensity: <span id="intensityVal">Medium</span></label>
+            <input type="range" id="intensitySlider" min="1" max="3" value="2" oninput="onIntensityChange(this.value)">
+        </div>
+        <div style="margin-top:12px;">
+            <div class="theme-panel-title" style="font-size:10px;">Animation Speed</div>
+            <div class="theme-speed-row">
+                <button class="theme-speed-btn" onclick="setSpeed(0.004,this)">Slow</button>
+                <button class="theme-speed-btn active" onclick="setSpeed(0.008,this)">Normal</button>
+                <button class="theme-speed-btn" onclick="setSpeed(0.018,this)">Fast</button>
+            </div>
+        </div>
+    </div> -->
+
+
+
+    <!-- ── AI ASSISTANT PANEL ── -->
+    <button class="ai-fab" id="aiFab" title="AI Assistant" onclick="toggleAI()">
+        🤖<span class="ai-badge"></span>
+    </button>
+    <div class="ai-panel" id="aiPanel">
+        <div class="ai-header">
+            <div class="ai-avatar">🤖</div>
+            <div class="ai-header-info">
+                <div class="ai-header-name">Nova AI</div>
+                <div class="ai-header-status">Online · Powered by Gemini</div>
+            </div>
+            <button class="ai-close" onclick="toggleAI()">✕</button>
+        </div>
+        <div class="ai-quick-btns">
+            <button class="ai-quick-btn" onclick="aiQuick('Summarize my day')">📊 My Day</button>
+            <button class="ai-quick-btn" onclick="aiQuick('What tasks are overdue?')">⚠️ Overdue</button>
+            <button class="ai-quick-btn" onclick="aiQuick('Suggest 3 tasks for productivity')">💡 Suggest</button>
+            <button class="ai-quick-btn" onclick="aiQuick('How many tasks are pending?')">📋 Status</button>
+        </div>
+        <div class="ai-messages" id="aiMessages"></div>
+        <div class="ai-voice-status" id="aiVoiceStatus">
+            <div class="vs-dot" id="vsStatusDot"></div>
+            <span id="vsStatusText">Listening…</span>
+            <div class="ai-voice-wave" id="vsWave">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="ai-input-row">
+            <textarea class="ai-input" id="aiInput" placeholder="Ask Nova anything…" rows="1"
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI();}"></textarea>
+            <button class="ai-voice-btn" id="aiVoiceBtn" title="Voice conversation with Nova" onclick="toggleAIVoice()">🎙️</button>
+            <button class="ai-send-btn" id="aiSendBtn" onclick="sendAI()">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+        </div>
+    </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
@@ -665,22 +886,925 @@
         setInterval(()=>renderTasks(),60000);
     </script>
 
-    <script>
-        const canvas=document.getElementById('blob-canvas'),ctx=canvas.getContext('2d');
-        let W,H,mouse={x:-500,y:-500},blobT=0;
-        function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-        resize();window.addEventListener('resize',resize);
-        window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
-        class Blob{
-            constructor(x,y,r,color,speed,pts){this.cx=x;this.cy=y;this.baseR=r;this.color=color;this.speed=speed;this.pts=pts;this.noiseOffsets=Array.from({length:pts},()=>Math.random()*1000);}
-            noise(x,y){const X=Math.floor(x)&255,Y=Math.floor(y)&255;return(Math.sin(X*127.1+Y*311.7)*.5+.5+Math.sin(X*269.5+Y*183.3)*.25+.25)*.5;}
-            draw(t,m){ctx.beginPath();const step=(Math.PI*2)/this.pts;for(let i=0;i<=this.pts;i++){const a=i*step,n=this.noise(Math.cos(a)+this.noiseOffsets[i%this.pts]+t*this.speed*.3,Math.sin(a)+this.noiseOffsets[i%this.pts]+t*this.speed*.3);const r=this.baseR*(0.75+n*0.5),dx=(this.cx+Math.cos(a)*r)-m.x,dy=(this.cy+Math.sin(a)*r)-m.y;const dist=Math.sqrt(dx*dx+dy*dy),repel=dist<180?(180-dist)/180*30:0;const x=this.cx+Math.cos(a)*(r+repel),y=this.cy+Math.sin(a)*(r+repel);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.closePath();ctx.fillStyle=this.color;ctx.fill();}
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!--  🎨  FEATURE 1: BACKGROUND THEME SYSTEM                      -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- <script>
+        const THEMES = [
+            { id:'nova',    label:'Nova',    colors:['rgba(31,111,235,0.12)','rgba(88,166,255,0.08)','rgba(163,113,247,0.10)'], bg:'#080c12' },
+            { id:'aurora',  label:'Aurora',  colors:['rgba(46,160,67,0.12)', 'rgba(0,210,140,0.08)', 'rgba(88,166,255,0.10)'], bg:'#060e0a' },
+            { id:'solar',   label:'Solar',   colors:['rgba(255,140,0,0.12)', 'rgba(255,77,77,0.09)', 'rgba(227,179,65,0.10)'], bg:'#100a04' },
+            { id:'galactic',label:'Galactic',colors:['rgba(163,113,247,0.13)','rgba(220,80,220,0.08)','rgba(88,166,255,0.09)'], bg:'#0a060f' },
+            { id:'ocean',   label:'Ocean',   colors:['rgba(0,180,220,0.12)', 'rgba(0,100,200,0.10)', 'rgba(46,160,200,0.08)'], bg:'#040c10' },
+            { id:'ember',   label:'Ember',   colors:['rgba(255,50,50,0.12)', 'rgba(255,120,0,0.09)', 'rgba(200,20,80,0.10)'],  bg:'#100406' },
+            { id:'mint',    label:'Mint',    colors:['rgba(0,220,180,0.10)', 'rgba(60,200,100,0.08)','rgba(0,180,255,0.09)'],  bg:'#040f0c' },
+            { id:'void',    label:'Void',    colors:['rgba(30,30,30,0.2)',   'rgba(60,60,80,0.08)',  'rgba(20,20,40,0.12)'],   bg:'#010103' },
+        ];
+
+        const SWATCH_GRADS = {
+            nova:    'linear-gradient(135deg,#1f6feb,#a371f7)',
+            aurora:  'linear-gradient(135deg,#2ea043,#00d28c)',
+            solar:   'linear-gradient(135deg,#ff8c00,#ff4d4d)',
+            galactic:'linear-gradient(135deg,#a371f7,#dc50dc)',
+            ocean:   'linear-gradient(135deg,#00b4dc,#0064c8)',
+            ember:   'linear-gradient(135deg,#ff3232,#c81450)',
+            mint:    'linear-gradient(135deg,#00dcb4,#00b4ff)',
+            void:    'linear-gradient(135deg,#1e1e28,#101018)',
+        };
+
+        let currentThemeId = localStorage.getItem('tn_theme') || 'nova';
+        let blobIntensity  = parseFloat(localStorage.getItem('tn_intensity') || '1');
+        let blobSpeed      = parseFloat(localStorage.getItem('tn_speed') || '0.008');
+        let themeBlobs     = [];
+        let themeT         = 0;
+        let themeW, themeH, themeMouse = {x:-500,y:-500};
+
+        function buildThemeSwatches() {
+            const wrap = document.getElementById('themeSwatches');
+            wrap.innerHTML = '';
+            THEMES.forEach(th => {
+                const div = document.createElement('div');
+                div.className = 'theme-swatch-wrap';
+                div.innerHTML = `
+                    <div class="theme-swatch${th.id===currentThemeId?' active':''}"
+                         style="background:${SWATCH_GRADS[th.id]}"
+                         onclick="applyTheme('${th.id}')"></div>
+                    <div class="theme-label">${th.label}</div>`;
+                wrap.appendChild(div);
+            });
         }
-        let blobs=[];
-        function initBlobs(){blobs=[];blobs.push(new Blob(W*.2,H*.4,Math.min(W,H)*.3,'rgba(31,111,235,0.1)',0.4,8));blobs.push(new Blob(W*.8,H*.3,Math.min(W,H)*.28,'rgba(88,166,255,0.07)',0.35,9));blobs.push(new Blob(W*.6,H*.75,Math.min(W,H)*.25,'rgba(163,113,247,0.09)',0.5,8));}
-        initBlobs();window.addEventListener('resize',initBlobs);
-        function animBlobs(){ctx.clearRect(0,0,W,H);blobT+=0.008;blobs.forEach(b=>b.draw(blobT,mouse));requestAnimationFrame(animBlobs);}
-        animBlobs();
+
+        function applyTheme(id) {
+            currentThemeId = id;
+            localStorage.setItem('tn_theme', id);
+            const th = THEMES.find(t => t.id === id);
+            document.body.style.background = th.bg;
+            document.querySelector(':root').style.setProperty('--bg', th.bg);
+            buildThemeSwatches();
+            initThemeBlobs();
+            showToast(`🎨 Theme: ${th.label}`, '#a371f7');
+        }
+
+        function onIntensityChange(val) {
+            const labels = ['','Subtle','Medium','Vivid'];
+            document.getElementById('intensityVal').textContent = labels[val];
+            blobIntensity = parseFloat(val);
+            localStorage.setItem('tn_intensity', val);
+            initThemeBlobs();
+        }
+
+        function setSpeed(speed, btn) {
+            blobSpeed = speed;
+            localStorage.setItem('tn_speed', speed);
+            document.querySelectorAll('.theme-speed-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function toggleThemePanel() {
+            document.getElementById('themePanel').classList.toggle('open');
+        }
+
+        document.addEventListener('click', e => {
+            const panel = document.getElementById('themePanel');
+            const fab   = document.getElementById('themeFab');
+            // Only close if click is outside both the panel and its fab,
+            // and not on the other FABs (voice / AI) to avoid interfering
+            if (!panel.contains(e.target) && !fab.contains(e.target)) {
+                panel.classList.remove('open');
+            }
+        });
+
+        buildThemeSwatches();
+
+        // Sync intensity slider from saved value
+        const savedInt = localStorage.getItem('tn_intensity') || '2';
+        document.getElementById('intensitySlider').value = savedInt;
+        onIntensityChange(savedInt);
+    </script> -->
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!--  🎙️  FEATURE 2: VOICE COMMANDS                               -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <script>
+        let voiceActive = false;
+        let recognition = null;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        function toggleVoice() {
+            if (!SpeechRecognition) {
+                showToast('⚠️ Voice not supported in this browser. Try Chrome.', '#ff4d4d');
+                return;
+            }
+            if (voiceActive) stopVoice();
+            else startVoice();
+        }
+
+        function startVoice() {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.continuous = false;
+
+            recognition.onstart = () => {
+                voiceActive = true;
+                document.getElementById('voiceFab').classList.add('listening');
+                document.getElementById('voiceFab').textContent = '🔴';
+                document.getElementById('voiceHint').classList.add('show');
+            };
+
+            recognition.onresult = e => {
+                const transcript = e.results[0][0].transcript.trim();
+                showToast(`🎙️ Heard: "${transcript}"`, '#58a6ff');
+                processVoiceCommand(transcript.toLowerCase());
+            };
+
+            recognition.onerror = err => {
+                showToast('🎙️ Voice error: ' + err.error, '#ff4d4d');
+                stopVoice();
+            };
+
+            recognition.onend = () => stopVoice();
+            recognition.start();
+        }
+
+        function stopVoice() {
+            voiceActive = false;
+            if (recognition) { try { recognition.stop(); } catch(e){} recognition = null; }
+            const btn = document.getElementById('voiceFab');
+            btn.classList.remove('listening');
+            btn.textContent = '🎙️';
+            document.getElementById('voiceHint').classList.remove('show');
+        }
+
+        async function processVoiceCommand(cmd) {
+            // ADD TASK — "add task [name]" / "new task [name]" / "create task [name]"
+            const addMatch = cmd.match(/^(?:add|new|create)(?: a)? task (.+)$/i);
+            if (addMatch) {
+                const text = addMatch[1].trim();
+                if (!text) { showToast('⚠️ Task name not detected.', '#ff4d4d'); return; }
+                if (!currentUser) { showToast('⚠️ Sign in first.', '#ff4d4d'); return; }
+                const { data, error } = await sb.from('tasks').insert({
+                    user_id: currentUser.id, text, priority: 'medium',
+                    tags: [], completed: false, scheduled_time: null,
+                    reminder_offset: 0, reminder_sent: false, start_notif_sent: false,
+                }).select().single();
+                if (error) { showToast('⚠️ Could not add task.', '#ff4d4d'); return; }
+                tasks.unshift(dbToLocal(data));
+                renderTasks();
+                showToast(`✅ Added: "${text}"`, '#2ea043');
+                speakOut(`Task added: ${text}`);
+                return;
+            }
+
+            // COMPLETE TASK — "complete [task name]" / "mark done [task name]"
+            const doneMatch = cmd.match(/^(?:complete|mark done|finish)(?: task)? (.+)$/i);
+            if (doneMatch) {
+                const name = doneMatch[1].toLowerCase();
+                const task = tasks.find(t => !t.completed && t.text.toLowerCase().includes(name));
+                if (!task) { showToast(`⚠️ Task not found: "${name}"`, '#ff4d4d'); speakOut('Task not found'); return; }
+                await toggleComplete(task.id);
+                showToast(`✅ Completed: "${task.text}"`, '#2ea043');
+                speakOut(`Marked done: ${task.text}`);
+                return;
+            }
+
+            // DELETE TASK — "delete [task name]" / "remove [task name]"
+            const delMatch = cmd.match(/^(?:delete|remove)(?: task)? (.+)$/i);
+            if (delMatch) {
+                const name = delMatch[1].toLowerCase();
+                const task = tasks.find(t => t.text.toLowerCase().includes(name));
+                if (!task) { showToast(`⚠️ Task not found: "${name}"`, '#ff4d4d'); return; }
+                await deleteTask(task.id);
+                speakOut(`Deleted: ${task.text}`);
+                return;
+            }
+
+            // SHOW FILTER — "show pending/completed/all/scheduled"
+            const filterMatch = cmd.match(/^show (all|pending|completed|scheduled)(?: tasks?)?$/i);
+            if (filterMatch) {
+                const f = filterMatch[1].toLowerCase();
+                const btn = [...document.querySelectorAll('.filter-btn')].find(b => b.textContent.toLowerCase().includes(f));
+                if (btn) { setFilter(f, btn); speakOut(`Showing ${f} tasks`); }
+                return;
+            }
+
+            // STATUS / SUMMARY
+            if (cmd.includes('how many') || cmd.includes('status') || cmd.includes('summary')) {
+                const total = tasks.length, done = tasks.filter(t=>t.completed).length;
+                const msg = `You have ${total} tasks, ${done} completed, ${total-done} pending.`;
+                showToast('📊 ' + msg, '#a371f7');
+                speakOut(msg);
+                return;
+            }
+
+            showToast(`🤔 Didn't understand: "${cmd}". Try "add task [name]" or "show pending".`, '#e3b341');
+        }
+
+        function speakOut(text) {
+            if (!window.speechSynthesis) return;
+            window.speechSynthesis.cancel();
+            const utt = new SpeechSynthesisUtterance(text);
+            utt.rate = 1.1; utt.pitch = 1;
+            window.speechSynthesis.speak(utt);
+        }
+    </script>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!--  🤖  FEATURE 3: AI ASSISTANT (Gemini-powered)                -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <script>
+const GEMINI_API_KEY = 'AIzaSyBMVwjEBNfOp4JP7NjcZ3RFP48EhhjW0hc'; // 🔑 Keep your key secure
+const GEMINI_API = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
+
+let aiOpen = false;
+let aiHistory = [];
+
+// ── Personal, human-centered draft state machine ──
+let draft = null;
+
+function resetDraft() {
+    draft = null;
+}
+
+function toggleAI() {
+    try {
+        aiOpen = !aiOpen;
+        document.getElementById('aiPanel').classList.toggle('open', aiOpen);
+        if (aiOpen && aiHistory.length === 0) {
+            // Personalizing based on active username if they're authenticated
+            const name = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || '';
+            const greeting = name ? `Hey ${name}! ` : `Hey there! `;
+            
+            addAIMessage('bot', `${greeting}I'm Nova 👋 Your personal productivity sidekick inside TaskNova.\n\nThink of me as a second brain—I know what's on your plate, can map out new schedules or priorities for you instantly, or we can just talk through your day. What are we tracking today?`);
+        }
+    } catch(e) {
+        console.error('toggleAI error:', e);
+    }
+}
+
+function aiQuick(prompt) {
+    document.getElementById('aiInput').value = prompt;
+    sendAI();
+}
+
+function buildTaskContext() {
+    if (!tasks || tasks.length === 0) return "No active tasks right now. Fresh slate!";
+    return tasks.map(t => `- [${t.completed ? 'x' : ' '}] ${t.text} (${t.priority} priority${t.scheduled_time ? ', scheduled: ' + new Date(t.scheduled_time).toLocaleString() : ''})`).join('\n');
+}
+
+// ── Smart Conversational Flow Helper ──
+async function handleDraftFlow(msg) {
+    const m = msg.toLowerCase().trim();
+
+    // Catch generic negative or cancellation intents early
+    const wantsCancel = /cancel|forget it|nevermind|delete|abort|stop|no\b/i.test(m);
+    const wantsConfirm = /yes\b|yep|sure|confirm|do it|add it|go ahead/i.test(m);
+    const wantsSchedule = /schedule|date|time|when/i.test(m);
+    const wantsPriority = /priority|importance|level/i.test(m);
+
+    // Context-aware: If the user says "delete" or "no" during confirmation/editing, cancel the draft
+    if (wantsCancel) {
+        resetDraft();
+        addAIMessage('bot', `No worries at all, I've cleared that draft! Nothing was added. Let me know what else you'd like to work on. 😊`);
+        return true;
+    }
+
+    // ── STAGE: CONFIRM ──
+    if (!draft.stage || draft.stage === 'confirm') {
+        if (wantsConfirm) {
+            await commitDraft();
+            return true;
+        }
+
+        // If user specifies a new priority directly (e.g., "change priority to medium" or just "medium")
+        let targetedPriority = null;
+        if (/high|urgent|critical/i.test(m)) targetedPriority = 'high';
+        else if (/medium|moderate|normal/i.test(m)) targetedPriority = 'medium';
+        else if (/low|chill|minor/i.test(m)) targetedPriority = 'low';
+
+        if (targetedPriority) {
+            draft.priority = targetedPriority;
+            addAIMessage('bot', `Switched the priority to 🟡 **${targetedPriority}** for you!`);
+            showDraftConfirm();
+            return true;
+        }
+
+        // If they ask to change priority explicitly without giving a value
+        if (wantsPriority) {
+            draft.stage = 'priority';
+            addAIMessage('bot', `Let's adjust that priority. What feels right for this task?\n\n🔴 **High** (Needs focus now)\n🟡 **Medium** (Important but flexible)\n🟢 **Low** (Whenever you get around to it)`);
+            return true;
+        }
+
+        // If they ask to change schedule/date explicitly
+        if (wantsSchedule) {
+            draft.stage = 'datetime';
+            addAIMessage('bot', `Let's lock down a time for **"${draft.text}"**. When should we set this for?\n*(Feel free to say something like "today at 4pm" or "tomorrow morning")*`);
+            return true;
+        }
+
+        // Catch-all fallbacks to remain supportive and deeply human
+        addAIMessage('bot', `I'm ready whenever you are! Just say **yes** to save it, **no** to toss it out, or tell me exactly what needs tweaking (like changing the title or swapping the priority).`);
+        return true;
+    }
+
+    // ── STAGE: PRIORITY SELECTION ──
+    if (draft.stage === 'priority') {
+        let pri = null;
+        if (/high|urgent|critical/i.test(m)) pri = 'high';
+        else if (/medium|moderate|normal/i.test(m)) pri = 'medium';
+        else if (/low|chill|minor/i.test(m)) pri = 'low';
+
+        if (pri) {
+            draft.priority = pri;
+            // SMART FIX: Check if date is already set so we don't ask repetitive questions!
+            if (draft.scheduledTime) {
+                draft.stage = 'confirm';
+                addAIMessage('bot', `Updated to **${pri} priority**! Let's check everything over.`);
+                showDraftConfirm();
+            } else {
+                draft.stage = 'scheduled';
+                addAIMessage('bot', `Got it, set to **${pri} priority**. Should we schedule a specific date and deadline for this one? (yes / no)`);
+            }
+            return true;
+        }
+        addAIMessage('bot', `Hmm, didn't catch that. Should it be 🔴 **High**, 🟡 **Medium**, or 🟢 **Low**?`);
+        return true;
+    }
+
+    // ── STAGE: CHOOSE IF SCHEDULED ──
+    if (draft.stage === 'scheduled') {
+        if (/yes|yep|sure|track|schedule/i.test(m)) {
+            draft.stage = 'datetime';
+            addAIMessage('bot', `Awesome. When should it happen? Give me a day or exact time (e.g., "today at 3pm", "Friday morning").`);
+            return true;
+        }
+        if (/no|skip|not now|nope/i.test(m)) {
+            draft.scheduledTime = null;
+            draft.stage = 'confirm';
+            showDraftConfirm();
+            return true;
+        }
+        addAIMessage('bot', `Just let me know with a simple **yes** to schedule an exact time, or **no** to keep it open-ended!`);
+        return true;
+    }
+
+    // ── STAGE: DATETIME PARSING ──
+    if (draft.stage === 'datetime') {
+        if (/skip|none|no/i.test(m)) {
+            draft.scheduledTime = null;
+            draft.stage = 'confirm';
+            showDraftConfirm();
+            return true;
+        }
+        const parsed = parseNaturalDate(msg);
+        if (parsed && !isNaN(parsed)) {
+            draft.scheduledTime = parsed.toISOString();
+            draft.stage = 'confirm';
+            showDraftConfirm();
+            return true;
+        }
+        addAIMessage('bot', `I couldn't quite translate that time. Try something simple like **"today 5pm"**, **"tomorrow morning"**, or write out a date like **"May 25th 9:30am"**!`);
+        return true;
+    }
+
+    return false;
+}
+
+function showDraftConfirm() {
+    const priEmoji = { high:'🔴', medium:'🟡', low:'🟢' }[draft.priority] || '🟡';
+    const formattedPriority = draft.priority.charAt(0).toUpperCase() + draft.priority.slice(1);
+    
+    const timeString = draft.scheduledTime ? 
+        `📅 **Scheduled for:** ${new Date(draft.scheduledTime).toLocaleString('en-IN', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})}` : 
+        `📅 **Scheduled:** No specific time set (open-ended)`;
+
+    addAIMessage('bot', 
+        `Looking good! Here is your quick task preview:\n\n` +
+        `📝 **"${draft.text}"**\n` +
+        `${priEmoji} **${formattedPriority}** priority\n` +
+        `${timeString}\n\n` +
+        `Ready to drop this into your list? Reply with a quick **yes** to confirm, **no** to abort, or simply tell me what to change!`
+    );
+}
+
+async function commitDraft() {
+    if (!currentUser) {
+        resetDraft();
+        addAIMessage('bot', '⚠️ Oh look at that, it looks like you were signed out. Please sign in to lock in your tasks!');
+        return;
+    }
+
+    const { data: nd, error } = await sb.from('tasks').insert({
+        user_id: currentUser.id,
+        text: draft.text,
+        priority: draft.priority,
+        tags: [],
+        completed: false,
+        scheduled_time: draft.scheduledTime || null,
+        reminder_offset: 0,
+        reminder_sent: false,
+        start_notif_sent: false,
+    }).select().single();
+
+    if (!error) {
+        tasks.unshift(dbToLocal(nd));
+        renderTasks();
+        if (draft.scheduledTime) scheduleLocalNotification(dbToLocal(nd));
+        
+        try { confetti({ particleCount: 60, spread: 40, origin: { y: 0.85 } }); } catch(e){}
+        
+        addAIMessage('bot', `Boom! 🚀 **"${draft.text}"** has been safely added to your workspace. What's next on our agenda?`);
+    } else {
+        addAIMessage('bot', `Ah, I hit a slight snag saving that to the database. Let's try confirming one more time?`);
+    }
+    resetDraft();
+}
+
+// ── Simple Natural Language Parser ──
+function parseNaturalDate(str) {
+    const m = str.toLowerCase().trim();
+    let base = new Date();
+    
+    if (m.includes('today')) {
+        // preserve current date
+    } else if (m.includes('tomorrow')) {
+        base.setDate(base.getDate() + 1);
+    } else {
+        const match = m.match(/(\d{1,2})\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i);
+        if (match) {
+            const day = parseInt(match[1]);
+            const months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+            const monthIdx = months.indexOf(match[2].toLowerCase().slice(0,3));
+            if (monthIdx !== -1) {
+                base.setMonth(monthIdx, day);
+                if (base < new Date() && !m.includes('2026')) {
+                    // assuming upcoming year unless spec
+                }
+            }
+        }
+    }
+    
+    // Time matching (e.g. 11:15 am, 3pm, 14:00)
+    const timeMatch = m.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+    if (timeMatch) {
+        let h = parseInt(timeMatch[1]);
+        const min = timeMatch[2] ? parseInt(timeMatch[2]) : 0;
+        const ampm = timeMatch[3];
+        if (ampm && ampm.toLowerCase() === 'pm' && h < 12) h += 12;
+        if (ampm && ampm.toLowerCase() === 'am' && h === 12) h = 0;
+        base.setHours(h, min, 0, 0);
+    } else {
+        base.setHours(9, 0, 0, 0); // Default smart backup time
+    }
+    return isNaN(base) ? null : base;
+}
+
+// ── Core Message Processor & LLM Integration ──
+async function sendAI() {
+    const input = document.getElementById('aiInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    addAIMessage('user', msg);
+    input.value = '';
+    input.style.height = 'auto';
+    document.getElementById('aiSendBtn').disabled = true;
+
+    // intercept if currently in an active wizard/draft configuration 
+    if (draft) {
+        await handleDraftFlow(msg);
+        document.getElementById('aiSendBtn').disabled = false;
+        return;
+    }
+
+    aiHistory.push({ role: 'user', content: msg });
+    const thinkId = addAIMessage('bot', 'Thinking...', true);
+
+    const systemPrompt = `You are Nova, an exceptionally warm, perceptive, and friendly AI assistant living inside TaskNova. 
+Current timestamp: ${new Date().toLocaleString()}
+User's workspace view:
+${buildTaskContext()}
+
+Your Identity & Rules:
+1. Always sound like an encouraging, helpful colleague rather than a corporate robot assistant.
+2. Address users conversationally. Avoid standard markdown bullet listings or repetitive phrases.
+3. If they ask to add, plan or schedule anything, formulate your response as an implicit structured request using the JSON schema below.
+
+If the user wants to add/schedule a task, reply ONLY with a raw valid JSON object:
+{
+  "action": "add_guided",
+  "text": "Task name here",
+  "priority": "high" | "medium" | "low",
+  "datetime": "natural date phrase if given, otherwise null"
+}
+
+If they want to complete a task:
+{ "action": "complete", "text": "task text keywords" }
+
+If they want to drop/delete a task:
+{ "action": "delete", "text": "task text keywords" }
+
+For regular chat, encouragement, or inquiries, respond naturally using friendly paragraphs and occasional emojis. Keep your sentences diverse and engaging.`;
+
+    try {
+        const geminiContents = aiHistory.map(m => ({
+            role: m.role === 'model' ? 'model' : 'user',
+            parts: [{ text: m.content }]
+        }));
+
+        const res = await fetch(GEMINI_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                system_instruction: { parts: [{ text: systemPrompt }] },
+                contents: geminiContents,
+                generationConfig: { maxOutputTokens: 800, temperature: 0.82 }
+            })
+        });
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "Hmm, my connection flickered for a second. Mind repeating that?";
+        document.getElementById(thinkId)?.remove();
+
+        let handled = false;
+        try {
+            const clean = reply.replace(/```json|```/g, '').trim();
+            const parsed = JSON.parse(clean);
+
+            if (parsed.action === 'add_guided') {
+                handled = true;
+                const extractedPriority = ['high','medium','low'].includes(parsed.priority) ? parsed.priority : null;
+                const extractedDatetime = parsed.datetime ? parseNaturalDate(parsed.datetime) : null;
+
+                draft = {
+                    text: parsed.text,
+                    priority: extractedPriority || 'medium',
+                    scheduledTime: extractedDatetime ? extractedDatetime.toISOString() : null,
+                    stage: null
+                };
+
+                if (extractedPriority && extractedDatetime) {
+                    draft.stage = 'confirm';
+                    const priEmoji = { high:'🔴', medium:'🟡', low:'🟢' }[draft.priority];
+                    addAIMessage('bot', `Awesome choice! I've put together the draft for **"${draft.text}"**.\n\n` + `${priEmoji} **${draft.priority.toUpperCase()}** priority\n📅 Scheduled for: ${extractedDatetime.toLocaleString('en-IN')}\n\nReady to append this to your workspace? Say **yes** to save!`);
+                } else if (extractedPriority) {
+                    draft.stage = 'scheduled';
+                    addAIMessage('bot', `Got it! Let's set up **"${draft.text}"** with a 🔴 **High priority**. Would you like to pick a specific date and time for it as well?`);
+                } else {
+                    draft.stage = 'priority';
+                    addAIMessage('bot', `Let's draft **"${draft.text}"** right now! What importance priority should we assign to this?\n\n🔴 **High**\n🟡 **Medium**\n🟢 **Low**`);
+                }
+            } else if (parsed.action === 'complete') {
+                handled = true;
+                const task = tasks.find(t => !t.completed && t.text.toLowerCase().includes(parsed.text.toLowerCase()));
+                if (task) {
+                    await toggleComplete(task.id);
+                    addAIMessage('bot', `Fantastic job! 🎉 Marked **"${task.text}"** as complete. Keep that momentum rolling!`);
+                } else {
+                    addAIMessage('bot', `I checked your list but couldn't find an open task containing "${parsed.text}". Double-check your list for me?`);
+                }
+            } else if (parsed.action === 'delete') {
+                handled = true;
+                const task = tasks.find(t => t.text.toLowerCase().includes(parsed.text.toLowerCase()));
+                if (task) {
+                    await deleteTask(task.id);
+                    addAIMessage('bot', `Done! 🗑️ Took care of that and scrubbed **"${task.text}"** off your dashboard.`);
+                } else {
+                    addAIMessage('bot', `I didn't see any tasks matching "${parsed.text}" to remove. Let me know if it's named something else!`);
+                }
+            }
+        } catch(e) {}
+
+        if (!handled) {
+            addAIMessage('bot', reply);
+            aiHistory.push({ role: 'model', content: reply });
+        }
+    } catch (err) {
+        console.error(err);
+        document.getElementById(thinkId)?.remove();
+        addAIMessage('bot', "Ah, I ran into an unexpected connection error. Let's try that prompt once more!");
+    } finally {
+        document.getElementById('aiSendBtn').disabled = false;
+    }
+}
+
+function addAIMessage(sender, text, isThinking = false) {
+    const box = document.getElementById('aiMessages');
+    const msgId = 'msg-' + Math.random().toString(36).substr(2, 9);
+    const div = document.createElement('div');
+    div.id = msgId;
+    div.className = `ai-msg ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
+
+    // Render **bold** markdown and newlines
+    let formattedText = text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+    const bubbleClass = isThinking ? 'ai-msg-bubble thinking' : 'ai-msg-bubble';
+
+    // For bot messages, add a small "speak" button
+    const speakBtn = (sender === 'bot' && !isThinking)
+        ? `<button class="voice-tts-btn" onclick="novaSpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
+        : '';
+
+    div.innerHTML = `<div class="${bubbleClass}">${formattedText}</div>${speakBtn}`;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return msgId;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  🎙️  VOICE CONVERSATION with Nova (Gemini-powered)
+// ══════════════════════════════════════════════════════════════
+(function() {
+    let aiVoiceActive = false;
+    let aiVoiceRec = null;
+    let novaIsSpeaking = false;
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    window.toggleAIVoice = function() {
+        if (!SpeechRec) {
+            showToast('⚠️ Voice not supported. Please use Chrome or Edge.', '#ff4d4d');
+            return;
+        }
+        if (aiVoiceActive) {
+            stopAIVoice();
+        } else {
+            startAIVoice();
+        }
+    };
+
+    function startAIVoice() {
+        // Stop any ongoing TTS first
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        novaIsSpeaking = false;
+
+        aiVoiceRec = new SpeechRec();
+        aiVoiceRec.lang = 'en-US';
+        aiVoiceRec.interimResults = false;
+        aiVoiceRec.continuous = false;
+
+        aiVoiceRec.onstart = () => {
+            aiVoiceActive = true;
+            setVoiceState('listening');
+            showToast('🎙️ Listening… speak to Nova', '#a371f7');
+        };
+
+        aiVoiceRec.onresult = async (e) => {
+            const transcript = e.results[0][0].transcript.trim();
+            if (!transcript) { stopAIVoice(); return; }
+
+            setVoiceState('processing');
+            // Put transcript into chat as user message and send to AI
+            document.getElementById('aiInput').value = transcript;
+            addAIMessage('user', transcript);
+            document.getElementById('aiInput').value = '';
+
+            // Route through existing AI logic (which handles add/delete/complete + Gemini)
+            // We replicate the sendAI flow but capture the bot reply for TTS
+            await sendAIVoice(transcript);
+            setVoiceState('idle');
+        };
+
+        aiVoiceRec.onerror = (err) => {
+            if (err.error !== 'no-speech') {
+                showToast('🎙️ Error: ' + err.error, '#ff4d4d');
+            }
+            stopAIVoice();
+        };
+
+        aiVoiceRec.onend = () => {
+            // If we're still in active mode and not processing, restart to keep listening
+            if (aiVoiceActive) {
+                stopAIVoice();
+            }
+        };
+
+        aiVoiceRec.start();
+    }
+
+    function stopAIVoice() {
+        aiVoiceActive = false;
+        if (aiVoiceRec) { try { aiVoiceRec.stop(); } catch(e){} aiVoiceRec = null; }
+        setVoiceState('idle');
+    }
+
+    function setVoiceState(state) {
+        const btn = document.getElementById('aiVoiceBtn');
+        const statusBar = document.getElementById('aiVoiceStatus');
+        const statusDot = document.getElementById('vsStatusDot');
+        const statusText = document.getElementById('vsStatusText');
+        const wave = document.getElementById('vsWave');
+
+        btn.classList.remove('voice-on', 'voice-processing');
+        statusBar.classList.remove('show');
+
+        if (state === 'listening') {
+            btn.classList.add('voice-on');
+            btn.title = 'Stop voice conversation';
+            btn.textContent = '🔴';
+            statusBar.classList.add('show');
+            statusDot.className = 'vs-dot';
+            statusText.textContent = 'Listening… speak now';
+            wave.style.display = 'flex';
+            wave.querySelectorAll('span').forEach(s => s.style.background = 'var(--danger)');
+        } else if (state === 'processing') {
+            btn.classList.add('voice-processing');
+            btn.title = 'Processing…';
+            btn.textContent = '⏳';
+            statusBar.classList.add('show');
+            statusDot.className = 'vs-dot processing';
+            statusText.textContent = 'Nova is thinking…';
+            wave.style.display = 'flex';
+            wave.querySelectorAll('span').forEach(s => s.style.background = 'var(--accent)');
+        } else {
+            btn.classList.remove('voice-on', 'voice-processing');
+            btn.title = 'Voice conversation with Nova';
+            btn.textContent = '🎙️';
+        }
+    }
+
+    // Voice-aware sendAI: same as sendAI() but auto-speaks the bot reply
+    async function sendAIVoice(msg) {
+        if (draft) {
+            await handleDraftFlow(msg);
+            // Speak the last bot message
+            speakLastBotMessage();
+            return;
+        }
+
+        aiHistory.push({ role: 'user', content: msg });
+        const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
+        document.getElementById('aiSendBtn').disabled = true;
+
+        const systemPrompt = `You are Nova, an exceptionally warm, perceptive, and friendly AI assistant living inside TaskNova. 
+Current timestamp: ${new Date().toLocaleString()}
+User's workspace view:
+${buildTaskContext()}
+
+Your Identity & Rules:
+1. Always sound like an encouraging, helpful colleague rather than a corporate robot assistant.
+2. Address users conversationally. Keep responses concise (2-3 sentences max) since this is a VOICE conversation.
+3. No markdown, no bullet points, no bold text - speak in natural sentences only.
+4. If they ask to add, plan or schedule anything, formulate your response as a JSON object.
+
+If the user wants to add/schedule a task, reply ONLY with a raw valid JSON object:
+{"action":"add_guided","text":"Task name here","priority":"high"|"medium"|"low","datetime":"natural date phrase if given, otherwise null"}
+
+If they want to complete a task:
+{"action":"complete","text":"task text keywords"}
+
+If they want to drop/delete a task:
+{"action":"delete","text":"task text keywords"}
+
+For regular chat, respond in 1-2 short natural sentences without any markdown formatting.`;
+
+        try {
+            const geminiContents = aiHistory.map(m => ({
+                role: m.role === 'model' ? 'model' : 'user',
+                parts: [{ text: m.content }]
+            }));
+
+            const res = await fetch(GEMINI_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    system_instruction: { parts: [{ text: systemPrompt }] },
+                    contents: geminiContents,
+                    generationConfig: { maxOutputTokens: 300, temperature: 0.8 }
+                })
+            });
+
+            const data = await res.json();
+            if (data.error) throw new Error(data.error.message);
+
+            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "Sorry, I had a connection issue. Could you try again?";
+            document.getElementById(thinkId)?.remove();
+
+            let handled = false;
+            try {
+                const clean = reply.replace(/```json|```/g, '').trim();
+                const parsed = JSON.parse(clean);
+
+                if (parsed.action === 'add_guided') {
+                    handled = true;
+                    const extractedPriority = ['high','medium','low'].includes(parsed.priority) ? parsed.priority : 'medium';
+                    const extractedDatetime = parsed.datetime ? parseNaturalDate(parsed.datetime) : null;
+
+                    draft = {
+                        text: parsed.text,
+                        priority: extractedPriority,
+                        scheduledTime: extractedDatetime ? extractedDatetime.toISOString() : null,
+                        stage: null
+                    };
+
+                    if (extractedPriority && extractedDatetime) {
+                        draft.stage = 'confirm';
+                        const botReply = `I've drafted "${draft.text}" with ${draft.priority} priority, scheduled for ${extractedDatetime.toLocaleString('en-IN', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})}. Should I save it?`;
+                        addAIMessage('bot', botReply);
+                        novaSpeak(null, botReply);
+                    } else {
+                        draft.stage = 'priority';
+                        const botReply = `Sure! What priority should I set for "${draft.text}"? High, medium, or low?`;
+                        addAIMessage('bot', botReply);
+                        novaSpeak(null, botReply);
+                    }
+                } else if (parsed.action === 'complete') {
+                    handled = true;
+                    const task = tasks.find(t => !t.completed && t.text.toLowerCase().includes(parsed.text.toLowerCase()));
+                    if (task) {
+                        await toggleComplete(task.id);
+                        const botReply = `Done! I've marked "${task.text}" as complete. Great work!`;
+                        addAIMessage('bot', botReply);
+                        novaSpeak(null, botReply);
+                    } else {
+                        const botReply = `I couldn't find a task matching "${parsed.text}". Want to try a different name?`;
+                        addAIMessage('bot', botReply);
+                        novaSpeak(null, botReply);
+                    }
+                } else if (parsed.action === 'delete') {
+                    handled = true;
+                    const task = tasks.find(t => t.text.toLowerCase().includes(parsed.text.toLowerCase()));
+                    if (task) {
+                        await deleteTask(task.id);
+                        const botReply = `Done! I've removed "${task.text}" from your list.`;
+                        addAIMessage('bot', botReply);
+                        novaSpeak(null, botReply);
+                    } else {
+                        const botReply = `I couldn't find a task matching "${parsed.text}". Could you describe it differently?`;
+                        addAIMessage('bot', botReply);
+                        novaSpeak(null, botReply);
+                    }
+                }
+            } catch(e) {}
+
+            if (!handled) {
+                addAIMessage('bot', reply);
+                aiHistory.push({ role: 'model', content: reply });
+                novaSpeak(null, reply);
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById(thinkId)?.remove();
+            const errMsg = "I hit a connection issue. Let's try that again!";
+            addAIMessage('bot', errMsg);
+            novaSpeak(null, errMsg);
+        } finally {
+            document.getElementById('aiSendBtn').disabled = false;
+        }
+    }
+
+    function speakLastBotMessage() {
+        const box = document.getElementById('aiMessages');
+        const botMsgs = box.querySelectorAll('.bot-msg .ai-msg-bubble');
+        if (botMsgs.length === 0) return;
+        const last = botMsgs[botMsgs.length - 1];
+        const rawText = last.innerText || last.textContent;
+        novaSpeak(null, rawText);
+    }
+
+    // Global speak function - called by "🔊 Speak" buttons and voice mode
+    window.novaSpeak = function(btnEl, overrideText) {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+
+        const text = overrideText || (btnEl && btnEl.getAttribute('data-text')) || '';
+        if (!text) return;
+
+        const utt = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, '').replace(/\*\*/g, ''));
+        utt.rate = 1.05;
+        utt.pitch = 1.05;
+        utt.volume = 1;
+
+        // Try to pick a pleasant female voice
+        const voices = window.speechSynthesis.getVoices();
+        const preferred = voices.find(v =>
+            /google uk english female|samantha|karen|victoria|moira|fiona|zira/i.test(v.name)
+        ) || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'))
+          || voices.find(v => v.lang.startsWith('en'))
+          || null;
+        if (preferred) utt.voice = preferred;
+
+        novaIsSpeaking = true;
+        utt.onend = () => { novaIsSpeaking = false; };
+        window.speechSynthesis.speak(utt);
+
+        if (btnEl) {
+            btnEl.textContent = '🔇 Stop';
+            btnEl.onclick = () => { window.speechSynthesis.cancel(); btnEl.textContent = '🔊 Speak'; btnEl.onclick = () => novaSpeak(btnEl); };
+        }
+    };
+
+    // Preload voices
+    if (window.speechSynthesis) {
+        window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+})();
+</script>
+    <script>
         const cursorEl=document.getElementById('cursor'),ringEl=document.getElementById('cursor-ring');
         let cx=0,cy=0,rx=0,ry=0;
         document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cursorEl.style.left=cx+'px';cursorEl.style.top=cy+'px';});
