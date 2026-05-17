@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TaskNova – Contact Us</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
@@ -191,7 +192,7 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="tasks.html">Manage Tasks</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="contact.html" class="active">Contact us</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
         </ul>
         <div class="nav-auth">
             <a href="profile.html" class="nav-user-chip" id="navUserChip" title="View profile" style="text-decoration:none">
@@ -552,34 +553,63 @@
             setTimeout(() => t.className = 'toast', 3500);
         }
 
-        // Form submission
-        function handleSubmit() {
-            const name    = document.getElementById('fname').value.trim();
-            const email   = document.getElementById('femail').value.trim();
-            const subject = document.getElementById('fsubject').value.trim();
-            const message = document.getElementById('fmessage').value.trim();
-            const topic   = document.querySelector('#topicChips .chip.selected')?.dataset.val || 'General';
+        // ── EmailJS Config (same keys as tasks.html) ─────────────────
+        const EJS_PUBLIC_KEY     = '0Ud5h7LBwcvc3zSqZ';
+        const EJS_SERVICE_ID     = 'service_vrt3fw9';
+        // const EJS_TEMPLATE_NOTIFY  = 'template_065pt9r'; // email to YOU (reusing tasks.html template)
+        const EJS_TEMPLATE_CONFIRM = 'template_wsj96pt'; // auto-reply to user
+        emailjs.init(EJS_PUBLIC_KEY);
 
-            if (!name) { showToast('⚠️ Please enter your name.', 'error'); return; }
+        // Form submission (EmailJS)
+        async function handleSubmit() {
+            const name     = document.getElementById('fname').value.trim();
+            const email    = document.getElementById('femail').value.trim();
+            const subject  = document.getElementById('fsubject').value.trim();
+            const message  = document.getElementById('fmessage').value.trim();
+            const topic    = document.querySelector('#topicChips .chip.selected')?.dataset.val || 'General';
+            const priority = activePriority;
+
+            if (!name)                         { showToast('⚠️ Please enter your name.', 'error'); return; }
             if (!email || !email.includes('@')) { showToast('⚠️ Please enter a valid email.', 'error'); return; }
-            if (!subject) { showToast('⚠️ Please add a subject.', 'error'); return; }
-            if (!message || message.length < 10) { showToast('⚠️ Message too short — tell us more!', 'error'); return; }
+            if (!subject)                      { showToast('⚠️ Please add a subject.', 'error'); return; }
+            if (!message || message.length < 10){ showToast('⚠️ Message too short — tell us more!', 'error'); return; }
 
             const btn = document.getElementById('submitBtn');
             const txt = document.getElementById('submitText');
             btn.disabled = true; txt.textContent = 'Sending…';
+const templateParams = {
+    email:         email,    // matches {{email}} in To Email field
+    name:          name,     // matches {{name}} in body
+    title:         subject,  // matches {{title}} in body
+    from_name:     name,
+    from_email:    email,
+    subject:       subject,
+    message:       message,
+    topic:         topic,
+    priority:      priority,
+    task_name:     subject,
+    scheduled_time: new Date().toLocaleString(),
+};
+            try {
+                // 1️⃣ Notify YOU
+                // await emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_NOTIFY, templateParams);
+                // 2️⃣ Confirm to USER
+                await emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_CONFIRM, templateParams);
 
-            // Simulate send (replace with real EmailJS / Supabase call as needed)
-            setTimeout(() => {
-                btn.disabled = false; txt.textContent = 'Send Message →';
-                showToast(`✅ Message sent, ${name.split(' ')[0]}! We'll reply to ${email} soon.`, 'success');
-                document.getElementById('fname').value = '';
-                document.getElementById('femail').value = '';
+                showToast(`✅ Message sent, ${name.split(' ')[0]}! Check ${email} for confirmation.`, 'success');
+                document.getElementById('fname').value    = '';
+                document.getElementById('femail').value   = '';
                 document.getElementById('fsubject').value = '';
                 document.getElementById('fmessage').value = '';
                 chips.forEach(x => x.classList.remove('selected'));
                 chips[0].classList.add('selected');
-            }, 1400);
+
+            } catch (err) {
+                console.error('EmailJS error:', err);
+                showToast(`❌ Error ${err.status || ''}: ${err.text || 'Something went wrong.'}`, 'error');
+            } finally {
+                btn.disabled = false; txt.textContent = 'Send Message →';
+            }
         }
     </script>
 </body>
