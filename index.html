@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProdAIify – Smart Task Manager</title>
+    <title>Prodify – Smart Task Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -132,7 +132,7 @@
 
     <nav class="navbar" id="navbar">
         <a href="index.html" class="nav-logo">
-            <img class="logo-icon" src="assets/logo.png" alt="ProdAIify logo" width="36" height="36" loading="eager" decoding="async"> ProdAIify
+            <img class="logo-icon" src="assets/logo.png" alt="ProdAIify logo" width="36" height="36" loading="eager" decoding="async"> Prodify
         </a>
         <ul class="nav-links">
             <li><a href="index.html" class="active">Home</a></li>
@@ -153,11 +153,11 @@
 
     <section class="hero">
         <div class="hero-eyebrow">
-            <span class="eyebrow-dot"></span> Smart ProdAIuctivity for Modern Teams
+            <span class="eyebrow-dot"></span> Smart Productivity for Modern Teams
         </div>
         <h1 class="hero-title">
             <span class="line1">Master Your</span>
-            <span class="line2">ProdAIuctivity</span>
+            <span class="line2">Productivity</span>
         </h1>
         <p class="hero-sub">Transform chaos into clarity. Add, track, filter, and conquer your tasks with a dashboard built for deep focus and real efficiency.</p>
         <div class="quote-box">
@@ -232,7 +232,7 @@
         <div class="ai-header">
             <div class="ai-avatar">🤖</div>
             <div class="ai-header-info">
-                <div class="ai-header-name">ProdAIAI</div>
+                <div class="ai-header-name">ProdAI</div>
                 <div class="ai-header-status">Online · Powered by Groq</div>
             </div>
             <button class="ai-close" onclick="toggleAI()">✕</button>
@@ -285,7 +285,7 @@ const GROQ_API_KEY = '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';
         document.getElementById('aiPanel').classList.toggle('open', aiOpen);
         if (aiOpen && aiHistory.length === 0) {
             const greeting = currentUserName ? `Hey ${currentUserName}! ` : 'Hey there! ';
-            addAIMessage('bot', `${greeting}I'm ProdAI 👋 Your AI guide for ProdAIify.\n\nI can walk you through features, share ProdAIuctivity tips, or just help you figure out where to start. What's on your mind?`);
+            addAIMessage('bot', `${greeting}I'm ProdAI 👋 Your AI guide for Prodify.\n\nI can walk you through features, share Productivity tips, or just help you figure out where to start. What's on your mind?`);
         }
     }
 
@@ -325,12 +325,12 @@ const GROQ_API_KEY = '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';
         aiHistory.push({ role: 'user', content: msg });
         const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
 
-        const systemPrompt = `You are ProdAI, a warm, friendly AI assistant on the ProdAIify homepage.
-ProdAIify is a smart task manager with: task creation (with priority, tags, scheduled times), AI assistant (that's you!), email reminders, Google Calendar integration, voice commands inside the chat, background themes, and a confetti celebration when all tasks are done.
+        const systemPrompt = `You are ProdAI, a warm, friendly AI assistant on the Prodify homepage.
+Prodify is a smart task manager with: task creation (with priority, tags, scheduled times), AI assistant (that's you!), email reminders, Google Calendar integration, voice commands inside the chat, background themes, and a confetti celebration when all tasks are done.
 Current time: ${new Date().toLocaleString()}
 
 Your role here on the homepage:
-- Welcome visitors and help them understand ProdAIify's features
+- Welcome visitors and help them understand Prodify's features
 - Share ProdAIuctivity tips and motivation
 - Encourage users to sign in and try the task manager (tasks.html)
 - If someone says "take me to tasks" or wants to manage tasks, tell them to click "Start Managing Tasks" or go to tasks.html
@@ -444,7 +444,7 @@ Your role here on the homepage:
             const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
             document.getElementById('aiSendBtn').disabled = true;
 
-            const systemPrompt = `You are ProdAI, a warm AI assistant on the ProdAIify homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. ProdAIify helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
+            const systemPrompt = `You are ProdAI, a warm AI assistant on the Prodify homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. Prodify helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
 
             try {
                 const messages = [
