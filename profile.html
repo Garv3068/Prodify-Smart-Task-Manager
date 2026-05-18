@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prodify – Profile & Analytics</title>
+    <title>TaskNova – Profile & Analytics</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -17,11 +17,11 @@
             --radius: 16px; --radius-sm: 10px;
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(135deg, rgba(8,12,18,0.65) 0%, rgba(8,14,22,0.75) 50%, rgba(10,8,18,0.70) 100%), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: none; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(135deg, rgba(8,12,18,0.65) 0%, rgba(8,14,22,0.75) 50%, rgba(10,8,18,0.70) 100%), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: auto; }
 
-        #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: screen; }
+       /* #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: screen; }
         #cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(88,166,255,0.5); pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
-        #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+       */ #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .025;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
             background-size: 200px 200px; }
@@ -243,13 +243,13 @@
 <!-- NAVBAR -->
 <nav class="navbar">
     <a href="index.html" class="nav-logo">
-        <img class="logo-icon" src="assets/logo.png" alt="Prodify logo" width="36" height="36"> Prodify
+        <img class="logo-icon" src="assets/logo.png" alt="TaskNova logo" width="36" height="36"> TaskNova
     </a>
     <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="tasks.html">Manage Tasks</a></li>
         <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact us</a></li>
+            <li><a href="contact.html">Contact</a></li>
         <li><a href="profile.html" class="active">Profile</a></li>
     </ul>
     <div class="nav-auth">
@@ -273,7 +273,7 @@
             <div class="profile-email" id="heroEmail">—</div>
             <div class="badges">
                 <span class="badge badge-green"><span class="badge-dot"></span> Active</span>
-                <span class="badge badge-blue">🚀 Prodify Member</span>
+                <span class="badge badge-blue">🚀 TaskNova Member</span>
                 <span class="badge badge-blue" id="streakBadge">🔥 0 day streak</span>
             </div>
             <div class="profile-joined" id="heroJoined"></div>
@@ -443,7 +443,7 @@
 </main>
 
 <footer id="profileFooter" style="display:none">
-    <p>Prodify © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
+    <p>TaskNova © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
         <a href="tasks.html">Workspace →</a> &nbsp;|&nbsp; <a href="index.html">Home →</a>
     </p>
 </footer>
@@ -893,7 +893,7 @@
     const cursorEl=document.getElementById('cursor'),ringEl=document.getElementById('cursor-ring');
     let cx=0,cy=0,rx=0,ry=0;
     document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cursorEl.style.left=cx+'px';cursorEl.style.top=cy+'px';});
-    (function animCursor(){rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;ringEl.style.left=rx+'px';ringEl.style.top=ry+'px';requestAnimationFrame(animCursor);})();
+    // (function animCursor(){rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;ringEl.style.left=rx+'px';ringEl.style.top=ry+'px';requestAnimationFrame(animCursor);})();
 </script>
 <div class="toast-container" id="toastContainer" style="position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:10px"></div>
 </body>
