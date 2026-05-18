@@ -69,7 +69,7 @@
         @keyframes fadeUp { from { opacity:0; transform:translateY(30px) } to { opacity:1; transform:translateY(0) } }
         @media(max-width:768px) { .navbar { padding: 16px 20px; } .nav-links { display: none; } }
 
-        /* ── NOVA AI ASSISTANT ── */
+        /* ── prod AI ASSISTANT ── */
         .ai-fab { position:fixed; bottom:28px; right:28px; z-index:500; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--accent3),var(--accent2)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 6px 24px rgba(163,113,247,0.5); transition:all .3s; }
         .ai-fab:hover { transform:scale(1.1); box-shadow:0 10px 36px rgba(163,113,247,0.7); }
         .ai-fab .ai-badge { position:absolute; top:-4px; right:-4px; width:16px; height:16px; border-radius:50%; background:var(--success); border:2px solid var(--bg); animation:pulse 2s ease infinite; }
@@ -224,8 +224,8 @@
         }
     </script>
 
-    <!-- ── NOVA AI ASSISTANT FAB + PANEL ── -->
-    <button class="ai-fab" id="aiFab" title="Chat with Nova AI" onclick="toggleAI()">
+    <!-- ── prod AI ASSISTANT FAB + PANEL ── -->
+    <button class="ai-fab" id="aiFab" title="Chat with prod AI" onclick="toggleAI()">
         🤖<span class="ai-badge"></span>
     </button>
     <div class="ai-panel" id="aiPanel">
@@ -252,16 +252,16 @@
             </div>
         </div>
         <div class="ai-input-row">
-            <textarea class="ai-input" id="aiInput" placeholder="Ask Nova anything…" rows="1"
+            <textarea class="ai-input" id="aiInput" placeholder="Ask prod anything…" rows="1"
                 onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI();}"></textarea>
-            <button class="ai-voice-btn" id="aiVoiceBtn" title="Voice conversation with Nova" onclick="toggleAIVoice()">🎙️</button>
+            <button class="ai-voice-btn" id="aiVoiceBtn" title="Voice conversation with prod" onclick="toggleAIVoice()">🎙️</button>
             <button class="ai-send-btn" id="aiSendBtn" onclick="sendAI()">
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
             </button>
         </div>
     </div>
 
-    <!-- ── NOVA AI JS ── -->
+    <!-- ── prod AI JS ── -->
     <script>
 const GROQ_API_KEY = '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'; // 🔑 Replace with your key from https://console.groq.com/keys
         const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
@@ -285,7 +285,7 @@ const GROQ_API_KEY = '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';
         document.getElementById('aiPanel').classList.toggle('open', aiOpen);
         if (aiOpen && aiHistory.length === 0) {
             const greeting = currentUserName ? `Hey ${currentUserName}! ` : 'Hey there! ';
-            addAIMessage('bot', `${greeting}I'm Nova 👋 Your AI guide for Prodify.\n\nI can walk you through features, share productivity tips, or just help you figure out where to start. What's on your mind?`);
+            addAIMessage('bot', `${greeting}I'm prod 👋 Your AI guide for Prodify.\n\nI can walk you through features, share productivity tips, or just help you figure out where to start. What's on your mind?`);
         }
     }
 
@@ -304,7 +304,7 @@ const GROQ_API_KEY = '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';
         let formatted = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         const bubbleClass = isThinking ? 'ai-msg-bubble thinking' : 'ai-msg-bubble';
         const speakBtn = (sender === 'bot' && !isThinking)
-            ? `<button class="voice-tts-btn" onclick="novaSpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
+            ? `<button class="voice-tts-btn" onclick="prodSpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
             : '';
         div.innerHTML = `<div class="${bubbleClass}">${formatted}</div>${speakBtn}`;
         box.appendChild(div);
@@ -325,7 +325,7 @@ const GROQ_API_KEY = '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';
         aiHistory.push({ role: 'user', content: msg });
         const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
 
-        const systemPrompt = `You are Nova, a warm, friendly AI assistant on the Prodify homepage.
+        const systemPrompt = `You are prod, a warm, friendly AI assistant on the Prodify homepage.
 Prodify is a smart task manager with: task creation (with priority, tags, scheduled times), AI assistant (that's you!), email reminders, Google Calendar integration, voice commands inside the chat, background themes, and a confetti celebration when all tasks are done.
 Current time: ${new Date().toLocaleString()}
 
@@ -434,7 +434,7 @@ Your role here on the homepage:
             } else if (state === 'processing') {
                 btn.classList.add('voice-processing'); btn.textContent = '⏳';
                 bar.classList.add('show'); dot.className = 'vs-dot processing';
-                txt.textContent = 'Nova is thinking…';
+                txt.textContent = 'prod is thinking…';
             } else {
                 btn.textContent = '🎙️';
             }
@@ -444,7 +444,7 @@ Your role here on the homepage:
             const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
             document.getElementById('aiSendBtn').disabled = true;
 
-            const systemPrompt = `You are Nova, a warm AI assistant on the Prodify homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. Prodify helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
+            const systemPrompt = `You are prod, a warm AI assistant on the Prodify homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. Prodify helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
 
             try {
                 const messages = [
@@ -467,18 +467,18 @@ Your role here on the homepage:
                 document.getElementById(thinkId)?.remove();
                 addAIMessage('bot', reply);
                 aiHistory.push({ role: 'model', content: reply });
-                novaSpeak(null, reply);
+                prodSpeak(null, reply);
             } catch(err) {
                 document.getElementById(thinkId)?.remove();
                 const errMsg = "I hit a connection issue. Let's try again!";
                 addAIMessage('bot', errMsg);
-                novaSpeak(null, errMsg);
+                prodSpeak(null, errMsg);
             } finally {
                 document.getElementById('aiSendBtn').disabled = false;
             }
         }
 
-        window.novaSpeak = function(btnEl, overrideText) {
+        window.prodSpeak = function(btnEl, overrideText) {
             if (!window.speechSynthesis) return;
             window.speechSynthesis.cancel();
             const text = overrideText || (btnEl && btnEl.getAttribute('data-text')) || '';
@@ -492,7 +492,7 @@ Your role here on the homepage:
             window.speechSynthesis.speak(utt);
             if (btnEl) {
                 btnEl.textContent = '🔇 Stop';
-                btnEl.onclick = () => { window.speechSynthesis.cancel(); btnEl.textContent = '🔊 Speak'; btnEl.onclick = () => novaSpeak(btnEl); };
+                btnEl.onclick = () => { window.speechSynthesis.cancel(); btnEl.textContent = '🔊 Speak'; btnEl.onclick = () => prodSpeak(btnEl); };
             }
         };
 
