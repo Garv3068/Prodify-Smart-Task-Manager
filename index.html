@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prodify – Smart Task Manager</title>
+    <title>ProdAIify – Smart Task Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -69,7 +69,7 @@
         @keyframes fadeUp { from { opacity:0; transform:translateY(30px) } to { opacity:1; transform:translateY(0) } }
         @media(max-width:768px) { .navbar { padding: 16px 20px; } .nav-links { display: none; } }
 
-        /* ── prod AI ASSISTANT ── */
+        /* ── ProdAI AI ASSISTANT ── */
         .ai-fab { position:fixed; bottom:28px; right:28px; z-index:500; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--accent3),var(--accent2)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 6px 24px rgba(163,113,247,0.5); transition:all .3s; }
         .ai-fab:hover { transform:scale(1.1); box-shadow:0 10px 36px rgba(163,113,247,0.7); }
         .ai-fab .ai-badge { position:absolute; top:-4px; right:-4px; width:16px; height:16px; border-radius:50%; background:var(--success); border:2px solid var(--bg); animation:pulse 2s ease infinite; }
@@ -132,7 +132,7 @@
 
     <nav class="navbar" id="navbar">
         <a href="index.html" class="nav-logo">
-            <img class="logo-icon" src="assets/logo.png" alt="Prodify logo" width="36" height="36" loading="eager" decoding="async"> Prodify
+            <img class="logo-icon" src="assets/logo.png" alt="ProdAIify logo" width="36" height="36" loading="eager" decoding="async"> ProdAIify
         </a>
         <ul class="nav-links">
             <li><a href="index.html" class="active">Home</a></li>
@@ -153,11 +153,11 @@
 
     <section class="hero">
         <div class="hero-eyebrow">
-            <span class="eyebrow-dot"></span> Smart Productivity for Modern Teams
+            <span class="eyebrow-dot"></span> Smart ProdAIuctivity for Modern Teams
         </div>
         <h1 class="hero-title">
             <span class="line1">Master Your</span>
-            <span class="line2">Productivity</span>
+            <span class="line2">ProdAIuctivity</span>
         </h1>
         <p class="hero-sub">Transform chaos into clarity. Add, track, filter, and conquer your tasks with a dashboard built for deep focus and real efficiency.</p>
         <div class="quote-box">
@@ -177,7 +177,7 @@
     </section>
 
     <footer>
-        <p>Prodify © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
+        <p>ProdAIify © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
             <a href="tasks.html">Workspace →</a> &nbsp;|&nbsp; <a href="index.html">Home →</a>
         </p>
     </footer>
@@ -224,23 +224,23 @@
         }
     </script>
 
-    <!-- ── prod AI ASSISTANT FAB + PANEL ── -->
-    <button class="ai-fab" id="aiFab" title="Chat with prod AI" onclick="toggleAI()">
+    <!-- ── ProdAI AI ASSISTANT FAB + PANEL ── -->
+    <button class="ai-fab" id="aiFab" title="Chat with ProdAI AI" onclick="toggleAI()">
         🤖<span class="ai-badge"></span>
     </button>
     <div class="ai-panel" id="aiPanel">
         <div class="ai-header">
             <div class="ai-avatar">🤖</div>
             <div class="ai-header-info">
-                <div class="ai-header-name">ProdAI</div>
+                <div class="ai-header-name">ProdAIAI</div>
                 <div class="ai-header-status">Online · Powered by Groq</div>
             </div>
             <button class="ai-close" onclick="toggleAI()">✕</button>
         </div>
         <div class="ai-quick-btns">
-            <button class="ai-quick-btn" onclick="aiQuick('What can Prodify do?')">✨ Features</button>
+            <button class="ai-quick-btn" onclick="aiQuick('What can ProdAIify do?')">✨ Features</button>
             <button class="ai-quick-btn" onclick="aiQuick('How do I get started?')">🚀 Get Started</button>
-            <button class="ai-quick-btn" onclick="aiQuick('Tell me a productivity tip')">💡 Pro Tips</button>
+            <button class="ai-quick-btn" onclick="aiQuick('Tell me a ProdAIuctivity tip')">💡 Pro Tips</button>
             <button class="ai-quick-btn" onclick="aiQuick('Take me to my tasks')">📋 My Tasks</button>
         </div>
         <div class="ai-messages" id="aiMessages"></div>
@@ -252,16 +252,16 @@
             </div>
         </div>
         <div class="ai-input-row">
-            <textarea class="ai-input" id="aiInput" placeholder="Ask prod anything…" rows="1"
+            <textarea class="ai-input" id="aiInput" placeholder="Ask ProdAI anything…" rows="1"
                 onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI();}"></textarea>
-            <button class="ai-voice-btn" id="aiVoiceBtn" title="Voice conversation with prod" onclick="toggleAIVoice()">🎙️</button>
+            <button class="ai-voice-btn" id="aiVoiceBtn" title="Voice conversation with ProdAI" onclick="toggleAIVoice()">🎙️</button>
             <button class="ai-send-btn" id="aiSendBtn" onclick="sendAI()">
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
             </button>
         </div>
     </div>
 
-    <!-- ── prod AI JS ── -->
+    <!-- ── ProdAI AI JS ── -->
     <script>
 const GROQ_API_KEY = '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'; // 🔑 Replace with your key from https://console.groq.com/keys
         const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
@@ -285,7 +285,7 @@ const GROQ_API_KEY = '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';
         document.getElementById('aiPanel').classList.toggle('open', aiOpen);
         if (aiOpen && aiHistory.length === 0) {
             const greeting = currentUserName ? `Hey ${currentUserName}! ` : 'Hey there! ';
-            addAIMessage('bot', `${greeting}I'm prod 👋 Your AI guide for Prodify.\n\nI can walk you through features, share productivity tips, or just help you figure out where to start. What's on your mind?`);
+            addAIMessage('bot', `${greeting}I'm ProdAI 👋 Your AI guide for ProdAIify.\n\nI can walk you through features, share ProdAIuctivity tips, or just help you figure out where to start. What's on your mind?`);
         }
     }
 
@@ -304,7 +304,7 @@ const GROQ_API_KEY = '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';
         let formatted = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         const bubbleClass = isThinking ? 'ai-msg-bubble thinking' : 'ai-msg-bubble';
         const speakBtn = (sender === 'bot' && !isThinking)
-            ? `<button class="voice-tts-btn" onclick="prodSpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
+            ? `<button class="voice-tts-btn" onclick="ProdAISpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
             : '';
         div.innerHTML = `<div class="${bubbleClass}">${formatted}</div>${speakBtn}`;
         box.appendChild(div);
@@ -325,13 +325,13 @@ const GROQ_API_KEY = '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';
         aiHistory.push({ role: 'user', content: msg });
         const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
 
-        const systemPrompt = `You are prod, a warm, friendly AI assistant on the Prodify homepage.
-Prodify is a smart task manager with: task creation (with priority, tags, scheduled times), AI assistant (that's you!), email reminders, Google Calendar integration, voice commands inside the chat, background themes, and a confetti celebration when all tasks are done.
+        const systemPrompt = `You are ProdAI, a warm, friendly AI assistant on the ProdAIify homepage.
+ProdAIify is a smart task manager with: task creation (with priority, tags, scheduled times), AI assistant (that's you!), email reminders, Google Calendar integration, voice commands inside the chat, background themes, and a confetti celebration when all tasks are done.
 Current time: ${new Date().toLocaleString()}
 
 Your role here on the homepage:
-- Welcome visitors and help them understand Prodify's features
-- Share productivity tips and motivation
+- Welcome visitors and help them understand ProdAIify's features
+- Share ProdAIuctivity tips and motivation
 - Encourage users to sign in and try the task manager (tasks.html)
 - If someone says "take me to tasks" or wants to manage tasks, tell them to click "Start Managing Tasks" or go to tasks.html
 - Keep responses friendly, concise (2-3 short paragraphs max), and encouraging
@@ -434,7 +434,7 @@ Your role here on the homepage:
             } else if (state === 'processing') {
                 btn.classList.add('voice-processing'); btn.textContent = '⏳';
                 bar.classList.add('show'); dot.className = 'vs-dot processing';
-                txt.textContent = 'prod is thinking…';
+                txt.textContent = 'ProdAI is thinking…';
             } else {
                 btn.textContent = '🎙️';
             }
@@ -444,7 +444,7 @@ Your role here on the homepage:
             const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
             document.getElementById('aiSendBtn').disabled = true;
 
-            const systemPrompt = `You are prod, a warm AI assistant on the Prodify homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. Prodify helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
+            const systemPrompt = `You are ProdAI, a warm AI assistant on the ProdAIify homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. ProdAIify helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
 
             try {
                 const messages = [
@@ -467,18 +467,18 @@ Your role here on the homepage:
                 document.getElementById(thinkId)?.remove();
                 addAIMessage('bot', reply);
                 aiHistory.push({ role: 'model', content: reply });
-                prodSpeak(null, reply);
+                ProdAISpeak(null, reply);
             } catch(err) {
                 document.getElementById(thinkId)?.remove();
                 const errMsg = "I hit a connection issue. Let's try again!";
                 addAIMessage('bot', errMsg);
-                prodSpeak(null, errMsg);
+                ProdAISpeak(null, errMsg);
             } finally {
                 document.getElementById('aiSendBtn').disabled = false;
             }
         }
 
-        window.prodSpeak = function(btnEl, overrideText) {
+        window.ProdAISpeak = function(btnEl, overrideText) {
             if (!window.speechSynthesis) return;
             window.speechSynthesis.cancel();
             const text = overrideText || (btnEl && btnEl.getAttribute('data-text')) || '';
@@ -492,7 +492,7 @@ Your role here on the homepage:
             window.speechSynthesis.speak(utt);
             if (btnEl) {
                 btnEl.textContent = '🔇 Stop';
-                btnEl.onclick = () => { window.speechSynthesis.cancel(); btnEl.textContent = '🔊 Speak'; btnEl.onclick = () => prodSpeak(btnEl); };
+                btnEl.onclick = () => { window.speechSynthesis.cancel(); btnEl.textContent = '🔊 Speak'; btnEl.onclick = () => ProdAISpeak(btnEl); };
             }
         };
 
