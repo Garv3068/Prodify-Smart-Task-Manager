@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prodify – Contact Us</title>
+    <title>TaskNova – Contact Us</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
@@ -18,8 +18,9 @@
         }
         html { scroll-behavior: smooth; }
         body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(rgba(8,12,18,0.72), rgba(8,12,18,0.78)), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: auto; }
-        #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
+        /*#cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
         #cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(88,166,255,0.5); pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
+        */
         #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px 200px; }
 
@@ -81,7 +82,6 @@
         .social-row { display: flex; gap: 10px; margin-top: 4px; flex-wrap: wrap; }
         .social-btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 10px; border: 1px solid var(--border); color: var(--muted); font-size: 13px; text-decoration: none; transition: all .25s; }
         .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.07); transform: translateY(-2px); }
-        .social-btn-linkedin:hover { border-color: #0a66c2; color: #0a66c2; background: rgba(10,102,194,0.08); }
 
         /* ── FORM CARD (RIGHT COL) ── */
         .form-card { padding: 40px 36px; border-radius: 24px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); backdrop-filter: blur(10px); animation: fadeUp .8s ease .4s both; position: relative; overflow: hidden; }
@@ -187,7 +187,7 @@
     <!-- ── NAVBAR ── -->
     <nav class="navbar" id="navbar">
         <a href="index.html" class="nav-logo">
-            <img class="logo-icon" src="assets/logo.png" alt="Prodify logo" width="36" height="36"> Prodify
+            <img class="logo-icon" src="assets/logo.png" alt="TaskNova logo" width="36" height="36"> TaskNova
         </a>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
@@ -224,7 +224,7 @@
                 <div class="info-card">
                     <span class="info-card-icon">📬</span>
                     <div class="info-card-title">Email Us</div>
-                    <div class="info-card-value">hello@prodify.app</div>
+                    <div class="info-card-value">hello@tasknova.app</div>
                     <div class="info-card-desc">For general inquiries, bug reports, or partnerships.</div>
                 </div>
 
@@ -261,12 +261,9 @@
                     <span class="info-card-icon">🔗</span>
                     <div class="info-card-title" style="margin-bottom:14px;">Find Us Online</div>
                     <div class="social-row">
-                        <a href="https://github.com/Garv3068/TASKNova-Smart-Task-Manager" target="_blank" rel="noopener noreferrer" class="social-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                            GitHub
-                        </a>
+                        <a href="#" class="social-btn">⭐ GitHub</a>
+                        <a href="#" class="social-btn">💼 LinkedIn</a>
+                        <a href="#" class="social-btn">🐦 Twitter</a>
                     </div>
                 </div>
 
@@ -339,14 +336,14 @@
         <!-- ── BLOG POSTS ── -->
         <div class="section-heading">
             <div class="hero-eyebrow" style="margin-bottom:20px;display:inline-flex"><span class="eyebrow-dot"></span>From Our Blog</div>
-            <h2>Latest from <span style="background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Prodify</span></h2>
+            <h2>Latest from <span style="background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">TaskNova</span></h2>
             <p>Tips, updates, and stories about productivity, AI, and how we're building smarter workflows.</p>
         </div>
 
         <div class="blog-grid">
             <div class="blog-card">
                 <div class="blog-card-tag tag-guide">📘 Guide</div>
-                <h3>How We Built the Prod AI Assistant in 72 Hours</h3>
+                <h3>How We Built the Nova AI Assistant in 72 Hours</h3>
                 <p>A behind-the-scenes look at how our team designed and integrated the Nova voice assistant using the Gemini API, Web Speech, and a lot of cold coffee.</p>
                 <div class="blog-meta">
                     <span>Garv Goel</span>
@@ -361,9 +358,9 @@
             <div class="blog-card">
                 <div class="blog-card-tag tag-tips">💡 Tips</div>
                 <h3>5 Task Management Habits That Actually Stick</h3>
-                <p>Forget rigid productivity systems — here are five lightweight habits our team uses every day that genuinely make a difference, powered by Prodify reminders.</p>
+                <p>Forget rigid productivity systems — here are five lightweight habits our team uses every day that genuinely make a difference, powered by TaskNova reminders.</p>
                 <div class="blog-meta">
-                    <span>Team Prodify</span>
+                    <span>Team TaskNova</span>
                     <span class="blog-meta-dot"></span>
                     <span>Apr 2026</span>
                     <span class="blog-meta-dot"></span>
@@ -374,10 +371,10 @@
 
             <div class="blog-card">
                 <div class="blog-card-tag tag-news">🚀 News</div>
-                <h3>Prodify v2.0 — What's New and What's Next</h3>
+                <h3>TaskNova v2.0 — What's New and What's Next</h3>
                 <p>We shipped real-time collaboration, gamification rewards, and a redesigned dashboard. Here's a full breakdown of every feature added in our biggest release yet.</p>
                 <div class="blog-meta">
-                    <span>Team Prodify</span>
+                    <span>Team TaskNova</span>
                     <span class="blog-meta-dot"></span>
                     <span>Mar 2026</span>
                     <span class="blog-meta-dot"></span>
@@ -400,35 +397,35 @@
         <div class="faq-list">
             <div class="faq-item open">
                 <div class="faq-q" onclick="toggleFaq(this)">
-                    Is Prodify free to use?
+                    Is TaskNova free to use?
                     <span class="faq-icon">+</span>
                 </div>
-                <div class="faq-a">Yes — Prodify is completely free. It was built as a university group project and is open to everyone. We may add premium features in the future, but the core experience will always remain free.</div>
+                <div class="faq-a">Yes — TaskNova is completely free. It was built as a university group project and is open to everyone. We may add premium features in the future, but the core experience will always remain free.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="toggleFaq(this)">
-                    Do I need an account to use Prodify?
+                    Do I need an account to use TaskNova?
                     <span class="faq-icon">+</span>
                 </div>
                 <div class="faq-a">You need to sign in to access the Task Manager (to save your data securely). However, the home page, about page, and contact page are fully accessible without an account.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="toggleFaq(this)">
-                    How does the Prod AI assistant work?
+                    How does the Nova AI assistant work?
                     <span class="faq-icon">+</span>
                 </div>
-                <div class="faq-a">Prod AI is powered by Google's Gemini API combined with the browser's Web Speech API for voice recognition. It can answer questions about Prodify, help you manage your tasks, and have natural conversations — all right inside your browser.</div>
+                <div class="faq-a">Nova is powered by Google's Gemini API combined with the browser's Web Speech API for voice recognition. It can answer questions about TaskNova, help you manage your tasks, and have natural conversations — all right inside your browser.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="toggleFaq(this)">
                     Can I contribute to the project?
                     <span class="faq-icon">+</span>
                 </div>
-                <div class="faq-a">Absolutely! Prodify is a student project and we welcome feedback, ideas, and contributions. Reach out through the contact form above or find us on GitHub.</div>
+                <div class="faq-a">Absolutely! TaskNova is a student project and we welcome feedback, ideas, and contributions. Reach out through the contact form above or find us on GitHub.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="toggleFaq(this)">
-                    Is my data safe with Prodify?
+                    Is my data safe with TaskNova?
                     <span class="faq-icon">+</span>
                 </div>
                 <div class="faq-a">We use Supabase for secure authentication and data storage. Your tasks and personal data are private to your account and are never shared or sold to third parties.</div>
@@ -439,7 +436,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>Prodify © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
+        <p>TaskNova © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
             <a href="tasks.html">Workspace →</a> &nbsp;|&nbsp; <a href="index.html">Home →</a> &nbsp;|&nbsp; <a href="contact.html">Contact →</a>
         </p>
     </footer>
@@ -488,32 +485,32 @@
         (function animCursor() { rx += (cx - rx) * .12; ry += (cy - ry) * .12; ringEl.style.left = rx + 'px'; ringEl.style.top = ry + 'px'; requestAnimationFrame(animCursor); })();
 
         // Blob canvas (matches about.html)
-        (function blobBg() {
-            const canvas = document.getElementById('blob-canvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let W, H;
-            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-            resize(); window.addEventListener('resize', resize);
-            const blobs = [
-                { x: 0.2, y: 0.3, r: 0.35, color: 'rgba(88,166,255,0.06)', speed: 0.0004 },
-                { x: 0.8, y: 0.6, r: 0.3, color: 'rgba(163,113,247,0.05)', speed: 0.0003 },
-                { x: 0.5, y: 0.8, r: 0.28, color: 'rgba(88,166,255,0.04)', speed: 0.0005 }
-            ];
-            let t = 0;
-            function draw() {
-                ctx.clearRect(0, 0, W, H);
-                blobs.forEach(b => {
-                    const x = (b.x + Math.sin(t * b.speed * 1000) * 0.08) * W;
-                    const y = (b.y + Math.cos(t * b.speed * 800) * 0.07) * H;
-                    const grad = ctx.createRadialGradient(x, y, 0, x, y, b.r * Math.min(W, H));
-                    grad.addColorStop(0, b.color); grad.addColorStop(1, 'transparent');
-                    ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(x, y, b.r * Math.min(W, H), 0, Math.PI * 2); ctx.fill();
-                });
-                t = performance.now(); requestAnimationFrame(draw);
-            }
-            draw();
-        })();
+        // (function blobBg() {
+            // const canvas = document.getElementById('blob-canvas');
+            // if (!canvas) return;
+            // const ctx = canvas.getContext('2d');
+            // let W, H;
+            // function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            // resize(); window.addEventListener('resize', resize);
+            // const blobs = [
+            //     { x: 0.2, y: 0.3, r: 0.35, color: 'rgba(88,166,255,0.06)', speed: 0.0004 },
+            //     { x: 0.8, y: 0.6, r: 0.3, color: 'rgba(163,113,247,0.05)', speed: 0.0003 },
+            //     { x: 0.5, y: 0.8, r: 0.28, color: 'rgba(88,166,255,0.04)', speed: 0.0005 }
+            // ];
+            // let t = 0;
+            // function draw() {
+                // ctx.clearRect(0, 0, W, H);
+                // blobs.forEach(b => {
+                //     const x = (b.x + Math.sin(t * b.speed * 1000) * 0.08) * W;
+                //     const y = (b.y + Math.cos(t * b.speed * 800) * 0.07) * H;
+                //     const grad = ctx.createRadialGradient(x, y, 0, x, y, b.r * Math.min(W, H));
+                //     grad.addColorStop(0, b.color); grad.addColorStop(1, 'transparent');
+                //     ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(x, y, b.r * Math.min(W, H), 0, Math.PI * 2); ctx.fill();
+                // });
+                // t = performance.now(); requestAnimationFrame(draw);
+            // }
+            // draw();
+        // })();
 
         // Intersection observer for blog cards
         const observer = new IntersectionObserver(entries => {
