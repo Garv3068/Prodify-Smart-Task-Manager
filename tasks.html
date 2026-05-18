@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskNova – Manage Tasks</title>
+    <title>Prodify – Manage Tasks</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -334,7 +334,7 @@
     </div>
 
     <nav class="navbar">
-        <a href="index.html" class="nav-logo"><img class="logo-icon" src="assets/logo.png" alt="TaskNova logo" width="36" height="36"> TaskNova</a>
+        <a href="index.html" class="nav-logo"><img class="logo-icon" src="assets/logo.png" alt="Prodify logo" width="36" height="36"> Prodify</a>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="tasks.html" class="active">Manage Tasks</a></li>
@@ -427,7 +427,7 @@
     </section>
 
     <footer>
-        <p>TaskNova © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
+        <p>Prodify © 2026 &nbsp;|&nbsp; Chitkara University Group Project &nbsp;|&nbsp;
             <a href="tasks.html">Workspace →</a> &nbsp;|&nbsp; <a href="index.html">Home →</a>
         </p>
     </footer>
@@ -869,7 +869,7 @@
             const details = [
                 `Priority: ${task.priority.toUpperCase()}`,
                 tags ? `Tags: ${tags}` : '',
-                'Added via TaskNova 🚀'
+                'Added via Prodify 🚀'
             ].filter(Boolean).join('\n');
 
             const params = new URLSearchParams({
@@ -1136,7 +1136,7 @@ function toggleAI() {
             const name = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || '';
             const greeting = name ? `Hey ${name}! ` : `Hey there! `;
             
-            addAIMessage('bot', `${greeting}I'm Nova 👋 Your personal productivity sidekick inside TaskNova.\n\nThink of me as a second brain—I know what's on your plate, can map out new schedules or priorities for you instantly, or we can just talk through your day. What are we tracking today?`);
+            addAIMessage('bot', `${greeting}I'm Nova 👋 Your personal productivity sidekick inside Prodify.\n\nThink of me as a second brain—I know what's on your plate, can map out new schedules or priorities for you instantly, or we can just talk through your day. What are we tracking today?`);
         }
     } catch(e) {
         console.error('toggleAI error:', e);
@@ -1382,7 +1382,7 @@ async function sendAI() {
     aiHistory.push({ role: 'user', content: msg });
     const thinkId = addAIMessage('bot', 'Thinking...', true);
 
-    const systemPrompt = `You are Nova, an exceptionally warm, perceptive, and friendly AI assistant living inside TaskNova. 
+    const systemPrompt = `You are Nova, an exceptionally warm, perceptive, and friendly AI assistant living inside Prodify. 
 Current timestamp: ${new Date().toLocaleString()}
 User's workspace view:
 ${buildTaskContext()}
@@ -1641,7 +1641,7 @@ function addAIMessage(sender, text, isThinking = false) {
         const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
         document.getElementById('aiSendBtn').disabled = true;
 
-        const systemPrompt = `You are Nova, an exceptionally warm, perceptive, and friendly AI assistant living inside TaskNova. 
+        const systemPrompt = `You are Nova, an exceptionally warm, perceptive, and friendly AI assistant living inside Prodify. 
 Current timestamp: ${new Date().toLocaleString()}
 User's workspace view:
 ${buildTaskContext()}
