@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
@@ -18,7 +19,7 @@
             --radius: 16px; --radius-sm: 10px;
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(135deg, rgba(8,12,18,0.65) 0%, rgba(8,14,22,0.75) 50%, rgba(10,8,18,0.70) 100%), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: none; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(135deg, rgba(8,12,18,0.65) 0%, rgba(8,14,22,0.75) 50%, rgba(10,8,18,0.70) 100%), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: auto; }
         #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
         #cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(88,166,255,0.5); pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
         /* #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; } */
@@ -138,7 +139,7 @@
         @keyframes toastIn  { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
         @keyframes toastOut { to{transform:translateX(110%);opacity:0} }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9000; cursor: none; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9000; cursor: auto; }
         .modal-box { background: rgba(22,27,34,0.98); border-radius: 20px; padding: 36px; border: 1px solid rgba(88,166,255,0.25); backdrop-filter: blur(20px); text-align: center; max-width: 400px; width: 90%; box-shadow: 0 25px 60px rgba(0,0,0,0.8); }
         .modal-input { padding: 12px; border-radius: 10px; border: 2px solid var(--border); background: var(--bg); color: var(--text); width: 200px; text-align: center; font-size: 15px; margin-bottom: 18px; font-family: inherit; transition: border-color .2s; }
         .modal-input:focus { outline: none; border-color: var(--accent); }
@@ -152,6 +153,101 @@
         footer a { color: var(--accent); text-decoration: none; transition: .2s; }
         footer a:hover { color: var(--text); }
         @media(max-width:768px) { .navbar{padding:16px 20px;} .nav-links{display:none;} .dashboard{padding:22px 16px;} .form-row{flex-direction:column;} }
+
+        /* ── VIEW TOGGLE ── */
+        .view-toggle { display:flex; gap:6px; margin-bottom:20px; }
+        .view-btn { padding:8px 16px; border:1px solid var(--border); border-radius:20px; background:transparent; color:var(--muted); cursor:pointer; font-size:13px; font-weight:500; transition:all .2s; font-family:inherit; display:flex; align-items:center; gap:6px; }
+        .view-btn:hover { border-color:var(--accent); color:var(--accent); }
+        .view-btn.active { background:rgba(88,166,255,0.15); border-color:var(--accent); color:var(--accent); }
+
+        /* ── KANBAN BOARD ── */
+        #kanbanBoard { display:none; gap:16px; margin-bottom:20px; overflow-x:auto; padding-bottom:8px; }
+        #kanbanBoard.active { display:flex; }
+        .kanban-col { flex:1; min-width:220px; background:rgba(255,255,255,0.025); border-radius:16px; border:1px solid var(--border); padding:16px; display:flex; flex-direction:column; gap:10px; }
+        .kanban-col-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+        .kanban-col-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+        .kanban-col.todo .kanban-col-title { color:var(--muted); }
+        .kanban-col.inprogress .kanban-col-title { color:var(--accent); }
+        .kanban-col.done-col .kanban-col-title { color:var(--success); }
+        .kanban-count { font-size:11px; padding:2px 8px; border-radius:10px; font-family:'JetBrains Mono',monospace; }
+        .kanban-col.todo .kanban-count { background:rgba(255,255,255,0.06); color:var(--muted); }
+        .kanban-col.inprogress .kanban-count { background:rgba(88,166,255,0.12); color:var(--accent); }
+        .kanban-col.done-col .kanban-count { background:rgba(46,160,67,0.12); color:var(--success); }
+        .kanban-card { background:rgba(255,255,255,0.04); border-radius:12px; border:1px solid var(--border); padding:12px 14px; cursor:grab; transition:all .25s; position:relative; overflow:hidden; }
+        .kanban-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px 0 0 3px; }
+        .kanban-card.p-high-item::before { background:var(--danger); }
+        .kanban-card.p-medium-item::before { background:var(--warn); }
+        .kanban-card.p-low-item::before { background:var(--success); }
+        .kanban-card:hover { background:rgba(255,255,255,0.07); transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
+        .kanban-card:active { cursor:grabbing; }
+        .kanban-card.completed-card { opacity:.55; }
+        .kanban-card-text { font-size:13px; font-weight:500; line-height:1.4; margin-bottom:8px; word-break:break-word; }
+        .kanban-card-meta { display:flex; gap:5px; flex-wrap:wrap; align-items:center; }
+        .kanban-card-actions { display:flex; gap:4px; margin-top:8px; }
+        .kanban-action-btn { padding:4px 8px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:11px; cursor:pointer; transition:all .2s; font-family:inherit; }
+        .kanban-action-btn:hover { border-color:var(--accent); color:var(--accent); }
+        .kanban-action-btn.done-btn:hover { border-color:var(--success); color:var(--success); }
+        .kanban-action-btn.del-btn:hover { border-color:var(--danger); color:var(--danger); }
+        .kanban-drop-zone { min-height:80px; border:2px dashed transparent; border-radius:12px; transition:all .2s; }
+        .kanban-drop-zone.drag-over { border-color:rgba(88,166,255,0.4); background:rgba(88,166,255,0.05); }
+
+        /* ── SUBTASKS / CHECKLIST ── */
+        .subtask-section { margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+        .subtask-list { list-style:none; padding:0; display:flex; flex-direction:column; gap:4px; margin-bottom:6px; }
+        .subtask-item { display:flex; align-items:center; gap:8px; padding:4px 6px; border-radius:8px; transition:background .2s; }
+        .subtask-item:hover { background:rgba(255,255,255,0.04); }
+        .subtask-check { width:14px; height:14px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+        .subtask-check.done { background:var(--success); border-color:var(--success); }
+        .subtask-check.done::after { content:'✓'; color:#fff; font-size:8px; font-weight:700; }
+        .subtask-text { font-size:12px; color:var(--muted); flex:1; transition:.2s; }
+        .subtask-text.done { text-decoration:line-through; color:rgba(240,246,252,0.3); }
+        .subtask-del { background:none; border:none; color:rgba(255,77,77,0.5); cursor:pointer; font-size:11px; padding:0 2px; transition:.2s; line-height:1; }
+        .subtask-del:hover { color:var(--danger); }
+        .subtask-add-row { display:flex; gap:6px; align-items:center; }
+        .subtask-input { flex:1; padding:6px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:12px; font-family:inherit; transition:.2s; }
+        .subtask-input:focus { border-color:var(--accent); outline:none; }
+        .subtask-add-btn { padding:6px 10px; border-radius:8px; border:1px solid rgba(88,166,255,0.3); background:rgba(88,166,255,0.08); color:var(--accent); font-size:12px; cursor:pointer; transition:.2s; font-family:inherit; }
+        .subtask-add-btn:hover { background:rgba(88,166,255,0.18); }
+        .subtask-progress { height:3px; border-radius:2px; background:var(--surface-hi); overflow:hidden; margin-bottom:6px; }
+        .subtask-progress-bar { height:100%; background:linear-gradient(90deg,var(--accent),var(--success)); border-radius:2px; transition:width .4s ease; }
+        .expand-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:11px; padding:2px 6px; border-radius:6px; transition:.2s; font-family:inherit; }
+        .expand-btn:hover { color:var(--accent); background:rgba(88,166,255,0.08); }
+
+        /* ── TASK COMMENTS ── */
+        .comments-section { margin-top:8px; padding-top:8px; border-top:1px solid var(--border); display:none; }
+        .comments-section.open { display:block; }
+        .comment-list { display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
+        .comment-item { background:rgba(255,255,255,0.03); border-radius:8px; padding:8px 10px; border:1px solid var(--border); }
+        .comment-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:3px; }
+        .comment-author { font-size:10px; color:var(--accent); font-weight:600; font-family:'JetBrains Mono',monospace; }
+        .comment-time { font-size:10px; color:var(--muted); }
+        .comment-text { font-size:12px; color:var(--text); line-height:1.5; }
+        .comment-add-row { display:flex; gap:6px; }
+        .comment-input { flex:1; padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:12px; font-family:inherit; transition:.2s; }
+        .comment-input:focus { border-color:var(--accent); outline:none; }
+        .comment-submit-btn { padding:7px 12px; border-radius:8px; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#080c12; font-size:12px; font-weight:700; cursor:pointer; transition:.2s; font-family:inherit; }
+        .comment-submit-btn:hover { transform:translateY(-1px); }
+
+        /* ── TIME TRACKER ── */
+        .time-tracker { display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap; }
+        .timer-display { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); background:rgba(88,166,255,0.08); padding:3px 8px; border-radius:8px; border:1px solid rgba(88,166,255,0.2); min-width:64px; text-align:center; }
+        .timer-btn { padding:4px 10px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:11px; cursor:pointer; transition:.2s; font-family:inherit; display:flex; align-items:center; gap:4px; }
+        .timer-btn.running { border-color:rgba(255,77,77,0.4); color:var(--danger); background:rgba(255,77,77,0.08); animation:timerPulse 2s ease infinite; }
+        .timer-btn:not(.running):hover { border-color:var(--accent); color:var(--accent); background:rgba(88,166,255,0.08); }
+        @keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:.65} }
+        .timer-total { font-size:11px; color:var(--muted); }
+
+        /* ── RECURRING TASKS ── */
+        .recurring-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:600; background:rgba(163,113,247,0.12); color:var(--accent3); border:1px solid rgba(163,113,247,0.25); font-family:'JetBrains Mono',monospace; }
+
+        /* ── COLOR-CODED TAGS ── */
+        .tag-colored { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; border:1px solid; }
+
+        /* ── SORTABLE DRAG INDICATOR ── */
+        .task-drag-handle { cursor:grab; color:var(--muted); padding:0 4px; font-size:14px; flex-shrink:0; opacity:.4; transition:.2s; }
+        .task-drag-handle:hover { opacity:1; color:var(--accent); }
+        .task-item.sortable-ghost { opacity:.3; background:rgba(88,166,255,0.08); border:2px dashed var(--accent); }
+        .task-item.sortable-chosen { box-shadow:0 12px 36px rgba(0,0,0,0.5); transform:scale(1.02); z-index:100; }
 /* 
        // ── BACKGROUND THEME PANEL ──
         .theme-fab { position:fixed; bottom:28px; right:100px; z-index:500; width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent3)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 4px 20px rgba(88,166,255,0.4); transition:all .3s; }
@@ -396,8 +492,17 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Tags</label>
-                        <input type="text" id="tagInput" placeholder="🏷️ comma-separated">
+                        <label>Tags <span style="color:var(--muted);font-size:10px;">(comma-sep)</span></label>
+                        <input type="text" id="tagInput" placeholder="🏷️ #work, #urgent">
+                    </div>
+                    <div class="form-group">
+                        <label>Repeat 🔁</label>
+                        <select id="recurringSelect">
+                            <option value="none">No repeat</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
                     </div>
                     <button class="add-btn" id="addBtn" onclick="addTask()">➕ Add</button>
                 </div>
@@ -405,11 +510,52 @@
 
             <div id="successMsg" class="success-msg"></div>
 
+            <!-- View Toggle -->
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                <div class="view-toggle">
+                    <button class="view-btn active" id="listViewBtn" onclick="setView('list')">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        List
+                    </button>
+                    <button class="view-btn" id="kanbanViewBtn" onclick="setView('kanban')">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="10" rx="1"/></svg>
+                        Board
+                    </button>
+                </div>
+                <div id="activeTagFilters" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+            </div>
+
             <div class="filters">
                 <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
                 <button class="filter-btn" onclick="setFilter('pending',this)">⏳ Pending</button>
                 <button class="filter-btn" onclick="setFilter('completed',this)">✅ Completed</button>
                 <button class="filter-btn" onclick="setFilter('scheduled',this)">🕐 Scheduled</button>
+                <button class="filter-btn" onclick="setFilter('recurring',this)">🔁 Recurring</button>
+            </div>
+
+            <!-- Kanban Board -->
+            <div id="kanbanBoard">
+                <div class="kanban-col todo" id="kColTodo">
+                    <div class="kanban-col-header">
+                        <span class="kanban-col-title">📋 To Do</span>
+                        <span class="kanban-count" id="kCountTodo">0</span>
+                    </div>
+                    <div class="kanban-drop-zone" id="kDropTodo"></div>
+                </div>
+                <div class="kanban-col inprogress" id="kColInProgress">
+                    <div class="kanban-col-header">
+                        <span class="kanban-col-title">⚡ In Progress</span>
+                        <span class="kanban-count" id="kCountInProgress">0</span>
+                    </div>
+                    <div class="kanban-drop-zone" id="kDropInProgress"></div>
+                </div>
+                <div class="kanban-col done-col" id="kColDone">
+                    <div class="kanban-col-header">
+                        <span class="kanban-col-title">✅ Done</span>
+                        <span class="kanban-count" id="kCountDone">0</span>
+                    </div>
+                    <div class="kanban-drop-zone" id="kDropDone"></div>
+                </div>
             </div>
 
             <ul id="taskList"></ul>
@@ -461,7 +607,7 @@
         <div class="ai-header">
             <div class="ai-avatar">🤖</div>
             <div class="ai-header-info">
-                <div class="ai-header-name">ProdAI</div>
+                <div class="ai-header-name">Prod AI</div>
                 <div class="ai-header-status">Online · Powered by Groq</div>
             </div>
             <button class="ai-close" onclick="toggleAI()">✕</button>
@@ -481,7 +627,7 @@
             </div>
         </div>
         <div class="ai-input-row">
-            <textarea class="ai-input" id="aiInput" placeholder="Ask Nova anything…" rows="1"
+            <textarea class="ai-input" id="aiInput" placeholder="Ask Prod AI anything…" rows="1"
                 onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI();}"></textarea>
             <button class="ai-voice-btn" id="aiVoiceBtn" title="Voice conversation with Nova" onclick="toggleAIVoice()">🎙️</button>
             <button class="ai-send-btn" id="aiSendBtn" onclick="sendAI()">
@@ -523,6 +669,13 @@
         let hasCelebrated = false;
         let activeFilter  = 'all';
         let timerMap      = {};
+        let currentView   = 'list';  // 'list' | 'kanban'
+        let activeTagFilter = null;  // tag string or null
+        let taskTimers    = {};      // { taskId: { interval, seconds, total } }
+        let subtasksMap   = {};      // { taskId: [{id,text,done}] } local state
+        let commentsMap   = {};      // { taskId: [{author,text,time}] }
+        let kanbanStatus  = {};      // { taskId: 'todo'|'inprogress'|'done' }
+        let sortableInst  = null;
 
         // ── Auth ──────────────────────────────────────────────────────
         function applyAuthState(session) {
@@ -572,6 +725,7 @@
             // Map DB columns (snake_case) → local camelCase shape
             tasks = (data || []).map(dbToLocal);
             renderTasks();
+            renderTagCloud();
             scheduleAllTimers();
         }
 
@@ -588,6 +742,7 @@
                 reminderSent:    row.reminder_sent,
                 startNotifSent:  row.start_notif_sent,
                 createdAt:       row.created_at,
+                recurring:       row.recurring || 'none',
             };
         }
 
@@ -598,7 +753,8 @@
             const dt       = document.getElementById('taskDateTime').value;
             const off      = parseInt(document.getElementById('reminderOffset').value);
             const tagRaw   = document.getElementById('tagInput').value.trim();
-            const tags     = tagRaw ? tagRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+            const tags     = tagRaw ? tagRaw.split(',').map(t => t.trim().replace(/^#/,'')).filter(Boolean) : [];
+            const recurring = document.getElementById('recurringSelect').value;
 
             if (!text) {
                 const el = document.getElementById('taskInput');
@@ -621,6 +777,7 @@
                 reminder_offset:  off,
                 reminder_sent:    false,
                 start_notif_sent: false,
+                recurring,
             }).select().single();
 
             btn.disabled = false; btn.textContent = '➕ Add';
@@ -632,7 +789,9 @@
             document.getElementById('taskInput').value    = '';
             document.getElementById('taskDateTime').value = '';
             document.getElementById('tagInput').value     = '';
+            document.getElementById('recurringSelect').value = 'none';
             renderTasks();
+            renderTagCloud();
             scheduleTaskTimer(task);
             showSuccess('Task added! ✨');
         }
@@ -651,6 +810,8 @@
                 task.completed = !newVal; // revert
                 renderTasks();
                 showToast('⚠ Could not update task.', '#ff4d4d');
+            } else if (newVal && task.recurring && task.recurring !== 'none') {
+                await handleRecurringCompletion(task);
             }
         }
 
@@ -672,8 +833,58 @@
             renderTasks();
         }
 
+        function setTagFilter(tag) {
+            activeTagFilter = (activeTagFilter === tag) ? null : tag;
+            renderTagCloud();
+            renderTasks();
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+            document.getElementById('kanbanViewBtn').classList.toggle('active', view === 'kanban');
+            document.getElementById('taskList').style.display = view === 'list' ? '' : 'none';
+            document.getElementById('kanbanBoard').classList.toggle('active', view === 'kanban');
+            if (view === 'kanban') renderKanban();
+            else renderTasks();
+        }
+
+        // ── Tag Color Palette ──────────────────────────────────────────
+        const TAG_COLORS = [
+            { bg:'rgba(88,166,255,0.15)',  border:'rgba(88,166,255,0.35)',  text:'#58a6ff'  },
+            { bg:'rgba(163,113,247,0.15)', border:'rgba(163,113,247,0.35)', text:'#a371f7'  },
+            { bg:'rgba(46,160,67,0.15)',   border:'rgba(46,160,67,0.35)',   text:'#3fb950'  },
+            { bg:'rgba(255,77,77,0.15)',   border:'rgba(255,77,77,0.35)',   text:'#ff6b6b'  },
+            { bg:'rgba(227,179,65,0.15)',  border:'rgba(227,179,65,0.35)',  text:'#e3b341'  },
+            { bg:'rgba(0,180,220,0.15)',   border:'rgba(0,180,220,0.35)',   text:'#00b4dc'  },
+        ];
+        const tagColorCache = {};
+        function getTagColor(tag) {
+            if (!tagColorCache[tag]) {
+                let h = 0; for (let c of tag) h = (h * 31 + c.charCodeAt(0)) % TAG_COLORS.length;
+                tagColorCache[tag] = TAG_COLORS[Math.abs(h)];
+            }
+            return tagColorCache[tag];
+        }
+
+        function renderTagCloud() {
+            const allTags = [...new Set(tasks.flatMap(t => t.tags||[]))];
+            const container = document.getElementById('activeTagFilters');
+            container.innerHTML = allTags.map(tag => {
+                const c = getTagColor(tag);
+                const active = activeTagFilter === tag;
+                return `<button onclick="setTagFilter('${escHtml(tag)}')" style="
+                    padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600;
+                    background:${active ? c.border : c.bg}; border:1px solid ${c.border};
+                    color:${c.text}; cursor:pointer; transition:all .2s; font-family:inherit;
+                    ${active ? 'box-shadow:0 0 0 2px '+c.border+';' : ''}
+                ">#${escHtml(tag)}</button>`;
+            }).join('');
+        }
+
         // ── Render ────────────────────────────────────────────────────
         function renderTasks() {
+            if (currentView === 'kanban') { renderKanban(); return; }
             const query  = document.getElementById('searchInput').value.toLowerCase();
             let source   = [...tasks];
             if (query) source = source.filter(t =>
@@ -682,6 +893,8 @@
             if      (activeFilter === 'completed') source = source.filter(t =>  t.completed);
             else if (activeFilter === 'pending')   source = source.filter(t => !t.completed);
             else if (activeFilter === 'scheduled') source = source.filter(t =>  t.scheduledTime);
+            else if (activeFilter === 'recurring') source = source.filter(t =>  t.recurring && t.recurring !== 'none');
+            if (activeTagFilter) source = source.filter(t => (t.tags||[]).includes(activeTagFilter));
 
             const ul = document.getElementById('taskList');
             ul.innerHTML = '';
@@ -690,28 +903,107 @@
             source.forEach(task => {
                 const li = document.createElement('li');
                 li.className = `task-item p-${task.priority}-item${task.completed ? ' completed-item' : ''}`;
-                const tagHTML   = (task.tags||[]).map(t => `<span class="tag">${escHtml(t)}</span>`).join('');
+                li.dataset.id = task.id;
+
+                // Tags
+                const tagHTML = (task.tags||[]).map(t => {
+                    const c = getTagColor(t);
+                    return `<span class="tag-colored" style="background:${c.bg};border-color:${c.border};color:${c.text}" onclick="setTagFilter('${escHtml(t)}')" title="Filter by #${escHtml(t)}">#${escHtml(t)}</span>`;
+                }).join('');
+
                 const timeBadge = task.scheduledTime
                     ? `<span class="time-badge ${getTimeBadgeClass(task)}">${getTimeBadgeLabel(task)}</span>` : '';
                 const gcalBtn = task.scheduledTime
-                    ? `<button class="gcal-btn" title="Add to Google Calendar">
-                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                           Calendar
-                       </button>` : '';
+                    ? `<button class="gcal-btn" title="Add to Google Calendar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Calendar</button>` : '';
+                const recurBadge = task.recurring && task.recurring !== 'none'
+                    ? `<span class="recurring-badge">🔁 ${task.recurring}</span>` : '';
+
+                // Subtasks
+                const subs = subtasksMap[task.id] || [];
+                const subsDone = subs.filter(s=>s.done).length;
+                const subPct = subs.length ? Math.round(subsDone/subs.length*100) : 0;
+                const subsHTML = subs.length > 0 ? `
+                    <div class="subtask-progress"><div class="subtask-progress-bar" style="width:${subPct}%"></div></div>
+                    <ul class="subtask-list">${subs.map(s=>`
+                        <li class="subtask-item">
+                            <div class="subtask-check ${s.done?'done':''}" onclick="toggleSubtask('${task.id}','${s.id}')"></div>
+                            <span class="subtask-text ${s.done?'done':''}">${escHtml(s.text)}</span>
+                            <button class="subtask-del" onclick="deleteSubtask('${task.id}','${s.id}')">✕</button>
+                        </li>`).join('')}
+                    </ul>` : '';
+
+                // Comments
+                const cmts = commentsMap[task.id] || [];
+                const cmtBadge = cmts.length > 0 ? `<span style="font-size:11px;color:var(--muted);">💬 ${cmts.length}</span>` : '';
+                const cmtsHTML = cmts.map(c=>`
+                    <div class="comment-item">
+                        <div class="comment-header"><span class="comment-author">${escHtml(c.author)}</span><span class="comment-time">${c.time}</span></div>
+                        <div class="comment-text">${escHtml(c.text)}</div>
+                    </div>`).join('');
+
+                // Timer
+                const tr = taskTimers[task.id] || { seconds:0, total:0 };
+                const totalSecs = tr.total || 0;
+                const isRunning = !!tr.interval;
+                const fmtTime = s => `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
                 li.innerHTML = `
                     <div class="task-main">
+                        <span class="task-drag-handle" title="Drag to reorder">⠿</span>
                         <div class="task-check"></div>
                         <div class="task-body">
                             <span class="task-text">${escHtml(task.text)}</span>
                             <div class="task-meta">
                                 <span class="priority-badge p-${task.priority}">${task.priority.toUpperCase()}</span>
-                                ${tagHTML} ${timeBadge} ${gcalBtn}
+                                ${tagHTML} ${timeBadge} ${gcalBtn} ${recurBadge} ${cmtBadge}
                             </div>
                         </div>
-                        <button class="task-del-btn" title="Delete">🗑️</button>
+                        <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+                            <button class="expand-btn" data-expanded="0" title="Subtasks & more">
+                                ${subs.length > 0 ? `✓ ${subsDone}/${subs.length}` : '+ Subtasks'}
+                            </button>
+                            <button class="task-del-btn" title="Delete">🗑️</button>
+                        </div>
+                    </div>
+
+                    <!-- Expandable section -->
+                    <div class="subtask-expand-panel" style="display:none;">
+                        <!-- Time Tracker -->
+                        <div class="time-tracker">
+                            <span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">⏱</span>
+                            <span class="timer-display" id="timer-display-${task.id}">${fmtTime(totalSecs)}</span>
+                            <button class="timer-btn ${isRunning?'running':''}" id="timer-btn-${task.id}" onclick="toggleTimer('${task.id}')">
+                                ${isRunning ? '⏸ Stop' : '▶ Start'}
+                            </button>
+                            ${totalSecs > 0 ? `<span class="timer-total">Total: ${fmtTime(totalSecs)}</span>` : ''}
+                        </div>
+
+                        <!-- Subtasks -->
+                        <div class="subtask-section">
+                            <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Checklist</div>
+                            ${subsHTML}
+                            <div class="subtask-add-row">
+                                <input class="subtask-input" placeholder="Add checklist item…" id="subtask-input-${task.id}" onkeydown="if(event.key==='Enter')addSubtask('${task.id}')">
+                                <button class="subtask-add-btn" onclick="addSubtask('${task.id}')">+ Add</button>
+                            </div>
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="subtask-section">
+                            <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Notes & Comments</div>
+                            <div class="comment-list">${cmtsHTML}</div>
+                            <div class="comment-add-row">
+                                <input class="comment-input" placeholder="Add a note…" id="comment-input-${task.id}" onkeydown="if(event.key==='Enter')addComment('${task.id}')">
+                                <button class="comment-submit-btn" onclick="addComment('${task.id}')">Post</button>
+                            </div>
+                        </div>
                     </div>`;
+
+                // Events
                 li.querySelector('.task-main').addEventListener('click', e => {
-                    if (!e.target.closest('.task-del-btn') && !e.target.closest('.gcal-btn')) toggleComplete(task.id);
+                    if (!e.target.closest('.task-del-btn') && !e.target.closest('.gcal-btn') &&
+                        !e.target.closest('.expand-btn') && !e.target.closest('.tag-colored') &&
+                        !e.target.closest('.task-drag-handle')) toggleComplete(task.id);
                 });
                 li.querySelector('.task-del-btn').addEventListener('click', e => {
                     e.stopPropagation(); showDeleteModal(task);
@@ -721,9 +1013,172 @@
                         e.stopPropagation(); addToGoogleCalendar(task);
                     });
                 }
+                // Expand toggle
+                li.querySelector('.expand-btn').addEventListener('click', e => {
+                    e.stopPropagation();
+                    const panel = li.querySelector('.subtask-expand-panel');
+                    const isOpen = panel.style.display !== 'none';
+                    panel.style.display = isOpen ? 'none' : 'block';
+                    e.target.style.color = isOpen ? '' : 'var(--accent)';
+                });
+
                 ul.appendChild(li);
             });
+
+            // Init SortableJS drag-and-drop
+            if (sortableInst) sortableInst.destroy();
+            sortableInst = Sortable.create(ul, {
+                handle: '.task-drag-handle',
+                animation: 180,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                onEnd: (evt) => {
+                    const moved = tasks.find(t => t.id == evt.item.dataset.id);
+                    if (!moved) return;
+                    tasks.splice(tasks.indexOf(moved), 1);
+                    // Find new position in tasks array by mapping visible order
+                    const ids = [...ul.querySelectorAll('li[data-id]')].map(li => li.dataset.id);
+                    tasks.sort((a,b) => {
+                        const ai = ids.indexOf(String(a.id)), bi = ids.indexOf(String(b.id));
+                        return (ai < 0 ? 9999 : ai) - (bi < 0 ? 9999 : bi);
+                    });
+                    showToast('📋 Task reordered', '#58a6ff');
+                }
+            });
+
             updateStats();
+        }
+
+        // ── Kanban ────────────────────────────────────────────────────
+        function getKanbanStatus(task) {
+            if (task.completed) return 'done';
+            return kanbanStatus[task.id] || 'todo';
+        }
+
+        function renderKanban() {
+            const cols = { todo: [], inprogress: [], done: [] };
+            tasks.forEach(t => { const s = getKanbanStatus(t); if (cols[s]) cols[s].push(t); });
+
+            ['Todo','InProgress','Done'].forEach(col => {
+                const key = col.toLowerCase().replace('done','done');
+                const el = document.getElementById(`kDrop${col}`);
+                const countEl = document.getElementById(`kCount${col}`);
+                const arr = col === 'Done' ? cols.done : col === 'InProgress' ? cols.inprogress : cols.todo;
+                if (countEl) countEl.textContent = arr.length;
+                if (!el) return;
+                el.innerHTML = arr.map(task => {
+                    const tagHTML = (task.tags||[]).map(t => {
+                        const c = getTagColor(t); return `<span class="tag-colored" style="background:${c.bg};border-color:${c.border};color:${c.text};font-size:10px;">#${escHtml(t)}</span>`;
+                    }).join('');
+                    return `<div class="kanban-card p-${task.priority}-item ${task.completed?'completed-card':''}" draggable="true" data-id="${task.id}">
+                        <div class="kanban-card-text">${escHtml(task.text)}</div>
+                        <div class="kanban-card-meta">
+                            <span class="priority-badge p-${task.priority}" style="font-size:10px;">${task.priority.toUpperCase()}</span>
+                            ${tagHTML}
+                        </div>
+                        <div class="kanban-card-actions">
+                            ${col !== 'Todo' ? `<button class="kanban-action-btn" onclick="moveKanban('${task.id}','todo')">← To Do</button>` : ''}
+                            ${col !== 'InProgress' && col !== 'Done' ? `<button class="kanban-action-btn" onclick="moveKanban('${task.id}','inprogress')">▶ Start</button>` : ''}
+                            ${col !== 'Done' ? `<button class="kanban-action-btn done-btn" onclick="moveKanban('${task.id}','done')">✅ Done</button>` : ''}
+                            <button class="kanban-action-btn del-btn" onclick="event.stopPropagation();showDeleteModal(tasks.find(t=>t.id=='${task.id}'))">🗑</button>
+                        </div>
+                    </div>`;
+                }).join('');
+            });
+        }
+
+        function moveKanban(taskId, status) {
+            kanbanStatus[taskId] = status;
+            if (status === 'done') {
+                const task = tasks.find(t => t.id == taskId);
+                if (task && !task.completed) toggleComplete(taskId);
+            } else {
+                const task = tasks.find(t => t.id == taskId);
+                if (task && task.completed) toggleComplete(taskId);
+            }
+            renderKanban();
+        }
+
+        // ── Subtasks ──────────────────────────────────────────────────
+        function addSubtask(taskId) {
+            const inp = document.getElementById(`subtask-input-${taskId}`);
+            const text = inp ? inp.value.trim() : '';
+            if (!text) return;
+            if (!subtasksMap[taskId]) subtasksMap[taskId] = [];
+            subtasksMap[taskId].push({ id: Date.now().toString(36), text, done: false });
+            inp.value = '';
+            renderTasks();
+        }
+        function toggleSubtask(taskId, subId) {
+            const subs = subtasksMap[taskId] || [];
+            const sub = subs.find(s => s.id === subId);
+            if (sub) sub.done = !sub.done;
+            renderTasks();
+        }
+        function deleteSubtask(taskId, subId) {
+            if (subtasksMap[taskId]) subtasksMap[taskId] = subtasksMap[taskId].filter(s => s.id !== subId);
+            renderTasks();
+        }
+
+        // ── Comments ──────────────────────────────────────────────────
+        function addComment(taskId) {
+            const inp = document.getElementById(`comment-input-${taskId}`);
+            const text = inp ? inp.value.trim() : '';
+            if (!text) return;
+            if (!commentsMap[taskId]) commentsMap[taskId] = [];
+            const author = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'You';
+            commentsMap[taskId].push({
+                author,
+                text,
+                time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+            });
+            inp.value = '';
+            renderTasks();
+        }
+
+        // ── Time Tracker ──────────────────────────────────────────────
+        function toggleTimer(taskId) {
+            if (!taskTimers[taskId]) taskTimers[taskId] = { seconds: 0, total: 0, interval: null };
+            const tr = taskTimers[taskId];
+            if (tr.interval) {
+                clearInterval(tr.interval);
+                tr.interval = null;
+                tr.total += tr.seconds;
+                tr.seconds = 0;
+                showToast(`⏱ Timer stopped. Session logged.`, '#58a6ff');
+            } else {
+                tr.seconds = 0;
+                tr.interval = setInterval(() => {
+                    tr.seconds++;
+                    const disp = document.getElementById(`timer-display-${taskId}`);
+                    const btn = document.getElementById(`timer-btn-${taskId}`);
+                    const fmtTime = s => `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+                    if (disp) disp.textContent = fmtTime(tr.total + tr.seconds);
+                }, 1000);
+                showToast(`▶ Timer started for task`, '#2ea043');
+            }
+            renderTasks();
+        }
+
+        // ── Recurring task completion handler ────────────────────────
+        async function handleRecurringCompletion(task) {
+            if (!task.recurring || task.recurring === 'none') return;
+            const nextDate = task.scheduledTime ? new Date(task.scheduledTime) : new Date();
+            if (task.recurring === 'daily') nextDate.setDate(nextDate.getDate() + 1);
+            else if (task.recurring === 'weekly') nextDate.setDate(nextDate.getDate() + 7);
+            else if (task.recurring === 'monthly') nextDate.setMonth(nextDate.getMonth() + 1);
+
+            const { data, error } = await sb.from('tasks').insert({
+                user_id: currentUser.id, text: task.text, priority: task.priority,
+                tags: task.tags, completed: false, scheduled_time: nextDate.toISOString(),
+                reminder_offset: task.reminderOffset, reminder_sent: false, start_notif_sent: false,
+                recurring: task.recurring,
+            }).select().single();
+            if (!error && data) {
+                tasks.unshift(dbToLocal(data));
+                showToast(`🔁 Recurring task rescheduled: ${task.recurring}`, '#a371f7');
+                renderTasks();
+            }
         }
 
         // ── Time badges ───────────────────────────────────────────────
@@ -1111,387 +1566,289 @@
     </script>
 
     <!-- ══════════════════════════════════════════════════════════════ -->
-    <!--  🤖  FEATURE 3: AI ASSISTANT (Groq-powered)                  -->
+    <!--  🤖  FEATURE 3: AI ASSISTANT (Groq-powered — fully live)     -->
     <!-- ══════════════════════════════════════════════════════════════ -->
     <script>
-    const GROQ_API_KEY = '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'; // 🔑 Replace with your key from https://console.groq.com/keys
+    const GROQ_API_KEY = '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';
     const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
     const GROQ_MODEL = 'llama-3.3-70b-versatile';
-let aiOpen = false;
-let aiHistory = [];
 
-// ── Personal, human-centered draft state machine ──
-let draft = null;
+    let aiOpen = false;
+    let aiHistory = []; // full conversation for context memory
 
-function resetDraft() {
-    draft = null;
-}
+    // ── Pending task draft (minimal — Groq now manages the logic) ──
+    let pendingTask = null; // { text, priority, scheduledTime } — only set when committed
 
-function toggleAI() {
-    try {
-        aiOpen = !aiOpen;
-        document.getElementById('aiPanel').classList.toggle('open', aiOpen);
-        if (aiOpen && aiHistory.length === 0) {
-            // Personalizing based on active username if they're authenticated
-            const name = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || '';
-            const greeting = name ? `Hey ${name}! ` : `Hey there! `;
-            
-            addAIMessage('bot', `${greeting}I'm Nova 👋 Your personal productivity sidekick inside Prodify.\n\nThink of me as a second brain—I know what's on your plate, can map out new schedules or priorities for you instantly, or we can just talk through your day. What are we tracking today?`);
-        }
-    } catch(e) {
-        console.error('toggleAI error:', e);
-    }
-}
-
-function aiQuick(prompt) {
-    document.getElementById('aiInput').value = prompt;
-    sendAI();
-}
-
-function buildTaskContext() {
-    if (!tasks || tasks.length === 0) return "No active tasks right now. Fresh slate!";
-    return tasks.map(t => `- [${t.completed ? 'x' : ' '}] ${t.text} (${t.priority} priority${t.scheduled_time ? ', scheduled: ' + new Date(t.scheduled_time).toLocaleString() : ''})`).join('\n');
-}
-
-// ── Smart Conversational Flow Helper ──
-async function handleDraftFlow(msg) {
-    const m = msg.toLowerCase().trim();
-
-    // Catch generic negative or cancellation intents early
-    const wantsCancel = /cancel|forget it|nevermind|delete|abort|stop|no\b/i.test(m);
-    const wantsConfirm = /yes\b|yep|sure|confirm|do it|add it|go ahead/i.test(m);
-    const wantsSchedule = /schedule|date|time|when/i.test(m);
-    const wantsPriority = /priority|importance|level/i.test(m);
-
-    // Context-aware: If the user says "delete" or "no" during confirmation/editing, cancel the draft
-    if (wantsCancel) {
-        resetDraft();
-        addAIMessage('bot', `No worries at all, I've cleared that draft! Nothing was added. Let me know what else you'd like to work on. 😊`);
-        return true;
-    }
-
-    // ── STAGE: CONFIRM ──
-    if (!draft.stage || draft.stage === 'confirm') {
-        if (wantsConfirm) {
-            await commitDraft();
-            return true;
-        }
-
-        // If user specifies a new priority directly (e.g., "change priority to medium" or just "medium")
-        let targetedPriority = null;
-        if (/high|urgent|critical/i.test(m)) targetedPriority = 'high';
-        else if (/medium|moderate|normal/i.test(m)) targetedPriority = 'medium';
-        else if (/low|chill|minor/i.test(m)) targetedPriority = 'low';
-
-        if (targetedPriority) {
-            draft.priority = targetedPriority;
-            addAIMessage('bot', `Switched the priority to 🟡 **${targetedPriority}** for you!`);
-            showDraftConfirm();
-            return true;
-        }
-
-        // If they ask to change priority explicitly without giving a value
-        if (wantsPriority) {
-            draft.stage = 'priority';
-            addAIMessage('bot', `Let's adjust that priority. What feels right for this task?\n\n🔴 **High** (Needs focus now)\n🟡 **Medium** (Important but flexible)\n🟢 **Low** (Whenever you get around to it)`);
-            return true;
-        }
-
-        // If they ask to change schedule/date explicitly
-        if (wantsSchedule) {
-            draft.stage = 'datetime';
-            addAIMessage('bot', `Let's lock down a time for **"${draft.text}"**. When should we set this for?\n*(Feel free to say something like "today at 4pm" or "tomorrow morning")*`);
-            return true;
-        }
-
-        // Catch-all fallbacks to remain supportive and deeply human
-        addAIMessage('bot', `I'm ready whenever you are! Just say **yes** to save it, **no** to toss it out, or tell me exactly what needs tweaking (like changing the title or swapping the priority).`);
-        return true;
-    }
-
-    // ── STAGE: PRIORITY SELECTION ──
-    if (draft.stage === 'priority') {
-        let pri = null;
-        if (/high|urgent|critical/i.test(m)) pri = 'high';
-        else if (/medium|moderate|normal/i.test(m)) pri = 'medium';
-        else if (/low|chill|minor/i.test(m)) pri = 'low';
-
-        if (pri) {
-            draft.priority = pri;
-            // SMART FIX: Check if date is already set so we don't ask repetitive questions!
-            if (draft.scheduledTime) {
-                draft.stage = 'confirm';
-                addAIMessage('bot', `Updated to **${pri} priority**! Let's check everything over.`);
-                showDraftConfirm();
-            } else {
-                draft.stage = 'scheduled';
-                addAIMessage('bot', `Got it, set to **${pri} priority**. Should we schedule a specific date and deadline for this one? (yes / no)`);
+    function toggleAI() {
+        try {
+            aiOpen = !aiOpen;
+            document.getElementById('aiPanel').classList.toggle('open', aiOpen);
+            if (aiOpen && aiHistory.length === 0) {
+                const name = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || '';
+                const greeting = name ? `Hey ${name}! ` : `Hey there! `;
+                const msg = `${greeting}I'm Prod AI 👋 Your personal productivity sidekick inside Prodify.\n\nI know everything on your plate right now and can add, complete, or delete tasks just by chatting with you. What are we working on today?`;
+                addAIMessage('bot', msg);
+                aiHistory.push({ role: 'assistant', content: msg });
             }
-            return true;
-        }
-        addAIMessage('bot', `Hmm, didn't catch that. Should it be 🔴 **High**, 🟡 **Medium**, or 🟢 **Low**?`);
-        return true;
+        } catch(e) { console.error('toggleAI error:', e); }
     }
 
-    // ── STAGE: CHOOSE IF SCHEDULED ──
-    if (draft.stage === 'scheduled') {
-        if (/yes|yep|sure|track|schedule/i.test(m)) {
-            draft.stage = 'datetime';
-            addAIMessage('bot', `Awesome. When should it happen? Give me a day or exact time (e.g., "today at 3pm", "Friday morning").`);
-            return true;
-        }
-        if (/no|skip|not now|nope/i.test(m)) {
-            draft.scheduledTime = null;
-            draft.stage = 'confirm';
-            showDraftConfirm();
-            return true;
-        }
-        addAIMessage('bot', `Just let me know with a simple **yes** to schedule an exact time, or **no** to keep it open-ended!`);
-        return true;
+    function aiQuick(prompt) {
+        document.getElementById('aiInput').value = prompt;
+        sendAI();
     }
 
-    // ── STAGE: DATETIME PARSING ──
-    if (draft.stage === 'datetime') {
-        if (/skip|none|no/i.test(m)) {
-            draft.scheduledTime = null;
-            draft.stage = 'confirm';
-            showDraftConfirm();
-            return true;
-        }
-        const parsed = parseNaturalDate(msg);
-        if (parsed && !isNaN(parsed)) {
-            draft.scheduledTime = parsed.toISOString();
-            draft.stage = 'confirm';
-            showDraftConfirm();
-            return true;
-        }
-        addAIMessage('bot', `I couldn't quite translate that time. Try something simple like **"today 5pm"**, **"tomorrow morning"**, or write out a date like **"May 25th 9:30am"**!`);
-        return true;
+    function buildTaskContext() {
+        if (!tasks || tasks.length === 0) return "No active tasks. Fresh slate!";
+        return tasks.map(t =>
+            `- [${t.completed ? 'DONE' : 'OPEN'}] id:${t.id} | "${t.text}" | priority:${t.priority}${t.scheduled_time ? ' | due:' + new Date(t.scheduled_time).toLocaleString('en-IN') : ''}`
+        ).join('\n');
     }
 
-    return false;
-}
-
-function showDraftConfirm() {
-    const priEmoji = { high:'🔴', medium:'🟡', low:'🟢' }[draft.priority] || '🟡';
-    const formattedPriority = draft.priority.charAt(0).toUpperCase() + draft.priority.slice(1);
-    
-    const timeString = draft.scheduledTime ? 
-        `📅 **Scheduled for:** ${new Date(draft.scheduledTime).toLocaleString('en-IN', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})}` : 
-        `📅 **Scheduled:** No specific time set (open-ended)`;
-
-    addAIMessage('bot', 
-        `Looking good! Here is your quick task preview:\n\n` +
-        `📝 **"${draft.text}"**\n` +
-        `${priEmoji} **${formattedPriority}** priority\n` +
-        `${timeString}\n\n` +
-        `Ready to drop this into your list? Reply with a quick **yes** to confirm, **no** to abort, or simply tell me what to change!`
-    );
-}
-
-async function commitDraft() {
-    if (!currentUser) {
-        resetDraft();
-        addAIMessage('bot', '⚠️ Oh look at that, it looks like you were signed out. Please sign in to lock in your tasks!');
-        return;
-    }
-
-    const { data: nd, error } = await sb.from('tasks').insert({
-        user_id: currentUser.id,
-        text: draft.text,
-        priority: draft.priority,
-        tags: [],
-        completed: false,
-        scheduled_time: draft.scheduledTime || null,
-        reminder_offset: 0,
-        reminder_sent: false,
-        start_notif_sent: false,
-    }).select().single();
-
-    if (!error) {
-        tasks.unshift(dbToLocal(nd));
-        renderTasks();
-        if (draft.scheduledTime) scheduleLocalNotification(dbToLocal(nd));
-        
-        try { confetti({ particleCount: 60, spread: 40, origin: { y: 0.85 } }); } catch(e){}
-        
-        addAIMessage('bot', `Boom! 🚀 **"${draft.text}"** has been safely added to your workspace. What's next on our agenda?`);
-    } else {
-        addAIMessage('bot', `Ah, I hit a slight snag saving that to the database. Let's try confirming one more time?`);
-    }
-    resetDraft();
-}
-
-// ── Simple Natural Language Parser ──
-function parseNaturalDate(str) {
-    const m = str.toLowerCase().trim();
-    let base = new Date();
-    
-    if (m.includes('today')) {
-        // preserve current date
-    } else if (m.includes('tomorrow')) {
-        base.setDate(base.getDate() + 1);
-    } else {
-        const match = m.match(/(\d{1,2})\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i);
-        if (match) {
-            const day = parseInt(match[1]);
-            const months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-            const monthIdx = months.indexOf(match[2].toLowerCase().slice(0,3));
-            if (monthIdx !== -1) {
-                base.setMonth(monthIdx, day);
-                if (base < new Date() && !m.includes('2026')) {
-                    // assuming upcoming year unless spec
-                }
+    // ── Simple Natural Language Date Parser ──
+    function parseNaturalDate(str) {
+        if (!str) return null;
+        const m = str.toLowerCase().trim();
+        let base = new Date();
+        if (m.includes('tomorrow')) base.setDate(base.getDate() + 1);
+        else {
+            const match = m.match(/(\d{1,2})\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i);
+            if (match) {
+                const months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+                base.setMonth(months.indexOf(match[2].toLowerCase().slice(0,3)), parseInt(match[1]));
             }
         }
-    }
-    
-    // Time matching (e.g. 11:15 am, 3pm, 14:00)
-    const timeMatch = m.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
-    if (timeMatch) {
-        let h = parseInt(timeMatch[1]);
-        const min = timeMatch[2] ? parseInt(timeMatch[2]) : 0;
-        const ampm = timeMatch[3];
-        if (ampm && ampm.toLowerCase() === 'pm' && h < 12) h += 12;
-        if (ampm && ampm.toLowerCase() === 'am' && h === 12) h = 0;
-        base.setHours(h, min, 0, 0);
-    } else {
-        base.setHours(9, 0, 0, 0); // Default smart backup time
-    }
-    return isNaN(base) ? null : base;
-}
-
-// ── Core Message Processor & LLM Integration ──
-async function sendAI() {
-    const input = document.getElementById('aiInput');
-    const msg = input.value.trim();
-    if (!msg) return;
-
-    addAIMessage('user', msg);
-    input.value = '';
-    input.style.height = 'auto';
-    document.getElementById('aiSendBtn').disabled = true;
-
-    // intercept if currently in an active wizard/draft configuration 
-    if (draft) {
-        await handleDraftFlow(msg);
-        document.getElementById('aiSendBtn').disabled = false;
-        return;
+        const timeMatch = m.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+        if (timeMatch) {
+            let h = parseInt(timeMatch[1]);
+            const min = timeMatch[2] ? parseInt(timeMatch[2]) : 0;
+            const ampm = timeMatch[3]?.toLowerCase();
+            if (ampm === 'pm' && h < 12) h += 12;
+            if (ampm === 'am' && h === 12) h = 0;
+            base.setHours(h, min, 0, 0);
+        } else {
+            base.setHours(9, 0, 0, 0);
+        }
+        return isNaN(base) ? null : base;
     }
 
-    aiHistory.push({ role: 'user', content: msg });
-    const thinkId = addAIMessage('bot', 'Thinking...', true);
+    // ── Execute an action returned by Groq ──
+    async function executeAction(action) {
+        // action: { type, text, priority, datetime, task_id, confirm_message }
+        const t = action.type;
 
-    const systemPrompt = `You are Nova, an exceptionally warm, perceptive, and friendly AI assistant living inside Prodify. 
-Current timestamp: ${new Date().toLocaleString()}
-User's workspace view:
+        if (t === 'ADD_TASK') {
+            if (!currentUser) {
+                return '⚠️ You need to be signed in to add tasks!';
+            }
+            const priority = ['high','medium','low'].includes(action.priority) ? action.priority : 'medium';
+            const scheduledTime = action.datetime ? parseNaturalDate(action.datetime) : null;
+            const { data: nd, error } = await sb.from('tasks').insert({
+                user_id: currentUser.id,
+                text: action.text,
+                priority,
+                tags: [],
+                completed: false,
+                scheduled_time: scheduledTime ? scheduledTime.toISOString() : null,
+                reminder_offset: 0,
+                reminder_sent: false,
+                start_notif_sent: false,
+            }).select().single();
+            if (error) return `I hit a snag saving that — Supabase said: ${error.message}`;
+            tasks.unshift(dbToLocal(nd));
+            renderTasks();
+            if (scheduledTime) scheduleLocalNotification(dbToLocal(nd));
+            try { confetti({ particleCount: 70, spread: 45, origin: { y: 0.85 } }); } catch(e){}
+            return null; // let Groq's confirm_message be the response
+
+        } else if (t === 'COMPLETE_TASK') {
+            const task = tasks.find(t2 =>
+                (!action.task_id || t2.id == action.task_id) &&
+                !t2.completed &&
+                (!action.text || t2.text.toLowerCase().includes(action.text.toLowerCase()))
+            );
+            if (!task) return `I couldn't find that open task. Could you double check the name?`;
+            await toggleComplete(task.id);
+            return null;
+
+        } else if (t === 'DELETE_TASK') {
+            const task = tasks.find(t2 =>
+                (!action.task_id || t2.id == action.task_id) &&
+                (!action.text || t2.text.toLowerCase().includes(action.text.toLowerCase()))
+            );
+            if (!task) return `I couldn't find a task matching "${action.text}" to remove.`;
+            await deleteTask(task.id);
+            return null;
+
+        } else if (t === 'UPDATE_PRIORITY') {
+            const task = tasks.find(t2 =>
+                (!action.task_id || t2.id == action.task_id) &&
+                (!action.text || t2.text.toLowerCase().includes(action.text.toLowerCase()))
+            );
+            if (!task) return `Couldn't find that task to update priority.`;
+            const priority = ['high','medium','low'].includes(action.priority) ? action.priority : task.priority;
+            await sb.from('tasks').update({ priority }).eq('id', task.id);
+            task.priority = priority;
+            renderTasks();
+            return null;
+
+        } else if (t === 'RESCHEDULE_TASK') {
+            const task = tasks.find(t2 =>
+                (!action.task_id || t2.id == action.task_id) &&
+                (!action.text || t2.text.toLowerCase().includes(action.text.toLowerCase()))
+            );
+            if (!task) return `I couldn't find that task to reschedule. Could you double-check the name?`;
+            const newTime = action.datetime ? parseNaturalDate(action.datetime) : null;
+            if (!newTime || isNaN(newTime)) return `I couldn't parse that date/time. Try something like "tomorrow 8pm" or "May 20th 3pm".`;
+            await sb.from('tasks').update({
+                scheduled_time: newTime.toISOString(),
+                reminder_sent: false,
+                start_notif_sent: false
+            }).eq('id', task.id);
+            task.scheduled_time = newTime.toISOString();
+            renderTasks();
+            scheduleLocalNotification(task);
+            return null;
+
+        } else if (t === 'RENAME_TASK') {
+            const task = tasks.find(t2 =>
+                (!action.task_id || t2.id == action.task_id) &&
+                (!action.text || t2.text.toLowerCase().includes(action.text.toLowerCase()))
+            );
+            if (!task) return `Couldn't find a task matching "${action.text}" to rename.`;
+            await sb.from('tasks').update({ text: action.new_text }).eq('id', task.id);
+            task.text = action.new_text;
+            renderTasks();
+            return null;
+        }
+        return null;
+    }
+
+    // ── Master Groq call — drives all conversation ──
+    async function callGroq(userMsg) {
+        const systemPrompt = `You are Prod AI — warm, witty, and genuinely helpful. You live inside Prodify, a productivity app. You have real-time access to the user's tasks and can control the app by returning structured JSON actions.
+
+Current time: ${new Date().toLocaleString('en-IN')}
+
+USER'S CURRENT TASKS:
 ${buildTaskContext()}
 
-Your Identity & Rules:
-1. Always sound like an encouraging, helpful colleague rather than a corporate robot assistant.
-2. Address users conversationally. Avoid standard markdown bullet listings or repetitive phrases.
-3. If they ask to add, plan or schedule anything, formulate your response as an implicit structured request using the JSON schema below.
+════════════════════════════════════════
+HOW TO RESPOND:
+════════════════════════════════════════
+You respond in ONE of two formats:
 
-If the user wants to add/schedule a task, reply ONLY with a raw valid JSON object:
-{
-  "action": "add_guided",
-  "text": "Task name here",
-  "priority": "high" | "medium" | "low",
-  "datetime": "natural date phrase if given, otherwise null"
-}
+── FORMAT A: Pure conversation ──
+Just write naturally. Be warm, helpful, encouraging. Use emojis tastefully. Keep responses focused and not too long.
 
-If they want to complete a task:
-{ "action": "complete", "text": "task text keywords" }
+── FORMAT B: Take an action AND respond ──
+When the user wants to add, complete, delete, or update a task, reply with a JSON block FIRST, then your natural conversational message after it.
 
-If they want to drop/delete a task:
-{ "action": "delete", "text": "task text keywords" }
+JSON block format (must be valid JSON, on its own line):
+ACTION:{"type":"ADD_TASK","text":"task name","priority":"high|medium|low","datetime":"natural date string or null","confirm_message":"your warm confirmation message here"}
+ACTION:{"type":"COMPLETE_TASK","text":"task keywords","task_id":null,"confirm_message":"..."}
+ACTION:{"type":"DELETE_TASK","text":"task keywords","task_id":null,"confirm_message":"..."}
+ACTION:{"type":"UPDATE_PRIORITY","text":"task keywords","priority":"high|medium|low","task_id":null,"confirm_message":"..."}
+ACTION:{"type":"RESCHEDULE_TASK","text":"task keywords","datetime":"new date/time string","task_id":null,"confirm_message":"..."}
+ACTION:{"type":"RENAME_TASK","text":"current task keywords","new_text":"new task name","task_id":null,"confirm_message":"..."}
 
-For regular chat, encouragement, or inquiries, respond naturally using friendly paragraphs and occasional emojis. Keep your sentences diverse and engaging.`;
+RULES FOR ADDING TASKS (read carefully):
+When the user asks to add a task, ALWAYS gather BOTH of these before firing ACTION:
+  1. PRIORITY — ask "Should this be 🔴 High, 🟡 Medium, or 🟢 Low priority?" if not given
+  2. SCHEDULE — ask "Would you like to schedule a date and time for this?" if not given
 
-    try {
+Exception: if the user provides BOTH priority AND a datetime in the same message, skip asking and go straight to ACTION.
+If only one is provided, ask for the missing one before acting.
+Ask ONE question at a time in a warm, conversational way. After both are confirmed, fire the ACTION.
+For schedule: if they say "no" or "skip" or "open-ended", use null for datetime.
+
+RULES FOR OTHER ACTIONS (act immediately, no need to ask):
+- COMPLETE_TASK: mark the matching open task done right away
+- DELETE_TASK: remove the matching task right away
+- UPDATE_PRIORITY: update priority right away
+- RESCHEDULE_TASK: use this when user says "move X to 8pm", "update X to tomorrow", "change X time to 3pm", "reschedule X". Parse the new time from their message.
+- RENAME_TASK: use this when user says "rename X to Y" or "change name of X to Y"
+
+Other rules:
+- confirm_message is the warm reply shown after action succeeds — include the new time/priority/name in it so user sees confirmation
+- You can infer datetime from phrases like "tomorrow 3pm", "Friday morning", "8pm today", "next Monday 10am"
+- Don't use markdown bullet lists. Write in friendly flowing sentences.
+- Never mention "JSON" or "action" to the user
+- Address the user by name if you know it: ${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'friend'}`;
+
         const messages = [
             { role: 'system', content: systemPrompt },
-            ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
+            ...aiHistory
         ];
+        if (userMsg) messages.push({ role: 'user', content: userMsg });
 
         const res = await fetch(GROQ_API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-            body: JSON.stringify({
-                model: GROQ_MODEL,
-                messages,
-                max_tokens: 800,
-                temperature: 0.82
-            })
+            body: JSON.stringify({ model: GROQ_MODEL, messages, max_tokens: 700, temperature: 0.85 })
         });
-
         const data = await res.json();
         if (data.error) throw new Error(data.error.message);
-
-        const reply = data.choices?.[0]?.message?.content?.trim() || "Hmm, my connection flickered for a second. Mind repeating that?";
-        document.getElementById(thinkId)?.remove();
-
-        let handled = false;
-        try {
-            const clean = reply.replace(/```json|```/g, '').trim();
-            const parsed = JSON.parse(clean);
-
-            if (parsed.action === 'add_guided') {
-                handled = true;
-                const extractedPriority = ['high','medium','low'].includes(parsed.priority) ? parsed.priority : null;
-                const extractedDatetime = parsed.datetime ? parseNaturalDate(parsed.datetime) : null;
-
-                draft = {
-                    text: parsed.text,
-                    priority: extractedPriority || 'medium',
-                    scheduledTime: extractedDatetime ? extractedDatetime.toISOString() : null,
-                    stage: null
-                };
-
-                if (extractedPriority && extractedDatetime) {
-                    draft.stage = 'confirm';
-                    const priEmoji = { high:'🔴', medium:'🟡', low:'🟢' }[draft.priority];
-                    addAIMessage('bot', `Awesome choice! I've put together the draft for **"${draft.text}"**.\n\n` + `${priEmoji} **${draft.priority.toUpperCase()}** priority\n📅 Scheduled for: ${extractedDatetime.toLocaleString('en-IN')}\n\nReady to append this to your workspace? Say **yes** to save!`);
-                } else if (extractedPriority) {
-                    draft.stage = 'scheduled';
-                    addAIMessage('bot', `Got it! Let's set up **"${draft.text}"** with a 🔴 **High priority**. Would you like to pick a specific date and time for it as well?`);
-                } else {
-                    draft.stage = 'priority';
-                    addAIMessage('bot', `Let's draft **"${draft.text}"** right now! What importance priority should we assign to this?\n\n🔴 **High**\n🟡 **Medium**\n🟢 **Low**`);
-                }
-            } else if (parsed.action === 'complete') {
-                handled = true;
-                const task = tasks.find(t => !t.completed && t.text.toLowerCase().includes(parsed.text.toLowerCase()));
-                if (task) {
-                    await toggleComplete(task.id);
-                    addAIMessage('bot', `Fantastic job! 🎉 Marked **"${task.text}"** as complete. Keep that momentum rolling!`);
-                } else {
-                    addAIMessage('bot', `I checked your list but couldn't find an open task containing "${parsed.text}". Double-check your list for me?`);
-                }
-            } else if (parsed.action === 'delete') {
-                handled = true;
-                const task = tasks.find(t => t.text.toLowerCase().includes(parsed.text.toLowerCase()));
-                if (task) {
-                    await deleteTask(task.id);
-                    addAIMessage('bot', `Done! 🗑️ Took care of that and scrubbed **"${task.text}"** off your dashboard.`);
-                } else {
-                    addAIMessage('bot', `I didn't see any tasks matching "${parsed.text}" to remove. Let me know if it's named something else!`);
-                }
-            }
-        } catch(e) {}
-
-        if (!handled) {
-            addAIMessage('bot', reply);
-            aiHistory.push({ role: 'model', content: reply });
-        }
-    } catch (err) {
-        console.error(err);
-        document.getElementById(thinkId)?.remove();
-        addAIMessage('bot', "Ah, I ran into an unexpected connection error. Let's try that prompt once more!");
-    } finally {
-        document.getElementById('aiSendBtn').disabled = false;
+        return data.choices?.[0]?.message?.content?.trim() || "I had a brief glitch — could you try that again?";
     }
-}
+
+    // ── Core send handler ──
+    async function sendAI() {
+        const input = document.getElementById('aiInput');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        addAIMessage('user', msg);
+        input.value = '';
+        input.style.height = 'auto';
+        document.getElementById('aiSendBtn').disabled = true;
+
+        aiHistory.push({ role: 'user', content: msg });
+        const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
+
+        try {
+            const rawReply = await callGroq(null); // history already has user msg
+
+            document.getElementById(thinkId)?.remove();
+
+            // Parse out any ACTION: {...} blocks
+            const actionLineRegex = /^ACTION:\s*(\{.+\})\s*$/m;
+            const actionMatch = rawReply.match(actionLineRegex);
+
+            let displayText = rawReply.replace(actionLineRegex, '').trim();
+
+            if (actionMatch) {
+                try {
+                    const action = JSON.parse(actionMatch[1]);
+                    const errorMsg = await executeAction(action);
+                    // Show confirm_message from Groq (or error if action failed)
+                    const finalDisplay = errorMsg || (action.confirm_message
+                        ? action.confirm_message + (displayText ? '\n\n' + displayText : '')
+                        : displayText);
+                    addAIMessage('bot', finalDisplay || "Done!");
+                    aiHistory.push({ role: 'assistant', content: finalDisplay || "Done!" });
+                } catch(parseErr) {
+                    // JSON parse failed — show raw text
+                    addAIMessage('bot', displayText || rawReply);
+                    aiHistory.push({ role: 'assistant', content: displayText || rawReply });
+                }
+            } else {
+                addAIMessage('bot', rawReply);
+                aiHistory.push({ role: 'assistant', content: rawReply });
+            }
+
+            // Keep history bounded (last 20 turns = 40 messages)
+            if (aiHistory.length > 40) aiHistory = aiHistory.slice(-40);
+
+        } catch (err) {
+            console.error(err);
+            document.getElementById(thinkId)?.remove();
+            const errMsg = "I ran into a connection hiccup. Let's try that again!";
+            addAIMessage('bot', errMsg);
+        } finally {
+            document.getElementById('aiSendBtn').disabled = false;
+        }
+    }
 
 function addAIMessage(sender, text, isThinking = false) {
     const box = document.getElementById('aiMessages');
@@ -1629,125 +1986,42 @@ function addAIMessage(sender, text, isThinking = false) {
     }
 
     // Voice-aware sendAI: same as sendAI() but auto-speaks the bot reply
+    // Voice-aware sendAI: unified pipeline, auto-speaks the bot reply
     async function sendAIVoice(msg) {
-        if (draft) {
-            await handleDraftFlow(msg);
-            // Speak the last bot message
-            speakLastBotMessage();
-            return;
-        }
-
         aiHistory.push({ role: 'user', content: msg });
         const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
         document.getElementById('aiSendBtn').disabled = true;
 
-        const systemPrompt = `You are Nova, an exceptionally warm, perceptive, and friendly AI assistant living inside Prodify. 
-Current timestamp: ${new Date().toLocaleString()}
-User's workspace view:
-${buildTaskContext()}
-
-Your Identity & Rules:
-1. Always sound like an encouraging, helpful colleague rather than a corporate robot assistant.
-2. Address users conversationally. Keep responses concise (2-3 sentences max) since this is a VOICE conversation.
-3. No markdown, no bullet points, no bold text - speak in natural sentences only.
-4. If they ask to add, plan or schedule anything, formulate your response as a JSON object.
-
-If the user wants to add/schedule a task, reply ONLY with a raw valid JSON object:
-{"action":"add_guided","text":"Task name here","priority":"high"|"medium"|"low","datetime":"natural date phrase if given, otherwise null"}
-
-If they want to complete a task:
-{"action":"complete","text":"task text keywords"}
-
-If they want to drop/delete a task:
-{"action":"delete","text":"task text keywords"}
-
-For regular chat, respond in 1-2 short natural sentences without any markdown formatting.`;
-
         try {
-            const messages = [
-                { role: 'system', content: systemPrompt },
-                ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
-            ];
-
-            const res = await fetch(GROQ_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-                body: JSON.stringify({
-                    model: GROQ_MODEL,
-                    messages,
-                    max_tokens: 300,
-                    temperature: 0.8
-                })
-            });
-
-            const data = await res.json();
-            if (data.error) throw new Error(data.error.message);
-
-            const reply = data.choices?.[0]?.message?.content?.trim() || "Sorry, I had a connection issue. Could you try again?";
+            const rawReply = await callGroq(null);
             document.getElementById(thinkId)?.remove();
 
-            let handled = false;
-            try {
-                const clean = reply.replace(/```json|```/g, '').trim();
-                const parsed = JSON.parse(clean);
+            const actionLineRegex = /^ACTION:\s*(\{.+\})\s*$/m;
+            const actionMatch = rawReply.match(actionLineRegex);
+            let displayText = rawReply.replace(actionLineRegex, '').trim();
 
-                if (parsed.action === 'add_guided') {
-                    handled = true;
-                    const extractedPriority = ['high','medium','low'].includes(parsed.priority) ? parsed.priority : 'medium';
-                    const extractedDatetime = parsed.datetime ? parseNaturalDate(parsed.datetime) : null;
-
-                    draft = {
-                        text: parsed.text,
-                        priority: extractedPriority,
-                        scheduledTime: extractedDatetime ? extractedDatetime.toISOString() : null,
-                        stage: null
-                    };
-
-                    if (extractedPriority && extractedDatetime) {
-                        draft.stage = 'confirm';
-                        const botReply = `I've drafted "${draft.text}" with ${draft.priority} priority, scheduled for ${extractedDatetime.toLocaleString('en-IN', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})}. Should I save it?`;
-                        addAIMessage('bot', botReply);
-                        novaSpeak(null, botReply);
-                    } else {
-                        draft.stage = 'priority';
-                        const botReply = `Sure! What priority should I set for "${draft.text}"? High, medium, or low?`;
-                        addAIMessage('bot', botReply);
-                        novaSpeak(null, botReply);
-                    }
-                } else if (parsed.action === 'complete') {
-                    handled = true;
-                    const task = tasks.find(t => !t.completed && t.text.toLowerCase().includes(parsed.text.toLowerCase()));
-                    if (task) {
-                        await toggleComplete(task.id);
-                        const botReply = `Done! I've marked "${task.text}" as complete. Great work!`;
-                        addAIMessage('bot', botReply);
-                        novaSpeak(null, botReply);
-                    } else {
-                        const botReply = `I couldn't find a task matching "${parsed.text}". Want to try a different name?`;
-                        addAIMessage('bot', botReply);
-                        novaSpeak(null, botReply);
-                    }
-                } else if (parsed.action === 'delete') {
-                    handled = true;
-                    const task = tasks.find(t => t.text.toLowerCase().includes(parsed.text.toLowerCase()));
-                    if (task) {
-                        await deleteTask(task.id);
-                        const botReply = `Done! I've removed "${task.text}" from your list.`;
-                        addAIMessage('bot', botReply);
-                        novaSpeak(null, botReply);
-                    } else {
-                        const botReply = `I couldn't find a task matching "${parsed.text}". Could you describe it differently?`;
-                        addAIMessage('bot', botReply);
-                        novaSpeak(null, botReply);
-                    }
+            let finalMsg;
+            if (actionMatch) {
+                try {
+                    const action = JSON.parse(actionMatch[1]);
+                    const errorMsg = await executeAction(action);
+                    finalMsg = errorMsg || (action.confirm_message
+                        ? action.confirm_message + (displayText ? ' ' + displayText : '')
+                        : displayText);
+                } catch(e) {
+                    finalMsg = displayText || rawReply;
                 }
-            } catch(e) {}
-
-            if (!handled) {
-                addAIMessage('bot', reply);
-                aiHistory.push({ role: 'model', content: reply });
-                novaSpeak(null, reply);
+            } else {
+                finalMsg = rawReply;
             }
+
+            addAIMessage('bot', finalMsg || "Done!");
+            aiHistory.push({ role: 'assistant', content: finalMsg || "Done!" });
+            if (aiHistory.length > 40) aiHistory = aiHistory.slice(-40);
+
+            const plainText = (finalMsg || '').replace(/<[^>]+>/g, '').replace(/\*\*/g, '');
+            novaSpeak(null, plainText);
+
         } catch (err) {
             console.error(err);
             document.getElementById(thinkId)?.remove();
