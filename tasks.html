@@ -20,9 +20,9 @@
         }
         html { scroll-behavior: smooth; }
         body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(135deg, rgba(8,12,18,0.65) 0%, rgba(8,14,22,0.75) 50%, rgba(10,8,18,0.70) 100%), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: auto; }
-        #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
+       /* #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
         #cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(88,166,255,0.5); pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
-        /* #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; } */
+       */ /* #blob-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; } */
         .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px 200px; }
 
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: rgba(8,12,18,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
@@ -116,6 +116,24 @@
         @keyframes tbPulse { 0%,100%{opacity:1} 50%{opacity:.6} }
         .task-del-btn { background: rgba(255,77,77,0.1); border: 1px solid rgba(255,77,77,0.25); color: var(--danger); padding: 7px 10px; border-radius: 9px; cursor: pointer; font-size: 14px; transition: all .3s; flex-shrink: 0; }
         .task-del-btn:hover { background: rgba(255,77,77,0.25); transform: scale(1.1); }
+        .task-edit-btn { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); color: var(--accent); padding: 7px 10px; border-radius: 9px; cursor: pointer; font-size: 14px; transition: all .3s; flex-shrink: 0; }
+        .task-edit-btn:hover { background: rgba(88,166,255,0.2); transform: scale(1.1); }
+
+        /* Edit Modal */
+        .edit-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9100; }
+        .edit-modal-box { background: rgba(22,27,34,0.99); border-radius: 20px; padding: 32px; border: 1px solid rgba(88,166,255,0.3); backdrop-filter: blur(20px); max-width: 480px; width: 92%; box-shadow: 0 25px 60px rgba(0,0,0,0.8); font-family: 'Space Grotesk', sans-serif; }
+        .edit-modal-box h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .edit-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .edit-field label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+        .edit-field input, .edit-field select { padding: 11px 14px; border-radius: 10px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-family: inherit; transition: all .2s; }
+        .edit-field input:focus, .edit-field select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(88,166,255,0.15); }
+        .edit-field select option { background: #161b22; }
+        .edit-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .btn-edit-save { padding: 12px 26px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #080c12; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; font-family: inherit; transition: all .25s; }
+        .btn-edit-save:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(88,166,255,0.4); }
+        .btn-edit-save:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+        .btn-edit-cancel { padding: 12px 20px; background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-weight: 500; font-family: inherit; transition: .2s; }
+        .btn-edit-cancel:hover { background: rgba(255,255,255,0.1); }
         .gcal-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(88,166,255,0.25); background: rgba(88,166,255,0.07); color: var(--accent); font-size: 11px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all .25s; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
         .gcal-btn:hover { background: rgba(88,166,255,0.18); border-color: rgba(88,166,255,0.55); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(88,166,255,0.2); }
 
@@ -154,44 +172,9 @@
         footer a:hover { color: var(--text); }
         @media(max-width:768px) { .navbar{padding:16px 20px;} .nav-links{display:none;} .dashboard{padding:22px 16px;} .form-row{flex-direction:column;} }
 
-      
-        .view-toggle { display:flex; gap:6px; margin-bottom:20px; }
-        .view-btn { padding:8px 16px; border:1px solid var(--border); border-radius:20px; background:transparent; color:var(--muted); cursor:pointer; font-size:13px; font-weight:500; transition:all .2s; font-family:inherit; display:flex; align-items:center; gap:6px; }
-        .view-btn:hover { border-color:var(--accent); color:var(--accent); }
-        .view-btn.active { background:rgba(88,166,255,0.15); border-color:var(--accent); color:var(--accent); }
 
-        
-        #kanbanBoard { display:none; gap:16px; margin-bottom:20px; overflow-x:auto; padding-bottom:8px; }
-        #kanbanBoard.active { display:flex; }
-        .kanban-col { flex:1; min-width:220px; background:rgba(255,255,255,0.025); border-radius:16px; border:1px solid var(--border); padding:16px; display:flex; flex-direction:column; gap:10px; }
-        .kanban-col-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
-        .kanban-col-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
-        .kanban-col.todo .kanban-col-title { color:var(--muted); }
-        .kanban-col.inprogress .kanban-col-title { color:var(--accent); }
-        .kanban-col.done-col .kanban-col-title { color:var(--success); }
-        .kanban-count { font-size:11px; padding:2px 8px; border-radius:10px; font-family:'JetBrains Mono',monospace; }
-        .kanban-col.todo .kanban-count { background:rgba(255,255,255,0.06); color:var(--muted); }
-        .kanban-col.inprogress .kanban-count { background:rgba(88,166,255,0.12); color:var(--accent); }
-        .kanban-col.done-col .kanban-count { background:rgba(46,160,67,0.12); color:var(--success); }
-        .kanban-card { background:rgba(255,255,255,0.04); border-radius:12px; border:1px solid var(--border); padding:12px 14px; cursor:grab; transition:all .25s; position:relative; overflow:hidden; }
-        .kanban-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px 0 0 3px; }
-        .kanban-card.p-high-item::before { background:var(--danger); }
-        .kanban-card.p-medium-item::before { background:var(--warn); }
-        .kanban-card.p-low-item::before { background:var(--success); }
-        .kanban-card:hover { background:rgba(255,255,255,0.07); transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
-        .kanban-card:active { cursor:grabbing; }
-        .kanban-card.completed-card { opacity:.55; }
-        .kanban-card-text { font-size:13px; font-weight:500; line-height:1.4; margin-bottom:8px; word-break:break-word; }
-        .kanban-card-meta { display:flex; gap:5px; flex-wrap:wrap; align-items:center; }
-        .kanban-card-actions { display:flex; gap:4px; margin-top:8px; }
-        .kanban-action-btn { padding:4px 8px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:11px; cursor:pointer; transition:all .2s; font-family:inherit; }
-        .kanban-action-btn:hover { border-color:var(--accent); color:var(--accent); }
-        .kanban-action-btn.done-btn:hover { border-color:var(--success); color:var(--success); }
-        .kanban-action-btn.del-btn:hover { border-color:var(--danger); color:var(--danger); }
-        .kanban-drop-zone { min-height:80px; border:2px dashed transparent; border-radius:12px; transition:all .2s; }
-        .kanban-drop-zone.drag-over { border-color:rgba(88,166,255,0.4); background:rgba(88,166,255,0.05); }
 
-        
+        /* ── SUBTASKS / CHECKLIST ── */
         .subtask-section { margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
         .subtask-list { list-style:none; padding:0; display:flex; flex-direction:column; gap:4px; margin-bottom:6px; }
         .subtask-item { display:flex; align-items:center; gap:8px; padding:4px 6px; border-radius:8px; transition:background .2s; }
@@ -213,7 +196,7 @@
         .expand-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:11px; padding:2px 6px; border-radius:6px; transition:.2s; font-family:inherit; }
         .expand-btn:hover { color:var(--accent); background:rgba(88,166,255,0.08); }
 
-        
+        /* ── TASK COMMENTS ── */
         .comments-section { margin-top:8px; padding-top:8px; border-top:1px solid var(--border); display:none; }
         .comments-section.open { display:block; }
         .comment-list { display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
@@ -228,7 +211,7 @@
         .comment-submit-btn { padding:7px 12px; border-radius:8px; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#080c12; font-size:12px; font-weight:700; cursor:pointer; transition:.2s; font-family:inherit; }
         .comment-submit-btn:hover { transform:translateY(-1px); }
 
-        
+        /* ── TIME TRACKER ── */
         .time-tracker { display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap; }
         .timer-display { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); background:rgba(88,166,255,0.08); padding:3px 8px; border-radius:8px; border:1px solid rgba(88,166,255,0.2); min-width:64px; text-align:center; }
         .timer-btn { padding:4px 10px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:11px; cursor:pointer; transition:.2s; font-family:inherit; display:flex; align-items:center; gap:4px; }
@@ -237,19 +220,19 @@
         @keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:.65} }
         .timer-total { font-size:11px; color:var(--muted); }
 
-        
+        /* ── RECURRING TASKS ── */
         .recurring-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:600; background:rgba(163,113,247,0.12); color:var(--accent3); border:1px solid rgba(163,113,247,0.25); font-family:'JetBrains Mono',monospace; }
 
-        
+        /* ── COLOR-CODED TAGS ── */
         .tag-colored { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; border:1px solid; }
 
-        
+        /* ── SORTABLE DRAG INDICATOR ── */
         .task-drag-handle { cursor:grab; color:var(--muted); padding:0 4px; font-size:14px; flex-shrink:0; opacity:.4; transition:.2s; }
         .task-drag-handle:hover { opacity:1; color:var(--accent); }
         .task-item.sortable-ghost { opacity:.3; background:rgba(88,166,255,0.08); border:2px dashed var(--accent); }
         .task-item.sortable-chosen { box-shadow:0 12px 36px rgba(0,0,0,0.5); transform:scale(1.02); z-index:100; }
 /* 
-       
+       // ── BACKGROUND THEME PANEL ──
         .theme-fab { position:fixed; bottom:28px; right:100px; z-index:500; width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent3)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 4px 20px rgba(88,166,255,0.4); transition:all .3s; }
         .theme-fab:hover { transform:scale(1.1) rotate(20deg); box-shadow:0 8px 30px rgba(88,166,255,0.6); }
         .theme-panel { position:fixed; bottom:90px; right:90px; z-index:500; background:rgba(22,27,34,0.98); border:1px solid var(--border-hi); border-radius:20px; padding:20px; width:260px; backdrop-filter:blur(20px); box-shadow:0 20px 60px rgba(0,0,0,0.7); transform:scale(0) translateY(20px); transform-origin:bottom right; opacity:0; transition:all .35s cubic-bezier(0.175,0.885,0.32,1.275); pointer-events:none; }
@@ -270,10 +253,10 @@
         .theme-speed-btn { flex:1; padding:6px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:11px; cursor:pointer; transition:all .2s; font-family:'DM Sans',sans-serif; }
         .theme-speed-btn.active,.theme-speed-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(88,166,255,0.1); }
 */
-        
+        /* ── VOICE BUTTON ── */
 
 
-        
+        /* ── AI ASSISTANT ── */
         .ai-fab { position:fixed; bottom:28px; right:28px; z-index:500; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--accent3),var(--accent2)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 6px 24px rgba(163,113,247,0.5); transition:all .3s; }
         .ai-fab:hover { transform:scale(1.1); box-shadow:0 10px 36px rgba(163,113,247,0.7); }
         .ai-fab .ai-badge { position:absolute; top:-4px; right:-4px; width:16px; height:16px; border-radius:50%; background:var(--success); border:2px solid var(--bg); animation:pulse 2s ease infinite; }
@@ -313,7 +296,8 @@
         .ai-send-btn:hover { transform:scale(1.08); }
         .ai-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
     
-    
+    /* --- AI Chat Message Layout --- */
+    /* user-msg / bot-msg are set by JS; map them onto the existing flex system */
     .ai-msg.user-msg {
         align-self: flex-end;
         align-items: flex-end;
@@ -348,7 +332,7 @@
         font-style: italic;
     }
 
-    
+    /* ── VOICE CONVERSATION IN AI PANEL ── */
     .ai-voice-btn {
         width: 38px; height: 38px; border-radius: 12px;
         background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
@@ -402,7 +386,7 @@
         font-family: 'DM Sans', sans-serif;
     }
     .voice-tts-btn:hover { background: rgba(163,113,247,0.18); border-color: var(--accent3); }
-        
+        /* ── BACKGROUND GLOW ── */
         .bg-glow { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
         .bg-glow::before { content: ""; position: absolute; top: -15%; left: -15%; width: 65%; height: 65%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(88,166,255,0.16) 0%, rgba(31,111,235,0.08) 35%, transparent 65%); animation: glowPulse 8s ease-in-out infinite; filter: blur(40px); }
         .bg-glow::after  { content: ""; position: absolute; bottom: -15%; right: -15%; width: 60%; height: 60%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(163,113,247,0.14) 0%, rgba(88,166,255,0.06) 35%, transparent 65%); animation: glowPulse 10s ease-in-out infinite reverse; filter: blur(40px); }
@@ -509,20 +493,7 @@
 
             <div id="successMsg" class="success-msg"></div>
 
-           
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
-                <div class="view-toggle">
-                    <button class="view-btn active" id="listViewBtn" onclick="setView('list')">
-                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                        List
-                    </button>
-                    <button class="view-btn" id="kanbanViewBtn" onclick="setView('kanban')">
-                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="10" rx="1"/></svg>
-                        Board
-                    </button>
-                </div>
-                <div id="activeTagFilters" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
-            </div>
+            <div id="activeTagFilters" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;"></div>
 
             <div class="filters">
                 <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
@@ -530,31 +501,6 @@
                 <button class="filter-btn" onclick="setFilter('completed',this)">✅ Completed</button>
                 <button class="filter-btn" onclick="setFilter('scheduled',this)">🕐 Scheduled</button>
                 <button class="filter-btn" onclick="setFilter('recurring',this)">🔁 Recurring</button>
-            </div>
-
-            
-            <div id="kanbanBoard">
-                <div class="kanban-col todo" id="kColTodo">
-                    <div class="kanban-col-header">
-                        <span class="kanban-col-title">📋 To Do</span>
-                        <span class="kanban-count" id="kCountTodo">0</span>
-                    </div>
-                    <div class="kanban-drop-zone" id="kDropTodo"></div>
-                </div>
-                <div class="kanban-col inprogress" id="kColInProgress">
-                    <div class="kanban-col-header">
-                        <span class="kanban-col-title">⚡ In Progress</span>
-                        <span class="kanban-count" id="kCountInProgress">0</span>
-                    </div>
-                    <div class="kanban-drop-zone" id="kDropInProgress"></div>
-                </div>
-                <div class="kanban-col done-col" id="kColDone">
-                    <div class="kanban-col-header">
-                        <span class="kanban-col-title">✅ Done</span>
-                        <span class="kanban-count" id="kCountDone">0</span>
-                    </div>
-                    <div class="kanban-drop-zone" id="kDropDone"></div>
-                </div>
             </div>
 
             <ul id="taskList"></ul>
@@ -577,7 +523,7 @@
         </p>
     </footer>
 
-    
+    <!-- ── BACKGROUND THEME FAB + PANEL ── -->
     <!-- <button class="theme-fab" id="themeFab" title="Change Background Theme" onclick="toggleThemePanel()">🎨</button>
     <div class="theme-panel" id="themePanel">
         <div class="theme-panel-title">Background Theme</div>
@@ -598,7 +544,7 @@
 
 
 
-    
+    <!-- ── AI ASSISTANT PANEL ── -->
     <button class="ai-fab" id="aiFab" title="AI Assistant" onclick="toggleAI()">
         🤖<span class="ai-badge"></span>
     </button>
@@ -639,37 +585,42 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        
-    const SUPABASE_URL  = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';         
+        // ================================================================
+        //  🔧  SUPABASE CONFIG
+        //      Supabase Dashboard → Project → Settings → API
+        // ================================================================
+
+    const SUPABASE_URL  = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';         // e.g. https://xyzxyz.supabase.co
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqanlobHdia3BubXJ5dHVxZ3VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTAwMDIsImV4cCI6MjA4OTcyNjAwMn0.a-aqOsOWNg1Alt6elXDHju-2XQDtiROazU_MDBa4thA';    // long public anon key
 
-        
+        // ================================================================
 
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-        
+        // ── EmailJS ──────────────────────────────────────────────────────
+        // ================================================================
+        //  🔧  EMAILJS CONFIG (replace if needed)
+        // ================================================================
         const EJS_PUBLIC_KEY  = '0Ud5h7LBwcvc3zSqZ';
         const EJS_SERVICE_ID  = 'service_vrt3fw9';
         const EJS_TEMPLATE_ID = 'template_065pt9r';
-        
+        // ================================================================
         emailjs.init(EJS_PUBLIC_KEY);
 
-        
-        let tasks        = [];   
+        // ── State ─────────────────────────────────────────────────────
+        let tasks        = [];   // always loaded from Supabase
         let currentUser  = null;
         let notifEmail   = '';
         let hasCelebrated = false;
         let activeFilter  = 'all';
         let timerMap      = {};
-        let currentView   = 'list';  
-        let activeTagFilter = null;  
-        let taskTimers    = {};      
-        let subtasksMap   = {};      
-        let commentsMap   = {};      
-        let kanbanStatus  = {};      
+        let activeTagFilter = null;  // tag string or null
+        let taskTimers    = {};      // { taskId: { interval, seconds, total } }
+        let subtasksMap   = {};      // { taskId: [{id,text,done}] } local state
+        let commentsMap   = {};      // { taskId: [{author,text,time}] }
         let sortableInst  = null;
 
-        
+        // ── Auth ──────────────────────────────────────────────────────
         function applyAuthState(session) {
             const gate    = document.getElementById('authGate');
             const chip    = document.getElementById('navUserChip');
@@ -705,7 +656,7 @@
         sb.auth.getSession().then(({ data }) => applyAuthState(data.session));
         async function navSignOut() { await sb.auth.signOut(); }
 
-        
+        // ── Load tasks from Supabase ──────────────────────────────────
         async function loadTasks() {
             document.getElementById('taskList').innerHTML =
                 '<div class="loading-overlay"><div class="spin"></div> Loading your tasks…</div>';
@@ -714,14 +665,14 @@
                 .select('*')
                 .order('created_at', { ascending: false });
             if (error) { showToast('⚠ Could not load tasks: ' + error.message, '#ff4d4d'); return; }
-            
+            // Map DB columns (snake_case) → local camelCase shape
             tasks = (data || []).map(dbToLocal);
             renderTasks();
             renderTagCloud();
             scheduleAllTimers();
         }
 
-       
+        // DB row → local object
         function dbToLocal(row) {
             return {
                 id:              row.id,
@@ -738,6 +689,7 @@
             };
         }
 
+        // ── Add task → INSERT into Supabase ───────────────────────────
         async function addTask() {
             const text     = document.getElementById('taskInput').value.trim();
             const priority = document.getElementById('prioritySelect').value;
@@ -787,16 +739,23 @@
             showSuccess('Task added! ✨');
         }
 
+        // ── Toggle complete → UPDATE in Supabase ──────────────────────
         async function toggleComplete(id) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
+
+            // Prevent toggling a recurring task back to incomplete — it should stay done;
+            // the next occurrence is a separate task created by handleRecurringCompletion.
+            if (task.completed && task.recurring && task.recurring !== 'none') return;
+
             const newVal = !task.completed;
+            // Optimistic update
             task.completed = newVal;
             hasCelebrated = false;
             renderTasks();
             const { error } = await sb.from('tasks').update({ completed: newVal }).eq('id', id);
             if (error) {
-                task.completed = !newVal; 
+                task.completed = !newVal; // revert
                 renderTasks();
                 showToast('⚠ Could not update task.', '#ff4d4d');
             } else if (newVal && task.recurring && task.recurring !== 'none') {
@@ -804,6 +763,7 @@
             }
         }
 
+        // ── Delete task → DELETE in Supabase ──────────────────────────
         async function deleteTask(id) {
             clearTaskTimers(id);
             tasks = tasks.filter(t => t.id !== id);
@@ -813,6 +773,116 @@
             else showSuccess('Task deleted.');
         }
 
+        // ── Edit task modal ────────────────────────────────────────────
+        function showEditModal(task) {
+            // Remove any existing edit modal
+            document.getElementById('editModalOverlay')?.remove();
+
+            const scheduledVal = task.scheduledTime
+                ? new Date(new Date(task.scheduledTime).getTime() - new Date().getTimezoneOffset()*60000)
+                    .toISOString().slice(0,16)
+                : '';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'edit-modal-overlay';
+            overlay.id = 'editModalOverlay';
+            overlay.innerHTML = `
+                <div class="edit-modal-box" onclick="event.stopPropagation()">
+                    <h3>✏️ Edit Task</h3>
+                    <div class="edit-field">
+                        <label>Task Name</label>
+                        <input id="editTaskText" value="${escHtml(task.text)}" placeholder="Task name…">
+                    </div>
+                    <div class="edit-field">
+                        <label>Priority</label>
+                        <select id="editPriority">
+                            <option value="high"   ${task.priority==='high'   ?'selected':''}>🔴 High</option>
+                            <option value="medium" ${task.priority==='medium' ?'selected':''}>🟡 Medium</option>
+                            <option value="low"    ${task.priority==='low'    ?'selected':''}>🟢 Low</option>
+                        </select>
+                    </div>
+                    <div class="edit-field">
+                        <label>Tags (comma-separated)</label>
+                        <input id="editTags" value="${escHtml((task.tags||[]).join(', '))}" placeholder="e.g. work, urgent">
+                    </div>
+                    <div class="edit-field">
+                        <label>Scheduled Date & Time</label>
+                        <input id="editDateTime" type="datetime-local" value="${scheduledVal}">
+                    </div>
+                    <div class="edit-field">
+                        <label>Recurring</label>
+                        <select id="editRecurring">
+                            <option value="none"    ${task.recurring==='none'    ||!task.recurring?'selected':''}>None</option>
+                            <option value="daily"   ${task.recurring==='daily'   ?'selected':''}>🔁 Daily</option>
+                            <option value="weekly"  ${task.recurring==='weekly'  ?'selected':''}>🔁 Weekly</option>
+                            <option value="monthly" ${task.recurring==='monthly' ?'selected':''}>🔁 Monthly</option>
+                        </select>
+                    </div>
+                    <div class="edit-modal-actions">
+                        <button class="btn-edit-cancel" onclick="closeEditModal()">Cancel</button>
+                        <button class="btn-edit-save" id="editSaveBtn" onclick="saveEditTask('${task.id}')">💾 Save Changes</button>
+                    </div>
+                </div>`;
+            overlay.addEventListener('click', closeEditModal);
+            document.body.appendChild(overlay);
+            // Focus the text field
+            setTimeout(() => document.getElementById('editTaskText')?.focus(), 80);
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModalOverlay')?.remove();
+        }
+
+        async function saveEditTask(id) {
+            const task = tasks.find(t => t.id == id);
+            if (!task) return;
+
+            const newText = document.getElementById('editTaskText').value.trim();
+            if (!newText) {
+                const el = document.getElementById('editTaskText');
+                el.style.borderColor = 'var(--danger)';
+                setTimeout(() => el.style.borderColor = 'var(--border)', 1200);
+                return;
+            }
+
+            const newPriority  = document.getElementById('editPriority').value;
+            const newTagRaw    = document.getElementById('editTags').value.trim();
+            const newTags      = newTagRaw ? newTagRaw.split(',').map(t=>t.trim().replace(/^#/,'')).filter(Boolean) : [];
+            const newDt        = document.getElementById('editDateTime').value;
+            const newRecurring = document.getElementById('editRecurring').value;
+
+            const saveBtn = document.getElementById('editSaveBtn');
+            saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+
+            const updates = {
+                text:             newText,
+                priority:         newPriority,
+                tags:             newTags,
+                scheduled_time:   newDt ? new Date(newDt).toISOString() : null,
+                recurring:        newRecurring,
+            };
+
+            const { error } = await sb.from('tasks').update(updates).eq('id', id);
+            if (error) {
+                showToast('⚠ Could not update task: ' + error.message, '#ff4d4d');
+                saveBtn.disabled = false; saveBtn.textContent = '💾 Save Changes';
+                return;
+            }
+
+            // Update local state
+            task.text          = newText;
+            task.priority      = newPriority;
+            task.tags          = newTags;
+            task.scheduledTime = newDt ? new Date(newDt).toISOString() : null;
+            task.recurring     = newRecurring;
+
+            closeEditModal();
+            renderTasks();
+            renderTagCloud();
+            showToast('✅ Task updated!', '#2ea043');
+        }
+
+        // ── Filter ────────────────────────────────────────────────────
         function setFilter(type, btn) {
             activeFilter = type;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -826,16 +896,8 @@
             renderTasks();
         }
 
-        function setView(view) {
-            currentView = view;
-            document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
-            document.getElementById('kanbanViewBtn').classList.toggle('active', view === 'kanban');
-            document.getElementById('taskList').style.display = view === 'list' ? '' : 'none';
-            document.getElementById('kanbanBoard').classList.toggle('active', view === 'kanban');
-            if (view === 'kanban') renderKanban();
-            else renderTasks();
-        }
 
+        // ── Tag Color Palette ──────────────────────────────────────────
         const TAG_COLORS = [
             { bg:'rgba(88,166,255,0.15)',  border:'rgba(88,166,255,0.35)',  text:'#58a6ff'  },
             { bg:'rgba(163,113,247,0.15)', border:'rgba(163,113,247,0.35)', text:'#a371f7'  },
@@ -868,8 +930,8 @@
             }).join('');
         }
 
+        // ── Render ────────────────────────────────────────────────────
         function renderTasks() {
-            if (currentView === 'kanban') { renderKanban(); return; }
             const query  = document.getElementById('searchInput').value.toLowerCase();
             let source   = [...tasks];
             if (query) source = source.filter(t =>
@@ -890,6 +952,7 @@
                 li.className = `task-item p-${task.priority}-item${task.completed ? ' completed-item' : ''}`;
                 li.dataset.id = task.id;
 
+                // Tags
                 const tagHTML = (task.tags||[]).map(t => {
                     const c = getTagColor(t);
                     return `<span class="tag-colored" style="background:${c.bg};border-color:${c.border};color:${c.text}" onclick="setTagFilter('${escHtml(t)}')" title="Filter by #${escHtml(t)}">#${escHtml(t)}</span>`;
@@ -902,6 +965,7 @@
                 const recurBadge = task.recurring && task.recurring !== 'none'
                     ? `<span class="recurring-badge">🔁 ${task.recurring}</span>` : '';
 
+                // Subtasks
                 const subs = subtasksMap[task.id] || [];
                 const subsDone = subs.filter(s=>s.done).length;
                 const subPct = subs.length ? Math.round(subsDone/subs.length*100) : 0;
@@ -915,6 +979,7 @@
                         </li>`).join('')}
                     </ul>` : '';
 
+                // Comments
                 const cmts = commentsMap[task.id] || [];
                 const cmtBadge = cmts.length > 0 ? `<span style="font-size:11px;color:var(--muted);">💬 ${cmts.length}</span>` : '';
                 const cmtsHTML = cmts.map(c=>`
@@ -923,6 +988,7 @@
                         <div class="comment-text">${escHtml(c.text)}</div>
                     </div>`).join('');
 
+                // Timer
                 const tr = taskTimers[task.id] || { seconds:0, total:0 };
                 const totalSecs = tr.total || 0;
                 const isRunning = !!tr.interval;
@@ -943,10 +1009,12 @@
                             <button class="expand-btn" data-expanded="0" title="Subtasks & more">
                                 ${subs.length > 0 ? `✓ ${subsDone}/${subs.length}` : '+ Subtasks'}
                             </button>
+                            <button class="task-edit-btn" title="Edit task">✏️</button>
                             <button class="task-del-btn" title="Delete">🗑️</button>
                         </div>
                     </div>
 
+                    <!-- Expandable section -->
                     <div class="subtask-expand-panel" style="display:none;">
                         <!-- Time Tracker -->
                         <div class="time-tracker">
@@ -958,6 +1026,7 @@
                             ${totalSecs > 0 ? `<span class="timer-total">Total: ${fmtTime(totalSecs)}</span>` : ''}
                         </div>
 
+                        <!-- Subtasks -->
                         <div class="subtask-section">
                             <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Checklist</div>
                             ${subsHTML}
@@ -967,6 +1036,7 @@
                             </div>
                         </div>
 
+                        <!-- Comments -->
                         <div class="subtask-section">
                             <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Notes & Comments</div>
                             <div class="comment-list">${cmtsHTML}</div>
@@ -977,6 +1047,7 @@
                         </div>
                     </div>`;
 
+                // Events
                 li.querySelector('.task-main').addEventListener('click', e => {
                     if (!e.target.closest('.task-del-btn') && !e.target.closest('.gcal-btn') &&
                         !e.target.closest('.expand-btn') && !e.target.closest('.tag-colored') &&
@@ -985,11 +1056,15 @@
                 li.querySelector('.task-del-btn').addEventListener('click', e => {
                     e.stopPropagation(); showDeleteModal(task);
                 });
+                li.querySelector('.task-edit-btn').addEventListener('click', e => {
+                    e.stopPropagation(); showEditModal(task);
+                });
                 if (task.scheduledTime) {
                     li.querySelector('.gcal-btn').addEventListener('click', e => {
                         e.stopPropagation(); addToGoogleCalendar(task);
                     });
                 }
+                // Expand toggle
                 li.querySelector('.expand-btn').addEventListener('click', e => {
                     e.stopPropagation();
                     const panel = li.querySelector('.subtask-expand-panel');
@@ -1001,6 +1076,7 @@
                 ul.appendChild(li);
             });
 
+            // Init SortableJS drag-and-drop
             if (sortableInst) sortableInst.destroy();
             sortableInst = Sortable.create(ul, {
                 handle: '.task-drag-handle',
@@ -1024,55 +1100,8 @@
             updateStats();
         }
 
-        function getKanbanStatus(task) {
-            if (task.completed) return 'done';
-            return kanbanStatus[task.id] || 'todo';
-        }
-
-        function renderKanban() {
-            const cols = { todo: [], inprogress: [], done: [] };
-            tasks.forEach(t => { const s = getKanbanStatus(t); if (cols[s]) cols[s].push(t); });
-
-            ['Todo','InProgress','Done'].forEach(col => {
-                const key = col.toLowerCase().replace('done','done');
-                const el = document.getElementById(`kDrop${col}`);
-                const countEl = document.getElementById(`kCount${col}`);
-                const arr = col === 'Done' ? cols.done : col === 'InProgress' ? cols.inprogress : cols.todo;
-                if (countEl) countEl.textContent = arr.length;
-                if (!el) return;
-                el.innerHTML = arr.map(task => {
-                    const tagHTML = (task.tags||[]).map(t => {
-                        const c = getTagColor(t); return `<span class="tag-colored" style="background:${c.bg};border-color:${c.border};color:${c.text};font-size:10px;">#${escHtml(t)}</span>`;
-                    }).join('');
-                    return `<div class="kanban-card p-${task.priority}-item ${task.completed?'completed-card':''}" draggable="true" data-id="${task.id}">
-                        <div class="kanban-card-text">${escHtml(task.text)}</div>
-                        <div class="kanban-card-meta">
-                            <span class="priority-badge p-${task.priority}" style="font-size:10px;">${task.priority.toUpperCase()}</span>
-                            ${tagHTML}
-                        </div>
-                        <div class="kanban-card-actions">
-                            ${col !== 'Todo' ? `<button class="kanban-action-btn" onclick="moveKanban('${task.id}','todo')">← To Do</button>` : ''}
-                            ${col !== 'InProgress' && col !== 'Done' ? `<button class="kanban-action-btn" onclick="moveKanban('${task.id}','inprogress')">▶ Start</button>` : ''}
-                            ${col !== 'Done' ? `<button class="kanban-action-btn done-btn" onclick="moveKanban('${task.id}','done')">✅ Done</button>` : ''}
-                            <button class="kanban-action-btn del-btn" onclick="event.stopPropagation();showDeleteModal(tasks.find(t=>t.id=='${task.id}'))">🗑</button>
-                        </div>
-                    </div>`;
-                }).join('');
-            });
-        }
-
-        function moveKanban(taskId, status) {
-            kanbanStatus[taskId] = status;
-            if (status === 'done') {
-                const task = tasks.find(t => t.id == taskId);
-                if (task && !task.completed) toggleComplete(taskId);
-            } else {
-                const task = tasks.find(t => t.id == taskId);
-                if (task && task.completed) toggleComplete(taskId);
-            }
-            renderKanban();
-        }
-
+        // ── Kanban ────────────────────────────────────────────────────
+        // ── Subtasks ──────────────────────────────────────────────────
         function addSubtask(taskId) {
             const inp = document.getElementById(`subtask-input-${taskId}`);
             const text = inp ? inp.value.trim() : '';
@@ -1093,6 +1122,7 @@
             renderTasks();
         }
 
+        // ── Comments ──────────────────────────────────────────────────
         function addComment(taskId) {
             const inp = document.getElementById(`comment-input-${taskId}`);
             const text = inp ? inp.value.trim() : '';
@@ -1108,6 +1138,7 @@
             renderTasks();
         }
 
+        // ── Time Tracker ──────────────────────────────────────────────
         function toggleTimer(taskId) {
             if (!taskTimers[taskId]) taskTimers[taskId] = { seconds: 0, total: 0, interval: null };
             const tr = taskTimers[taskId];
@@ -1131,6 +1162,7 @@
             renderTasks();
         }
 
+        // ── Recurring task completion handler ────────────────────────
         async function handleRecurringCompletion(task) {
             if (!task.recurring || task.recurring === 'none') return;
             const nextDate = task.scheduledTime ? new Date(task.scheduledTime) : new Date();
@@ -1145,12 +1177,23 @@
                 recurring: task.recurring,
             }).select().single();
             if (!error && data) {
-                tasks.unshift(dbToLocal(data));
+                const newTask = dbToLocal(data);
+                tasks.unshift(newTask);
+                // Schedule reminder + start email for the new recurrence
+                scheduleTaskTimer(newTask);
+                // Send a confirmation email that the task was rescheduled
+                sendEmail(
+                    `🔁 Recurring Task Rescheduled: "${task.text}"`,
+                    task.text,
+                    `Your recurring task "${task.text}" has been marked complete and rescheduled. Next occurrence: ${nextDate.toLocaleString()}.`,
+                    nextDate.toLocaleString()
+                );
                 showToast(`🔁 Recurring task rescheduled: ${task.recurring}`, '#a371f7');
                 renderTasks();
             }
         }
 
+        // ── Time badges ───────────────────────────────────────────────
         function getTimeBadgeClass(task) {
             if (task.completed) return 'done';
             const diff = new Date(task.scheduledTime) - Date.now();
@@ -1168,6 +1211,7 @@
             return `🕐 in ${mins}m`;
         }
 
+        // ── Stats ─────────────────────────────────────────────────────
         function updateStats() {
             const total=tasks.length, done=tasks.filter(t=>t.completed).length;
             const sched=tasks.filter(t=>t.scheduledTime&&!t.completed).length;
@@ -1187,6 +1231,7 @@
             } else { allDoneEl.style.display='none'; if(done<total)hasCelebrated=false; }
         }
 
+        // ── EmailJS ───────────────────────────────────────────────────
         function sendEmail(subject,taskName,message,scheduledTime) {
             if (!notifEmail) { showToast('⚠ Sign in to receive email notifications.','#ffa500'); return; }
             emailjs.send(EJS_SERVICE_ID,EJS_TEMPLATE_ID,{to_email:notifEmail,subject,task_name:taskName,message,scheduled_time:scheduledTime||'N/A'})
@@ -1194,6 +1239,7 @@
                 .catch(err=>showToast('⚠ Email failed: '+(err.text||err.message),'#ff4d4d'));
         }
 
+        // ── Timers ────────────────────────────────────────────────────
         function scheduleAllTimers() { tasks.forEach(t=>{if(!t.completed&&t.scheduledTime)scheduleTaskTimer(t);}); }
         async function scheduleTaskTimer(task) {
             if (!task.scheduledTime) return;
@@ -1222,6 +1268,7 @@
             if (timerMap[id]){clearTimeout(timerMap[id].reminder);clearTimeout(timerMap[id].start);delete timerMap[id];}
         }
 
+        // ── Delete modal ──────────────────────────────────────────────
         function showDeleteModal(task) {
             const overlay=document.createElement('div');
             overlay.className='modal-overlay';
@@ -1250,6 +1297,7 @@
             };
         }
 
+        // ── Toast ─────────────────────────────────────────────────────
         function showToast(msg,color='#58a6ff') {
             const c=document.getElementById('toastContainer');
             const t=document.createElement('div');
@@ -1275,10 +1323,13 @@
         }
         function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+        // ── Google Calendar ───────────────────────────────────────────
         function addToGoogleCalendar(task) {
             const start = new Date(task.scheduledTime);
+            // Default event duration: 1 hour
             const end   = new Date(start.getTime() + 60 * 60 * 1000);
 
+            // Google Calendar needs dates in YYYYMMDDTHHmmssZ format
             const fmt = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
             const tags    = (task.tags || []).join(', ');
@@ -1303,6 +1354,9 @@
         setInterval(()=>renderTasks(),60000);
     </script>
 
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!--  🎨  FEATURE 1: BACKGROUND THEME SYSTEM                      -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
     <!-- <script>
         const THEMES = [
             { id:'nova',    label:'Nova',    colors:['rgba(31,111,235,0.12)','rgba(88,166,255,0.08)','rgba(163,113,247,0.10)'], bg:'#080c12' },
@@ -1396,7 +1450,9 @@
         onIntensityChange(savedInt);
     </script> -->
 
-  
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!--  🎙️  FEATURE 2: VOICE COMMANDS                               -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
     <script>
         let voiceActive = false;
         let recognition = null;
@@ -1449,6 +1505,7 @@
         }
 
         async function processVoiceCommand(cmd) {
+            // ADD TASK — "add task [name]" / "new task [name]" / "create task [name]"
             const addMatch = cmd.match(/^(?:add|new|create)(?: a)? task (.+)$/i);
             if (addMatch) {
                 const text = addMatch[1].trim();
@@ -1467,6 +1524,7 @@
                 return;
             }
 
+            // COMPLETE TASK — "complete [task name]" / "mark done [task name]"
             const doneMatch = cmd.match(/^(?:complete|mark done|finish)(?: task)? (.+)$/i);
             if (doneMatch) {
                 const name = doneMatch[1].toLowerCase();
@@ -1478,6 +1536,7 @@
                 return;
             }
 
+            // DELETE TASK — "delete [task name]" / "remove [task name]"
             const delMatch = cmd.match(/^(?:delete|remove)(?: task)? (.+)$/i);
             if (delMatch) {
                 const name = delMatch[1].toLowerCase();
@@ -1488,6 +1547,7 @@
                 return;
             }
 
+            // SHOW FILTER — "show pending/completed/all/scheduled"
             const filterMatch = cmd.match(/^show (all|pending|completed|scheduled)(?: tasks?)?$/i);
             if (filterMatch) {
                 const f = filterMatch[1].toLowerCase();
@@ -1496,6 +1556,7 @@
                 return;
             }
 
+            // STATUS / SUMMARY
             if (cmd.includes('how many') || cmd.includes('status') || cmd.includes('summary')) {
                 const total = tasks.length, done = tasks.filter(t=>t.completed).length;
                 const msg = `You have ${total} tasks, ${done} completed, ${total-done} pending.`;
@@ -1516,16 +1577,20 @@
         }
     </script>
 
-    
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!--  🤖  FEATURE 3: AI ASSISTANT (Groq-powered — fully live)     -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
     <script>
     const GROQ_API_KEY = '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';
     const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
     const GROQ_MODEL = 'llama-3.3-70b-versatile';
 
     let aiOpen = false;
-    let aiHistory = []; 
+    let aiHistory = []; // full conversation for context memory
 
-    let pendingTask = null;
+    // ── Pending task draft (minimal — Groq now manages the logic) ──
+    let pendingTask = null; // { text, priority, scheduledTime } — only set when committed
+
     function toggleAI() {
         try {
             aiOpen = !aiOpen;
@@ -1552,6 +1617,7 @@
         ).join('\n');
     }
 
+    // ── Simple Natural Language Date Parser ──
     function parseNaturalDate(str) {
         if (!str) return null;
         const m = str.toLowerCase().trim();
@@ -1578,7 +1644,9 @@
         return isNaN(base) ? null : base;
     }
 
+    // ── Execute an action returned by Groq ──
     async function executeAction(action) {
+        // action: { type, text, priority, datetime, task_id, confirm_message }
         const t = action.type;
 
         if (t === 'ADD_TASK') {
@@ -1668,6 +1736,7 @@
         return null;
     }
 
+    // ── Master Groq call — drives all conversation ──
     async function callGroq(userMsg) {
         const systemPrompt = `You are Prod AI — warm, witty, and genuinely helpful. You live inside Prodify, a productivity app. You have real-time access to the user's tasks and can control the app by returning structured JSON actions.
 
@@ -1676,6 +1745,16 @@ Current time: ${new Date().toLocaleString('en-IN')}
 USER'S CURRENT TASKS:
 ${buildTaskContext()}
 
+════════════════════════════════════════
+HOW TO RESPOND:
+════════════════════════════════════════
+You respond in ONE of two formats:
+
+── FORMAT A: Pure conversation ──
+Just write naturally. Be warm, helpful, encouraging. Use emojis tastefully. Keep responses focused and not too long.
+
+── FORMAT B: Take an action AND respond ──
+When the user wants to add, complete, delete, or update a task, reply with a JSON block FIRST, then your natural conversational message after it.
 
 JSON block format (must be valid JSON, on its own line):
 ACTION:{"type":"ADD_TASK","text":"task name","priority":"high|medium|low","datetime":"natural date string or null","confirm_message":"your warm confirmation message here"}
@@ -1725,6 +1804,7 @@ Other rules:
         return data.choices?.[0]?.message?.content?.trim() || "I had a brief glitch — could you try that again?";
     }
 
+    // ── Core send handler ──
     async function sendAI() {
         const input = document.getElementById('aiInput');
         const msg = input.value.trim();
@@ -1743,6 +1823,7 @@ Other rules:
 
             document.getElementById(thinkId)?.remove();
 
+            // Parse out any ACTION: {...} blocks
             const actionLineRegex = /^ACTION:\s*(\{.+\})\s*$/m;
             const actionMatch = rawReply.match(actionLineRegex);
 
@@ -1752,12 +1833,14 @@ Other rules:
                 try {
                     const action = JSON.parse(actionMatch[1]);
                     const errorMsg = await executeAction(action);
+                    // Show confirm_message from Groq (or error if action failed)
                     const finalDisplay = errorMsg || (action.confirm_message
                         ? action.confirm_message + (displayText ? '\n\n' + displayText : '')
                         : displayText);
                     addAIMessage('bot', finalDisplay || "Done!");
                     aiHistory.push({ role: 'assistant', content: finalDisplay || "Done!" });
                 } catch(parseErr) {
+                    // JSON parse failed — show raw text
                     addAIMessage('bot', displayText || rawReply);
                     aiHistory.push({ role: 'assistant', content: displayText || rawReply });
                 }
@@ -1766,6 +1849,7 @@ Other rules:
                 aiHistory.push({ role: 'assistant', content: rawReply });
             }
 
+            // Keep history bounded (last 20 turns = 40 messages)
             if (aiHistory.length > 40) aiHistory = aiHistory.slice(-40);
 
         } catch (err) {
@@ -1785,11 +1869,13 @@ function addAIMessage(sender, text, isThinking = false) {
     div.id = msgId;
     div.className = `ai-msg ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
 
+    // Render **bold** markdown and newlines
     let formattedText = text
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\n/g, '<br>');
     const bubbleClass = isThinking ? 'ai-msg-bubble thinking' : 'ai-msg-bubble';
 
+    // For bot messages, add a small "speak" button
     const speakBtn = (sender === 'bot' && !isThinking)
         ? `<button class="voice-tts-btn" onclick="novaSpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
         : '';
@@ -1800,7 +1886,9 @@ function addAIMessage(sender, text, isThinking = false) {
     return msgId;
 }
 
-
+// ══════════════════════════════════════════════════════════════
+//  🎙️  VOICE CONVERSATION with Nova (Groq-powered)
+// ══════════════════════════════════════════════════════════════
 (function() {
     let aiVoiceActive = false;
     let aiVoiceRec = null;
@@ -1819,6 +1907,10 @@ function addAIMessage(sender, text, isThinking = false) {
         }
     };
 
+    let aiVoiceSilenceTimer = null;   // debounce timer for pause detection
+    let aiVoicePendingText  = '';     // accumulated transcript waiting to be sent
+    const AI_VOICE_PAUSE_MS = 1500;   // send after 1.5 s of silence
+
     function startAIVoice() {
         // Stop any ongoing TTS first
         if (window.speechSynthesis) window.speechSynthesis.cancel();
@@ -1826,50 +1918,147 @@ function addAIMessage(sender, text, isThinking = false) {
 
         aiVoiceRec = new SpeechRec();
         aiVoiceRec.lang = 'en-US';
-        aiVoiceRec.interimResults = false;
-        aiVoiceRec.continuous = false;
+        aiVoiceRec.interimResults = true;   // show live preview
+        aiVoiceRec.continuous    = true;    // don't auto-stop after first pause
 
         aiVoiceRec.onstart = () => {
             aiVoiceActive = true;
+            aiVoicePendingText = '';
             setVoiceState('listening');
-            showToast('🎙️ Listening… speak to Nova', '#a371f7');
+            showToast('🎙️ Listening… speak then pause to send', '#a371f7');
         };
 
-        aiVoiceRec.onresult = async (e) => {
-            const transcript = e.results[0][0].transcript.trim();
-            if (!transcript) { stopAIVoice(); return; }
+        aiVoiceRec.onresult = (e) => {
+            // Build full transcript from all results so far
+            let interimText = '';
+            let finalText   = '';
+            for (let i = 0; i < e.results.length; i++) {
+                const t = e.results[i][0].transcript;
+                if (e.results[i].isFinal) finalText   += t + ' ';
+                else                      interimText += t;
+            }
 
-            setVoiceState('processing');
-            // Put transcript into chat as user message and send to AI
-            document.getElementById('aiInput').value = transcript;
-            addAIMessage('user', transcript);
-            document.getElementById('aiInput').value = '';
+            const fullText = (finalText + interimText).trim();
+            if (!fullText) return;
 
-            // Route through existing AI logic (which handles add/delete/complete + Groq)
-            // We replicate the sendAI flow but capture the bot reply for TTS
-            await sendAIVoice(transcript);
-            setVoiceState('idle');
+            // Show live preview in the input box
+            document.getElementById('aiInput').value = fullText;
+
+            // Store confirmed (final) text
+            if (finalText.trim()) aiVoicePendingText = finalText.trim();
+
+            // Reset the silence debounce timer on every new word
+            clearTimeout(aiVoiceSilenceTimer);
+            aiVoiceSilenceTimer = setTimeout(async () => {
+                // Use the most complete text available
+                const toSend = aiVoicePendingText || fullText;
+                if (!toSend) return;
+
+                document.getElementById('aiInput').value = '';
+                aiVoicePendingText = '';
+
+                // Stop listening while processing so we don't pick up the AI's reply
+                try { aiVoiceRec.stop(); } catch(e) {}
+
+                setVoiceState('processing');
+                addAIMessage('user', toSend);
+                await sendAIVoice(toSend);
+
+                // Resume listening after reply if voice mode is still on
+                if (aiVoiceActive) {
+                    setVoiceState('listening');
+                    try {
+                        aiVoiceRec = new SpeechRec();
+                        aiVoiceRec.lang           = 'en-US';
+                        aiVoiceRec.interimResults = true;
+                        aiVoiceRec.continuous     = true;
+                        _attachAIVoiceHandlers(aiVoiceRec);
+                        aiVoiceRec.start();
+                    } catch(e) {}
+                }
+            }, AI_VOICE_PAUSE_MS);
         };
 
         aiVoiceRec.onerror = (err) => {
-            if (err.error !== 'no-speech') {
+            clearTimeout(aiVoiceSilenceTimer);
+            if (err.error !== 'no-speech' && err.error !== 'aborted') {
                 showToast('🎙️ Error: ' + err.error, '#ff4d4d');
-            }
-            stopAIVoice();
-        };
-
-        aiVoiceRec.onend = () => {
-            if (aiVoiceActive) {
                 stopAIVoice();
             }
         };
 
+        aiVoiceRec.onend = () => {
+            // Only fully stop if user explicitly ended voice mode
+            // (the processing flow handles restarting)
+        };
+
+        _attachAIVoiceHandlers(aiVoiceRec);
         aiVoiceRec.start();
+    }
+
+    // Attach handlers to a recognition instance (used on initial start + restart)
+    function _attachAIVoiceHandlers(rec) {
+        rec.onresult = (e) => {
+            let interimText = '';
+            let finalText   = '';
+            for (let i = 0; i < e.results.length; i++) {
+                const t = e.results[i][0].transcript;
+                if (e.results[i].isFinal) finalText   += t + ' ';
+                else                      interimText += t;
+            }
+            const fullText = (finalText + interimText).trim();
+            if (!fullText) return;
+
+            document.getElementById('aiInput').value = fullText;
+            if (finalText.trim()) aiVoicePendingText = finalText.trim();
+
+            clearTimeout(aiVoiceSilenceTimer);
+            aiVoiceSilenceTimer = setTimeout(async () => {
+                const toSend = aiVoicePendingText || fullText;
+                if (!toSend) return;
+
+                document.getElementById('aiInput').value = '';
+                aiVoicePendingText = '';
+
+                try { rec.stop(); } catch(e) {}
+                setVoiceState('processing');
+                addAIMessage('user', toSend);
+                await sendAIVoice(toSend);
+
+                if (aiVoiceActive) {
+                    setVoiceState('listening');
+                    setTimeout(() => {
+                        try {
+                            const next = new SpeechRec();
+                            next.lang           = 'en-US';
+                            next.interimResults = true;
+                            next.continuous     = true;
+                            aiVoiceRec = next;
+                            _attachAIVoiceHandlers(next);
+                            next.start();
+                        } catch(e) {}
+                    }, 600); // small gap so AI TTS can start before mic re-opens
+                }
+            }, AI_VOICE_PAUSE_MS);
+        };
+
+        rec.onerror = (err) => {
+            clearTimeout(aiVoiceSilenceTimer);
+            if (err.error !== 'no-speech' && err.error !== 'aborted') {
+                showToast('🎙️ Error: ' + err.error, '#ff4d4d');
+                stopAIVoice();
+            }
+        };
+
+        rec.onend = () => {};   // managed manually
     }
 
     function stopAIVoice() {
         aiVoiceActive = false;
+        clearTimeout(aiVoiceSilenceTimer);
+        aiVoicePendingText = '';
         if (aiVoiceRec) { try { aiVoiceRec.stop(); } catch(e){} aiVoiceRec = null; }
+        if (document.getElementById('aiInput')) document.getElementById('aiInput').value = '';
         setVoiceState('idle');
     }
 
@@ -1908,7 +2097,8 @@ function addAIMessage(sender, text, isThinking = false) {
         }
     }
 
-    
+    // Voice-aware sendAI: same as sendAI() but auto-speaks the bot reply
+    // Voice-aware sendAI: unified pipeline, auto-speaks the bot reply
     async function sendAIVoice(msg) {
         aiHistory.push({ role: 'user', content: msg });
         const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
@@ -1964,6 +2154,7 @@ function addAIMessage(sender, text, isThinking = false) {
         novaSpeak(null, rawText);
     }
 
+    // Global speak function - called by "🔊 Speak" buttons and voice mode
     window.novaSpeak = function(btnEl, overrideText) {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
@@ -1976,6 +2167,7 @@ function addAIMessage(sender, text, isThinking = false) {
         utt.pitch = 1.05;
         utt.volume = 1;
 
+        // Try to pick a pleasant female voice
         const voices = window.speechSynthesis.getVoices();
         const preferred = voices.find(v =>
             /google uk english female|samantha|karen|victoria|moira|fiona|zira/i.test(v.name)
@@ -1999,6 +2191,12 @@ function addAIMessage(sender, text, isThinking = false) {
         window.speechSynthesis.getVoices();
         window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
     }
+
+    // Edit modal keyboard shortcuts
+    document.addEventListener('keydown', e => {
+        if (!document.getElementById('editModalOverlay')) return;
+        if (e.key === 'Escape') { closeEditModal(); }
+    });
 })();
 </script>
     <script>
