@@ -154,13 +154,13 @@
         footer a:hover { color: var(--text); }
         @media(max-width:768px) { .navbar{padding:16px 20px;} .nav-links{display:none;} .dashboard{padding:22px 16px;} .form-row{flex-direction:column;} }
 
-        /* ── VIEW TOGGLE ── */
+      
         .view-toggle { display:flex; gap:6px; margin-bottom:20px; }
         .view-btn { padding:8px 16px; border:1px solid var(--border); border-radius:20px; background:transparent; color:var(--muted); cursor:pointer; font-size:13px; font-weight:500; transition:all .2s; font-family:inherit; display:flex; align-items:center; gap:6px; }
         .view-btn:hover { border-color:var(--accent); color:var(--accent); }
         .view-btn.active { background:rgba(88,166,255,0.15); border-color:var(--accent); color:var(--accent); }
 
-        /* ── KANBAN BOARD ── */
+        
         #kanbanBoard { display:none; gap:16px; margin-bottom:20px; overflow-x:auto; padding-bottom:8px; }
         #kanbanBoard.active { display:flex; }
         .kanban-col { flex:1; min-width:220px; background:rgba(255,255,255,0.025); border-radius:16px; border:1px solid var(--border); padding:16px; display:flex; flex-direction:column; gap:10px; }
@@ -191,7 +191,7 @@
         .kanban-drop-zone { min-height:80px; border:2px dashed transparent; border-radius:12px; transition:all .2s; }
         .kanban-drop-zone.drag-over { border-color:rgba(88,166,255,0.4); background:rgba(88,166,255,0.05); }
 
-        /* ── SUBTASKS / CHECKLIST ── */
+        
         .subtask-section { margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
         .subtask-list { list-style:none; padding:0; display:flex; flex-direction:column; gap:4px; margin-bottom:6px; }
         .subtask-item { display:flex; align-items:center; gap:8px; padding:4px 6px; border-radius:8px; transition:background .2s; }
@@ -213,7 +213,7 @@
         .expand-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:11px; padding:2px 6px; border-radius:6px; transition:.2s; font-family:inherit; }
         .expand-btn:hover { color:var(--accent); background:rgba(88,166,255,0.08); }
 
-        /* ── TASK COMMENTS ── */
+        
         .comments-section { margin-top:8px; padding-top:8px; border-top:1px solid var(--border); display:none; }
         .comments-section.open { display:block; }
         .comment-list { display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
@@ -228,7 +228,7 @@
         .comment-submit-btn { padding:7px 12px; border-radius:8px; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#080c12; font-size:12px; font-weight:700; cursor:pointer; transition:.2s; font-family:inherit; }
         .comment-submit-btn:hover { transform:translateY(-1px); }
 
-        /* ── TIME TRACKER ── */
+        
         .time-tracker { display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap; }
         .timer-display { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); background:rgba(88,166,255,0.08); padding:3px 8px; border-radius:8px; border:1px solid rgba(88,166,255,0.2); min-width:64px; text-align:center; }
         .timer-btn { padding:4px 10px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:11px; cursor:pointer; transition:.2s; font-family:inherit; display:flex; align-items:center; gap:4px; }
@@ -237,19 +237,19 @@
         @keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:.65} }
         .timer-total { font-size:11px; color:var(--muted); }
 
-        /* ── RECURRING TASKS ── */
+        
         .recurring-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:600; background:rgba(163,113,247,0.12); color:var(--accent3); border:1px solid rgba(163,113,247,0.25); font-family:'JetBrains Mono',monospace; }
 
-        /* ── COLOR-CODED TAGS ── */
+        
         .tag-colored { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; border:1px solid; }
 
-        /* ── SORTABLE DRAG INDICATOR ── */
+        
         .task-drag-handle { cursor:grab; color:var(--muted); padding:0 4px; font-size:14px; flex-shrink:0; opacity:.4; transition:.2s; }
         .task-drag-handle:hover { opacity:1; color:var(--accent); }
         .task-item.sortable-ghost { opacity:.3; background:rgba(88,166,255,0.08); border:2px dashed var(--accent); }
         .task-item.sortable-chosen { box-shadow:0 12px 36px rgba(0,0,0,0.5); transform:scale(1.02); z-index:100; }
 /* 
-       // ── BACKGROUND THEME PANEL ──
+       
         .theme-fab { position:fixed; bottom:28px; right:100px; z-index:500; width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent3)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 4px 20px rgba(88,166,255,0.4); transition:all .3s; }
         .theme-fab:hover { transform:scale(1.1) rotate(20deg); box-shadow:0 8px 30px rgba(88,166,255,0.6); }
         .theme-panel { position:fixed; bottom:90px; right:90px; z-index:500; background:rgba(22,27,34,0.98); border:1px solid var(--border-hi); border-radius:20px; padding:20px; width:260px; backdrop-filter:blur(20px); box-shadow:0 20px 60px rgba(0,0,0,0.7); transform:scale(0) translateY(20px); transform-origin:bottom right; opacity:0; transition:all .35s cubic-bezier(0.175,0.885,0.32,1.275); pointer-events:none; }
@@ -270,10 +270,10 @@
         .theme-speed-btn { flex:1; padding:6px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:11px; cursor:pointer; transition:all .2s; font-family:'DM Sans',sans-serif; }
         .theme-speed-btn.active,.theme-speed-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(88,166,255,0.1); }
 */
-        /* ── VOICE BUTTON ── */
+        
 
 
-        /* ── AI ASSISTANT ── */
+        
         .ai-fab { position:fixed; bottom:28px; right:28px; z-index:500; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--accent3),var(--accent2)); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 6px 24px rgba(163,113,247,0.5); transition:all .3s; }
         .ai-fab:hover { transform:scale(1.1); box-shadow:0 10px 36px rgba(163,113,247,0.7); }
         .ai-fab .ai-badge { position:absolute; top:-4px; right:-4px; width:16px; height:16px; border-radius:50%; background:var(--success); border:2px solid var(--bg); animation:pulse 2s ease infinite; }
@@ -313,8 +313,7 @@
         .ai-send-btn:hover { transform:scale(1.08); }
         .ai-send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
     
-    /* --- AI Chat Message Layout --- */
-    /* user-msg / bot-msg are set by JS; map them onto the existing flex system */
+    
     .ai-msg.user-msg {
         align-self: flex-end;
         align-items: flex-end;
@@ -349,7 +348,7 @@
         font-style: italic;
     }
 
-    /* ── VOICE CONVERSATION IN AI PANEL ── */
+    
     .ai-voice-btn {
         width: 38px; height: 38px; border-radius: 12px;
         background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
@@ -403,7 +402,7 @@
         font-family: 'DM Sans', sans-serif;
     }
     .voice-tts-btn:hover { background: rgba(163,113,247,0.18); border-color: var(--accent3); }
-        /* ── BACKGROUND GLOW ── */
+        
         .bg-glow { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
         .bg-glow::before { content: ""; position: absolute; top: -15%; left: -15%; width: 65%; height: 65%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(88,166,255,0.16) 0%, rgba(31,111,235,0.08) 35%, transparent 65%); animation: glowPulse 8s ease-in-out infinite; filter: blur(40px); }
         .bg-glow::after  { content: ""; position: absolute; bottom: -15%; right: -15%; width: 60%; height: 60%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(163,113,247,0.14) 0%, rgba(88,166,255,0.06) 35%, transparent 65%); animation: glowPulse 10s ease-in-out infinite reverse; filter: blur(40px); }
@@ -510,7 +509,7 @@
 
             <div id="successMsg" class="success-msg"></div>
 
-            <!-- View Toggle -->
+           
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
                 <div class="view-toggle">
                     <button class="view-btn active" id="listViewBtn" onclick="setView('list')">
@@ -533,7 +532,7 @@
                 <button class="filter-btn" onclick="setFilter('recurring',this)">🔁 Recurring</button>
             </div>
 
-            <!-- Kanban Board -->
+            
             <div id="kanbanBoard">
                 <div class="kanban-col todo" id="kColTodo">
                     <div class="kanban-col-header">
@@ -578,7 +577,7 @@
         </p>
     </footer>
 
-    <!-- ── BACKGROUND THEME FAB + PANEL ── -->
+    
     <!-- <button class="theme-fab" id="themeFab" title="Change Background Theme" onclick="toggleThemePanel()">🎨</button>
     <div class="theme-panel" id="themePanel">
         <div class="theme-panel-title">Background Theme</div>
@@ -599,7 +598,7 @@
 
 
 
-    <!-- ── AI ASSISTANT PANEL ── -->
+    
     <button class="ai-fab" id="aiFab" title="AI Assistant" onclick="toggleAI()">
         🤖<span class="ai-badge"></span>
     </button>
@@ -640,44 +639,37 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ================================================================
-        //  🔧  SUPABASE CONFIG
-        //      Supabase Dashboard → Project → Settings → API
-        // ================================================================
-
-    const SUPABASE_URL  = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';         // e.g. https://xyzxyz.supabase.co
+        
+    const SUPABASE_URL  = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';         
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqanlobHdia3BubXJ5dHVxZ3VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTAwMDIsImV4cCI6MjA4OTcyNjAwMn0.a-aqOsOWNg1Alt6elXDHju-2XQDtiROazU_MDBa4thA';    // long public anon key
 
-        // ================================================================
+        
 
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-        // ── EmailJS ──────────────────────────────────────────────────────
-        // ================================================================
-        //  🔧  EMAILJS CONFIG (replace if needed)
-        // ================================================================
+        
         const EJS_PUBLIC_KEY  = '0Ud5h7LBwcvc3zSqZ';
         const EJS_SERVICE_ID  = 'service_vrt3fw9';
         const EJS_TEMPLATE_ID = 'template_065pt9r';
-        // ================================================================
+        
         emailjs.init(EJS_PUBLIC_KEY);
 
-        // ── State ─────────────────────────────────────────────────────
-        let tasks        = [];   // always loaded from Supabase
+        
+        let tasks        = [];   
         let currentUser  = null;
         let notifEmail   = '';
         let hasCelebrated = false;
         let activeFilter  = 'all';
         let timerMap      = {};
-        let currentView   = 'list';  // 'list' | 'kanban'
-        let activeTagFilter = null;  // tag string or null
-        let taskTimers    = {};      // { taskId: { interval, seconds, total } }
-        let subtasksMap   = {};      // { taskId: [{id,text,done}] } local state
-        let commentsMap   = {};      // { taskId: [{author,text,time}] }
-        let kanbanStatus  = {};      // { taskId: 'todo'|'inprogress'|'done' }
+        let currentView   = 'list';  
+        let activeTagFilter = null;  
+        let taskTimers    = {};      
+        let subtasksMap   = {};      
+        let commentsMap   = {};      
+        let kanbanStatus  = {};      
         let sortableInst  = null;
 
-        // ── Auth ──────────────────────────────────────────────────────
+        
         function applyAuthState(session) {
             const gate    = document.getElementById('authGate');
             const chip    = document.getElementById('navUserChip');
@@ -713,7 +705,7 @@
         sb.auth.getSession().then(({ data }) => applyAuthState(data.session));
         async function navSignOut() { await sb.auth.signOut(); }
 
-        // ── Load tasks from Supabase ──────────────────────────────────
+        
         async function loadTasks() {
             document.getElementById('taskList').innerHTML =
                 '<div class="loading-overlay"><div class="spin"></div> Loading your tasks…</div>';
@@ -722,14 +714,14 @@
                 .select('*')
                 .order('created_at', { ascending: false });
             if (error) { showToast('⚠ Could not load tasks: ' + error.message, '#ff4d4d'); return; }
-            // Map DB columns (snake_case) → local camelCase shape
+            
             tasks = (data || []).map(dbToLocal);
             renderTasks();
             renderTagCloud();
             scheduleAllTimers();
         }
 
-        // DB row → local object
+       
         function dbToLocal(row) {
             return {
                 id:              row.id,
@@ -746,7 +738,6 @@
             };
         }
 
-        // ── Add task → INSERT into Supabase ───────────────────────────
         async function addTask() {
             const text     = document.getElementById('taskInput').value.trim();
             const priority = document.getElementById('prioritySelect').value;
@@ -796,18 +787,16 @@
             showSuccess('Task added! ✨');
         }
 
-        // ── Toggle complete → UPDATE in Supabase ──────────────────────
         async function toggleComplete(id) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
             const newVal = !task.completed;
-            // Optimistic update
             task.completed = newVal;
             hasCelebrated = false;
             renderTasks();
             const { error } = await sb.from('tasks').update({ completed: newVal }).eq('id', id);
             if (error) {
-                task.completed = !newVal; // revert
+                task.completed = !newVal; 
                 renderTasks();
                 showToast('⚠ Could not update task.', '#ff4d4d');
             } else if (newVal && task.recurring && task.recurring !== 'none') {
@@ -815,7 +804,6 @@
             }
         }
 
-        // ── Delete task → DELETE in Supabase ──────────────────────────
         async function deleteTask(id) {
             clearTaskTimers(id);
             tasks = tasks.filter(t => t.id !== id);
@@ -825,7 +813,6 @@
             else showSuccess('Task deleted.');
         }
 
-        // ── Filter ────────────────────────────────────────────────────
         function setFilter(type, btn) {
             activeFilter = type;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -849,7 +836,6 @@
             else renderTasks();
         }
 
-        // ── Tag Color Palette ──────────────────────────────────────────
         const TAG_COLORS = [
             { bg:'rgba(88,166,255,0.15)',  border:'rgba(88,166,255,0.35)',  text:'#58a6ff'  },
             { bg:'rgba(163,113,247,0.15)', border:'rgba(163,113,247,0.35)', text:'#a371f7'  },
@@ -882,7 +868,6 @@
             }).join('');
         }
 
-        // ── Render ────────────────────────────────────────────────────
         function renderTasks() {
             if (currentView === 'kanban') { renderKanban(); return; }
             const query  = document.getElementById('searchInput').value.toLowerCase();
@@ -905,7 +890,6 @@
                 li.className = `task-item p-${task.priority}-item${task.completed ? ' completed-item' : ''}`;
                 li.dataset.id = task.id;
 
-                // Tags
                 const tagHTML = (task.tags||[]).map(t => {
                     const c = getTagColor(t);
                     return `<span class="tag-colored" style="background:${c.bg};border-color:${c.border};color:${c.text}" onclick="setTagFilter('${escHtml(t)}')" title="Filter by #${escHtml(t)}">#${escHtml(t)}</span>`;
@@ -918,7 +902,6 @@
                 const recurBadge = task.recurring && task.recurring !== 'none'
                     ? `<span class="recurring-badge">🔁 ${task.recurring}</span>` : '';
 
-                // Subtasks
                 const subs = subtasksMap[task.id] || [];
                 const subsDone = subs.filter(s=>s.done).length;
                 const subPct = subs.length ? Math.round(subsDone/subs.length*100) : 0;
@@ -932,7 +915,6 @@
                         </li>`).join('')}
                     </ul>` : '';
 
-                // Comments
                 const cmts = commentsMap[task.id] || [];
                 const cmtBadge = cmts.length > 0 ? `<span style="font-size:11px;color:var(--muted);">💬 ${cmts.length}</span>` : '';
                 const cmtsHTML = cmts.map(c=>`
@@ -941,7 +923,6 @@
                         <div class="comment-text">${escHtml(c.text)}</div>
                     </div>`).join('');
 
-                // Timer
                 const tr = taskTimers[task.id] || { seconds:0, total:0 };
                 const totalSecs = tr.total || 0;
                 const isRunning = !!tr.interval;
@@ -966,7 +947,6 @@
                         </div>
                     </div>
 
-                    <!-- Expandable section -->
                     <div class="subtask-expand-panel" style="display:none;">
                         <!-- Time Tracker -->
                         <div class="time-tracker">
@@ -978,7 +958,6 @@
                             ${totalSecs > 0 ? `<span class="timer-total">Total: ${fmtTime(totalSecs)}</span>` : ''}
                         </div>
 
-                        <!-- Subtasks -->
                         <div class="subtask-section">
                             <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Checklist</div>
                             ${subsHTML}
@@ -988,7 +967,6 @@
                             </div>
                         </div>
 
-                        <!-- Comments -->
                         <div class="subtask-section">
                             <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Notes & Comments</div>
                             <div class="comment-list">${cmtsHTML}</div>
@@ -999,7 +977,6 @@
                         </div>
                     </div>`;
 
-                // Events
                 li.querySelector('.task-main').addEventListener('click', e => {
                     if (!e.target.closest('.task-del-btn') && !e.target.closest('.gcal-btn') &&
                         !e.target.closest('.expand-btn') && !e.target.closest('.tag-colored') &&
@@ -1013,7 +990,6 @@
                         e.stopPropagation(); addToGoogleCalendar(task);
                     });
                 }
-                // Expand toggle
                 li.querySelector('.expand-btn').addEventListener('click', e => {
                     e.stopPropagation();
                     const panel = li.querySelector('.subtask-expand-panel');
@@ -1025,7 +1001,6 @@
                 ul.appendChild(li);
             });
 
-            // Init SortableJS drag-and-drop
             if (sortableInst) sortableInst.destroy();
             sortableInst = Sortable.create(ul, {
                 handle: '.task-drag-handle',
@@ -1049,7 +1024,6 @@
             updateStats();
         }
 
-        // ── Kanban ────────────────────────────────────────────────────
         function getKanbanStatus(task) {
             if (task.completed) return 'done';
             return kanbanStatus[task.id] || 'todo';
@@ -1099,7 +1073,6 @@
             renderKanban();
         }
 
-        // ── Subtasks ──────────────────────────────────────────────────
         function addSubtask(taskId) {
             const inp = document.getElementById(`subtask-input-${taskId}`);
             const text = inp ? inp.value.trim() : '';
@@ -1120,7 +1093,6 @@
             renderTasks();
         }
 
-        // ── Comments ──────────────────────────────────────────────────
         function addComment(taskId) {
             const inp = document.getElementById(`comment-input-${taskId}`);
             const text = inp ? inp.value.trim() : '';
@@ -1136,7 +1108,6 @@
             renderTasks();
         }
 
-        // ── Time Tracker ──────────────────────────────────────────────
         function toggleTimer(taskId) {
             if (!taskTimers[taskId]) taskTimers[taskId] = { seconds: 0, total: 0, interval: null };
             const tr = taskTimers[taskId];
@@ -1160,7 +1131,6 @@
             renderTasks();
         }
 
-        // ── Recurring task completion handler ────────────────────────
         async function handleRecurringCompletion(task) {
             if (!task.recurring || task.recurring === 'none') return;
             const nextDate = task.scheduledTime ? new Date(task.scheduledTime) : new Date();
@@ -1181,7 +1151,6 @@
             }
         }
 
-        // ── Time badges ───────────────────────────────────────────────
         function getTimeBadgeClass(task) {
             if (task.completed) return 'done';
             const diff = new Date(task.scheduledTime) - Date.now();
@@ -1199,7 +1168,6 @@
             return `🕐 in ${mins}m`;
         }
 
-        // ── Stats ─────────────────────────────────────────────────────
         function updateStats() {
             const total=tasks.length, done=tasks.filter(t=>t.completed).length;
             const sched=tasks.filter(t=>t.scheduledTime&&!t.completed).length;
@@ -1219,7 +1187,6 @@
             } else { allDoneEl.style.display='none'; if(done<total)hasCelebrated=false; }
         }
 
-        // ── EmailJS ───────────────────────────────────────────────────
         function sendEmail(subject,taskName,message,scheduledTime) {
             if (!notifEmail) { showToast('⚠ Sign in to receive email notifications.','#ffa500'); return; }
             emailjs.send(EJS_SERVICE_ID,EJS_TEMPLATE_ID,{to_email:notifEmail,subject,task_name:taskName,message,scheduled_time:scheduledTime||'N/A'})
@@ -1227,7 +1194,6 @@
                 .catch(err=>showToast('⚠ Email failed: '+(err.text||err.message),'#ff4d4d'));
         }
 
-        // ── Timers ────────────────────────────────────────────────────
         function scheduleAllTimers() { tasks.forEach(t=>{if(!t.completed&&t.scheduledTime)scheduleTaskTimer(t);}); }
         async function scheduleTaskTimer(task) {
             if (!task.scheduledTime) return;
@@ -1256,7 +1222,6 @@
             if (timerMap[id]){clearTimeout(timerMap[id].reminder);clearTimeout(timerMap[id].start);delete timerMap[id];}
         }
 
-        // ── Delete modal ──────────────────────────────────────────────
         function showDeleteModal(task) {
             const overlay=document.createElement('div');
             overlay.className='modal-overlay';
@@ -1285,7 +1250,6 @@
             };
         }
 
-        // ── Toast ─────────────────────────────────────────────────────
         function showToast(msg,color='#58a6ff') {
             const c=document.getElementById('toastContainer');
             const t=document.createElement('div');
@@ -1311,13 +1275,10 @@
         }
         function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-        // ── Google Calendar ───────────────────────────────────────────
         function addToGoogleCalendar(task) {
             const start = new Date(task.scheduledTime);
-            // Default event duration: 1 hour
             const end   = new Date(start.getTime() + 60 * 60 * 1000);
 
-            // Google Calendar needs dates in YYYYMMDDTHHmmssZ format
             const fmt = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
             const tags    = (task.tags || []).join(', ');
@@ -1342,9 +1303,6 @@
         setInterval(()=>renderTasks(),60000);
     </script>
 
-    <!-- ══════════════════════════════════════════════════════════════ -->
-    <!--  🎨  FEATURE 1: BACKGROUND THEME SYSTEM                      -->
-    <!-- ══════════════════════════════════════════════════════════════ -->
     <!-- <script>
         const THEMES = [
             { id:'nova',    label:'Nova',    colors:['rgba(31,111,235,0.12)','rgba(88,166,255,0.08)','rgba(163,113,247,0.10)'], bg:'#080c12' },
@@ -1438,9 +1396,7 @@
         onIntensityChange(savedInt);
     </script> -->
 
-    <!-- ══════════════════════════════════════════════════════════════ -->
-    <!--  🎙️  FEATURE 2: VOICE COMMANDS                               -->
-    <!-- ══════════════════════════════════════════════════════════════ -->
+  
     <script>
         let voiceActive = false;
         let recognition = null;
@@ -1493,7 +1449,6 @@
         }
 
         async function processVoiceCommand(cmd) {
-            // ADD TASK — "add task [name]" / "new task [name]" / "create task [name]"
             const addMatch = cmd.match(/^(?:add|new|create)(?: a)? task (.+)$/i);
             if (addMatch) {
                 const text = addMatch[1].trim();
@@ -1512,7 +1467,6 @@
                 return;
             }
 
-            // COMPLETE TASK — "complete [task name]" / "mark done [task name]"
             const doneMatch = cmd.match(/^(?:complete|mark done|finish)(?: task)? (.+)$/i);
             if (doneMatch) {
                 const name = doneMatch[1].toLowerCase();
@@ -1524,7 +1478,6 @@
                 return;
             }
 
-            // DELETE TASK — "delete [task name]" / "remove [task name]"
             const delMatch = cmd.match(/^(?:delete|remove)(?: task)? (.+)$/i);
             if (delMatch) {
                 const name = delMatch[1].toLowerCase();
@@ -1535,7 +1488,6 @@
                 return;
             }
 
-            // SHOW FILTER — "show pending/completed/all/scheduled"
             const filterMatch = cmd.match(/^show (all|pending|completed|scheduled)(?: tasks?)?$/i);
             if (filterMatch) {
                 const f = filterMatch[1].toLowerCase();
@@ -1544,7 +1496,6 @@
                 return;
             }
 
-            // STATUS / SUMMARY
             if (cmd.includes('how many') || cmd.includes('status') || cmd.includes('summary')) {
                 const total = tasks.length, done = tasks.filter(t=>t.completed).length;
                 const msg = `You have ${total} tasks, ${done} completed, ${total-done} pending.`;
@@ -1565,20 +1516,16 @@
         }
     </script>
 
-    <!-- ══════════════════════════════════════════════════════════════ -->
-    <!--  🤖  FEATURE 3: AI ASSISTANT (Groq-powered — fully live)     -->
-    <!-- ══════════════════════════════════════════════════════════════ -->
+    
     <script>
     const GROQ_API_KEY = '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';
     const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
     const GROQ_MODEL = 'llama-3.3-70b-versatile';
 
     let aiOpen = false;
-    let aiHistory = []; // full conversation for context memory
+    let aiHistory = []; 
 
-    // ── Pending task draft (minimal — Groq now manages the logic) ──
-    let pendingTask = null; // { text, priority, scheduledTime } — only set when committed
-
+    let pendingTask = null;
     function toggleAI() {
         try {
             aiOpen = !aiOpen;
@@ -1605,7 +1552,6 @@
         ).join('\n');
     }
 
-    // ── Simple Natural Language Date Parser ──
     function parseNaturalDate(str) {
         if (!str) return null;
         const m = str.toLowerCase().trim();
@@ -1632,9 +1578,7 @@
         return isNaN(base) ? null : base;
     }
 
-    // ── Execute an action returned by Groq ──
     async function executeAction(action) {
-        // action: { type, text, priority, datetime, task_id, confirm_message }
         const t = action.type;
 
         if (t === 'ADD_TASK') {
@@ -1724,7 +1668,6 @@
         return null;
     }
 
-    // ── Master Groq call — drives all conversation ──
     async function callGroq(userMsg) {
         const systemPrompt = `You are Prod AI — warm, witty, and genuinely helpful. You live inside Prodify, a productivity app. You have real-time access to the user's tasks and can control the app by returning structured JSON actions.
 
@@ -1733,16 +1676,6 @@ Current time: ${new Date().toLocaleString('en-IN')}
 USER'S CURRENT TASKS:
 ${buildTaskContext()}
 
-════════════════════════════════════════
-HOW TO RESPOND:
-════════════════════════════════════════
-You respond in ONE of two formats:
-
-── FORMAT A: Pure conversation ──
-Just write naturally. Be warm, helpful, encouraging. Use emojis tastefully. Keep responses focused and not too long.
-
-── FORMAT B: Take an action AND respond ──
-When the user wants to add, complete, delete, or update a task, reply with a JSON block FIRST, then your natural conversational message after it.
 
 JSON block format (must be valid JSON, on its own line):
 ACTION:{"type":"ADD_TASK","text":"task name","priority":"high|medium|low","datetime":"natural date string or null","confirm_message":"your warm confirmation message here"}
@@ -1792,7 +1725,6 @@ Other rules:
         return data.choices?.[0]?.message?.content?.trim() || "I had a brief glitch — could you try that again?";
     }
 
-    // ── Core send handler ──
     async function sendAI() {
         const input = document.getElementById('aiInput');
         const msg = input.value.trim();
@@ -1811,7 +1743,6 @@ Other rules:
 
             document.getElementById(thinkId)?.remove();
 
-            // Parse out any ACTION: {...} blocks
             const actionLineRegex = /^ACTION:\s*(\{.+\})\s*$/m;
             const actionMatch = rawReply.match(actionLineRegex);
 
@@ -1821,14 +1752,12 @@ Other rules:
                 try {
                     const action = JSON.parse(actionMatch[1]);
                     const errorMsg = await executeAction(action);
-                    // Show confirm_message from Groq (or error if action failed)
                     const finalDisplay = errorMsg || (action.confirm_message
                         ? action.confirm_message + (displayText ? '\n\n' + displayText : '')
                         : displayText);
                     addAIMessage('bot', finalDisplay || "Done!");
                     aiHistory.push({ role: 'assistant', content: finalDisplay || "Done!" });
                 } catch(parseErr) {
-                    // JSON parse failed — show raw text
                     addAIMessage('bot', displayText || rawReply);
                     aiHistory.push({ role: 'assistant', content: displayText || rawReply });
                 }
@@ -1837,7 +1766,6 @@ Other rules:
                 aiHistory.push({ role: 'assistant', content: rawReply });
             }
 
-            // Keep history bounded (last 20 turns = 40 messages)
             if (aiHistory.length > 40) aiHistory = aiHistory.slice(-40);
 
         } catch (err) {
@@ -1857,13 +1785,11 @@ function addAIMessage(sender, text, isThinking = false) {
     div.id = msgId;
     div.className = `ai-msg ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
 
-    // Render **bold** markdown and newlines
     let formattedText = text
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\n/g, '<br>');
     const bubbleClass = isThinking ? 'ai-msg-bubble thinking' : 'ai-msg-bubble';
 
-    // For bot messages, add a small "speak" button
     const speakBtn = (sender === 'bot' && !isThinking)
         ? `<button class="voice-tts-btn" onclick="novaSpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
         : '';
@@ -1874,9 +1800,7 @@ function addAIMessage(sender, text, isThinking = false) {
     return msgId;
 }
 
-// ══════════════════════════════════════════════════════════════
-//  🎙️  VOICE CONVERSATION with Nova (Groq-powered)
-// ══════════════════════════════════════════════════════════════
+
 (function() {
     let aiVoiceActive = false;
     let aiVoiceRec = null;
@@ -1935,7 +1859,6 @@ function addAIMessage(sender, text, isThinking = false) {
         };
 
         aiVoiceRec.onend = () => {
-            // If we're still in active mode and not processing, restart to keep listening
             if (aiVoiceActive) {
                 stopAIVoice();
             }
@@ -1985,8 +1908,7 @@ function addAIMessage(sender, text, isThinking = false) {
         }
     }
 
-    // Voice-aware sendAI: same as sendAI() but auto-speaks the bot reply
-    // Voice-aware sendAI: unified pipeline, auto-speaks the bot reply
+    
     async function sendAIVoice(msg) {
         aiHistory.push({ role: 'user', content: msg });
         const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
@@ -2042,7 +1964,6 @@ function addAIMessage(sender, text, isThinking = false) {
         novaSpeak(null, rawText);
     }
 
-    // Global speak function - called by "🔊 Speak" buttons and voice mode
     window.novaSpeak = function(btnEl, overrideText) {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
@@ -2055,7 +1976,6 @@ function addAIMessage(sender, text, isThinking = false) {
         utt.pitch = 1.05;
         utt.volume = 1;
 
-        // Try to pick a pleasant female voice
         const voices = window.speechSynthesis.getVoices();
         const preferred = voices.find(v =>
             /google uk english female|samantha|karen|victoria|moira|fiona|zira/i.test(v.name)
