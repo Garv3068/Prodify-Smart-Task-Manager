@@ -17,12 +17,11 @@
             --radius: 16px; --radius-sm: 10px;
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(rgba(8,12,18,0.72), rgba(8,12,18,0.78)), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; cursor: none; }
-        #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--text); background: linear-gradient(rgba(8,12,18,0.72), rgba(8,12,18,0.78)), url('assets/background.jpeg') center/cover no-repeat fixed, var(--bg); min-height: 100vh; overflow-x: hidden; }
+       /* #cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .3s, height .3s; mix-blend-mode: screen; }
         #cursor-ring { position: fixed; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(88,166,255,0.5); pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
-       .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px 200px; }
+      */  .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px 200px; }
 
-         
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: all .4s; }
         .navbar.scrolled { background: rgba(8,12,18,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); padding: 14px 60px; }
         .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -.5px; text-decoration: none; }
@@ -31,11 +30,9 @@
         .nav-links li a { display: block; padding: 9px 18px; border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: all .25s; border: 1px solid transparent; }
         .nav-links li a:hover, .nav-links li a.active { color: var(--text); background: var(--surface-hi); border-color: var(--border); }
         .nav-links li a.active { color: var(--accent); }
-        /* Auth nav area */
         .nav-auth { display: flex; align-items: center; gap: 10px; }
         .nav-cta { padding: 10px 22px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #080c12; font-weight: 700; font-size: 14px; text-decoration: none; transition: all .25s; box-shadow: 0 4px 20px rgba(88,166,255,0.3); white-space: nowrap; }
         .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(88,166,255,0.5); }
-        /* User chip shown when signed in */
         .nav-user-chip { display: none; align-items: center; gap: 8px; padding: 6px 14px 6px 8px; border-radius: 20px; background: var(--surface-hi); border: 1px solid var(--border); }
         .nav-user-chip.show { display: flex; }
         .nav-user-chip:hover { border-color: rgba(88,166,255,0.4); background: rgba(88,166,255,0.08); cursor: pointer; }
@@ -44,7 +41,6 @@
         .nav-signout-btn { padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,77,77,0.3); background: transparent; color: var(--danger); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .2s; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
         .nav-signout-btn:hover { background: rgba(255,77,77,0.1); border-color: var(--danger); }
 
-        /* ── HERO ── */
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 40px 80px; position: relative; z-index: 10; }
         .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px; background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.2); font-size: 12px; font-weight: 500; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; animation: fadeUp .8s ease both; }
         .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease infinite; }
@@ -126,9 +122,10 @@
     </style>
 </head>
 <body>
-    <!-- <div id="cursor"></div>
-    <div id="cursor-ring"></div> -->
-        <div class="noise"></div>
+    <!-- Custom cursor elements (enabled) -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+    <div class="noise"></div>
 
     <nav class="navbar" id="navbar">
         <a href="index.html" class="nav-logo">
@@ -140,7 +137,6 @@
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
-        <!-- Auth area: shows Sign In OR user chip + sign out -->
         <div class="nav-auth">
             <a href="profile.html" class="nav-user-chip" id="navUserChip" title="View profile" style="text-decoration:none">
                 <div class="nav-avatar" id="navAvatar">?</div>
@@ -185,19 +181,11 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ================================================================
-        //  🔧  SUPABASE CONFIG — paste your credentials here
-        //      Supabase Dashboard → Project → Settings → API
-        // ================================================================
-
-    const SUPABASE_URL  = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';         // e.g. https://xyzxyz.supabase.co
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqanlobHdia3BubXJ5dHVxZ3VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTAwMDIsImV4cCI6MjA4OTcyNjAwMn0.a-aqOsOWNg1Alt6elXDHju-2XQDtiROazU_MDBa4thA';    // long public anon key
-
-        // ================================================================
+        const SUPABASE_URL  = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqanlobHdia3BubXJ5dHVxZ3VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTAwMDIsImV4cCI6MjA4OTcyNjAwMn0.a-aqOsOWNg1Alt6elXDHju-2XQDtiROazU_MDBa4thA';
 
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-        // Update navbar based on auth state
         sb.auth.onAuthStateChange((_e, session) => {
             const chip     = document.getElementById('navUserChip');
             const avatar   = document.getElementById('navAvatar');
@@ -263,257 +251,281 @@
 
     <!-- ── ProdAI AI JS ── -->
     <script>
-const GROQ_API_KEY = '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'; // 🔑 Replace with your key from https://console.groq.com/keys
+        const GROQ_API_KEY = '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';
         const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
         const GROQ_MODEL = 'llama-3.3-70b-versatile';
-    let aiOpen = false;
-    let aiHistory = [];
-    let currentUserName = '';
+        let aiOpen = false;
+        let aiHistory = [];
+        let currentUserName = '';
 
-    // Grab auth name if available
-    if (typeof sb !== 'undefined') {
-        sb.auth.getSession().then(({ data }) => {
-            if (data.session && data.session.user) {
-                const meta = data.session.user.user_metadata || {};
-                currentUserName = meta.full_name || meta.name || data.session.user.email.split('@')[0] || '';
-            }
-        });
-    }
-
-    function toggleAI() {
-        aiOpen = !aiOpen;
-        document.getElementById('aiPanel').classList.toggle('open', aiOpen);
-        if (aiOpen && aiHistory.length === 0) {
-            const greeting = currentUserName ? `Hey ${currentUserName}! ` : 'Hey there! ';
-            addAIMessage('bot', `${greeting}I'm ProdAI 👋 Your AI guide for Prodify.\n\nI can walk you through features, share Productivity tips, or just help you figure out where to start. What's on your mind?`);
+        if (typeof sb !== 'undefined') {
+            sb.auth.getSession().then(({ data }) => {
+                if (data.session && data.session.user) {
+                    const meta = data.session.user.user_metadata || {};
+                    currentUserName = meta.full_name || meta.name || data.session.user.email.split('@')[0] || '';
+                }
+            });
         }
-    }
 
-    function aiQuick(prompt) {
-        if (!aiOpen) toggleAI();
-        document.getElementById('aiInput').value = prompt;
-        sendAI();
-    }
+        function toggleAI() {
+            aiOpen = !aiOpen;
+            document.getElementById('aiPanel').classList.toggle('open', aiOpen);
+            if (aiOpen && aiHistory.length === 0) {
+                const greeting = currentUserName ? `Hey ${currentUserName}! ` : 'Hey there! ';
+                addAIMessage('bot', `${greeting}I'm ProdAI 👋 Your AI guide for Prodify.\n\nI can walk you through features, share Productivity tips, or just help you figure out where to start. What's on your mind?`);
+            }
+        }
 
-    function addAIMessage(sender, text, isThinking = false) {
-        const box = document.getElementById('aiMessages');
-        const msgId = 'msg-' + Math.random().toString(36).substr(2, 9);
-        const div = document.createElement('div');
-        div.id = msgId;
-        div.className = `ai-msg ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
-        let formatted = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-        const bubbleClass = isThinking ? 'ai-msg-bubble thinking' : 'ai-msg-bubble';
-        const speakBtn = (sender === 'bot' && !isThinking)
-            ? `<button class="voice-tts-btn" onclick="ProdAISpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
-            : '';
-        div.innerHTML = `<div class="${bubbleClass}">${formatted}</div>${speakBtn}`;
-        box.appendChild(div);
-        box.scrollTop = box.scrollHeight;
-        return msgId;
-    }
+        function aiQuick(prompt) {
+            if (!aiOpen) toggleAI();
+            document.getElementById('aiInput').value = prompt;
+            sendAI();
+        }
 
-    async function sendAI() {
-        const input = document.getElementById('aiInput');
-        const msg = input.value.trim();
-        if (!msg) return;
+        function addAIMessage(sender, text, isThinking = false) {
+            const box = document.getElementById('aiMessages');
+            const msgId = 'msg-' + Math.random().toString(36).substr(2, 9);
+            const div = document.createElement('div');
+            div.id = msgId;
+            div.className = `ai-msg ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
+            let formatted = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            const bubbleClass = isThinking ? 'ai-msg-bubble thinking' : 'ai-msg-bubble';
+            const speakBtn = (sender === 'bot' && !isThinking)
+                ? `<button class="voice-tts-btn" onclick="ProdAISpeak(this)" data-text="${text.replace(/"/g,'&quot;').replace(/\n/g,' ')}">🔊 Speak</button>`
+                : '';
+            div.innerHTML = `<div class="${bubbleClass}">${formatted}</div>${speakBtn}`;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            return msgId;
+        }
 
-        addAIMessage('user', msg);
-        input.value = '';
-        input.style.height = 'auto';
-        document.getElementById('aiSendBtn').disabled = true;
+        async function sendAI() {
+            const input = document.getElementById('aiInput');
+            const msg = input.value.trim();
+            if (!msg) return;
 
-        aiHistory.push({ role: 'user', content: msg });
-        const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
+            addAIMessage('user', msg);
+            input.value = '';
+            input.style.height = 'auto';
+            document.getElementById('aiSendBtn').disabled = true;
 
-        const systemPrompt = `You are ProdAI, a warm, friendly AI assistant on the Prodify homepage.
+            aiHistory.push({ role: 'user', content: msg });
+            const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
+
+            const systemPrompt = `You are ProdAI, a warm, friendly AI assistant on the Prodify homepage.
 Prodify is a smart task manager with: task creation (with priority, tags, scheduled times), AI assistant (that's you!), email reminders, Google Calendar integration, voice commands inside the chat, background themes, and a confetti celebration when all tasks are done.
 Current time: ${new Date().toLocaleString()}
 
 Your role here on the homepage:
 - Welcome visitors and help them understand Prodify's features
-- Share ProdAIuctivity tips and motivation
+- Share Productivity tips and motivation
 - Encourage users to sign in and try the task manager (tasks.html)
 - If someone says "take me to tasks" or wants to manage tasks, tell them to click "Start Managing Tasks" or go to tasks.html
 - Keep responses friendly, concise (2-3 short paragraphs max), and encouraging
 - Use occasional emojis but don't overdo it
 - You do NOT have access to the user's tasks from this page — they need to go to tasks.html for that`;
 
-        try {
-            const messages = [
-                { role: 'system', content: systemPrompt },
-                ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
-            ];
-
-            const res = await fetch(GROQ_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-                body: JSON.stringify({
-                    model: GROQ_MODEL,
-                    messages,
-                    max_tokens: 500,
-                    temperature: 0.85
-                })
-            });
-
-            const data = await res.json();
-            if (data.error) throw new Error(data.error.message);
-
-            const reply = data.choices?.[0]?.message?.content?.trim()
-                || "Hmm, something flickered on my end. Mind trying that again?";
-
-            document.getElementById(thinkId)?.remove();
-            addAIMessage('bot', reply);
-            aiHistory.push({ role: 'model', content: reply });
-
-            // If user explicitly asks to be taken to tasks, redirect
-            if (/^(take me to (my )?tasks?|go to tasks?|open tasks?)$/i.test(msg.trim())) {
-                setTimeout(() => window.location.href = 'tasks.html', 1800);
-            }
-        } catch(err) {
-            console.error(err);
-            document.getElementById(thinkId)?.remove();
-            addAIMessage('bot', "I hit a connection hiccup. Let's try that again!");
-        } finally {
-            document.getElementById('aiSendBtn').disabled = false;
-        }
-    }
-
-    // ── Voice conversation ──
-    (function() {
-        let aiVoiceActive = false;
-        let aiVoiceRec = null;
-        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        window.toggleAIVoice = function() {
-            if (!SpeechRec) { alert('Voice not supported. Please use Chrome or Edge.'); return; }
-            aiVoiceActive ? stopAIVoice() : startAIVoice();
-        };
-
-        function startAIVoice() {
-            if (window.speechSynthesis) window.speechSynthesis.cancel();
-            aiVoiceRec = new SpeechRec();
-            aiVoiceRec.lang = 'en-US';
-            aiVoiceRec.interimResults = false;
-            aiVoiceRec.continuous = false;
-
-            aiVoiceRec.onstart = () => { aiVoiceActive = true; setVoiceState('listening'); };
-
-            aiVoiceRec.onresult = async (e) => {
-                const transcript = e.results[0][0].transcript.trim();
-                if (!transcript) { stopAIVoice(); return; }
-                setVoiceState('processing');
-                if (!aiOpen) toggleAI();
-                addAIMessage('user', transcript);
-                aiHistory.push({ role: 'user', content: transcript });
-                await sendAIVoice(transcript);
-                setVoiceState('idle');
-            };
-
-            aiVoiceRec.onerror = (err) => { if (err.error !== 'no-speech') console.warn(err.error); stopAIVoice(); };
-            aiVoiceRec.onend = () => stopAIVoice();
-            aiVoiceRec.start();
-        }
-
-        function stopAIVoice() {
-            aiVoiceActive = false;
-            if (aiVoiceRec) { try { aiVoiceRec.stop(); } catch(e){} aiVoiceRec = null; }
-            setVoiceState('idle');
-        }
-
-        function setVoiceState(state) {
-            const btn = document.getElementById('aiVoiceBtn');
-            const bar = document.getElementById('aiVoiceStatus');
-            const dot = document.getElementById('vsStatusDot');
-            const txt = document.getElementById('vsStatusText');
-            btn.classList.remove('voice-on','voice-processing');
-            bar.classList.remove('show');
-            if (state === 'listening') {
-                btn.classList.add('voice-on'); btn.textContent = '🔴';
-                bar.classList.add('show'); dot.className = 'vs-dot';
-                txt.textContent = 'Listening… speak now';
-            } else if (state === 'processing') {
-                btn.classList.add('voice-processing'); btn.textContent = '⏳';
-                bar.classList.add('show'); dot.className = 'vs-dot processing';
-                txt.textContent = 'ProdAI is thinking…';
-            } else {
-                btn.textContent = '🎙️';
-            }
-        }
-
-        async function sendAIVoice(msg) {
-            const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
-            document.getElementById('aiSendBtn').disabled = true;
-
-            const systemPrompt = `You are ProdAI, a warm AI assistant on the Prodify homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. Prodify helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
-
             try {
                 const messages = [
                     { role: 'system', content: systemPrompt },
                     ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
                 ];
+
                 const res = await fetch(GROQ_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                     body: JSON.stringify({
                         model: GROQ_MODEL,
                         messages,
-                        max_tokens: 150,
-                        temperature: 0.8
+                        max_tokens: 500,
+                        temperature: 0.85
                     })
                 });
+
                 const data = await res.json();
                 if (data.error) throw new Error(data.error.message);
-                const reply = data.choices?.[0]?.message?.content?.trim() || "Sorry, I had a hiccup. Could you say that again?";
+
+                const reply = data.choices?.[0]?.message?.content?.trim()
+                    || "Hmm, something flickered on my end. Mind trying that again?";
+
                 document.getElementById(thinkId)?.remove();
                 addAIMessage('bot', reply);
                 aiHistory.push({ role: 'model', content: reply });
-                ProdAISpeak(null, reply);
+
+                if (/^(take me to (my )?tasks?|go to tasks?|open tasks?)$/i.test(msg.trim())) {
+                    setTimeout(() => window.location.href = 'tasks.html', 1800);
+                }
             } catch(err) {
+                console.error(err);
                 document.getElementById(thinkId)?.remove();
-                const errMsg = "I hit a connection issue. Let's try again!";
-                addAIMessage('bot', errMsg);
-                ProdAISpeak(null, errMsg);
+                addAIMessage('bot', "I hit a connection hiccup. Let's try that again!");
             } finally {
                 document.getElementById('aiSendBtn').disabled = false;
             }
         }
 
-        window.ProdAISpeak = function(btnEl, overrideText) {
-            if (!window.speechSynthesis) return;
-            window.speechSynthesis.cancel();
-            const text = overrideText || (btnEl && btnEl.getAttribute('data-text')) || '';
-            if (!text) return;
-            const utt = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g,'').replace(/\*\*/g,''));
-            utt.rate = 1.05; utt.pitch = 1.05; utt.volume = 1;
-            const voices = window.speechSynthesis.getVoices();
-            const preferred = voices.find(v => /google uk english female|samantha|karen|victoria|moira|fiona|zira/i.test(v.name))
-                || voices.find(v => v.lang.startsWith('en')) || null;
-            if (preferred) utt.voice = preferred;
-            window.speechSynthesis.speak(utt);
-            if (btnEl) {
-                btnEl.textContent = '🔇 Stop';
-                btnEl.onclick = () => { window.speechSynthesis.cancel(); btnEl.textContent = '🔊 Speak'; btnEl.onclick = () => ProdAISpeak(btnEl); };
-            }
-        };
+        // ── Voice conversation ──
+        (function() {
+            let aiVoiceActive = false;
+            let aiVoiceRec = null;
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        if (window.speechSynthesis) {
-            window.speechSynthesis.getVoices();
-            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-        }
-    })();
+            window.toggleAIVoice = function() {
+                if (!SpeechRec) { alert('Voice not supported. Please use Chrome or Edge.'); return; }
+                aiVoiceActive ? stopAIVoice() : startAIVoice();
+            };
+
+            function startAIVoice() {
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
+                aiVoiceRec = new SpeechRec();
+                aiVoiceRec.lang = 'en-US';
+                aiVoiceRec.interimResults = false;
+                aiVoiceRec.continuous = false;
+
+                aiVoiceRec.onstart = () => { aiVoiceActive = true; setVoiceState('listening'); };
+
+                aiVoiceRec.onresult = async (e) => {
+                    const transcript = e.results[0][0].transcript.trim();
+                    if (!transcript) { stopAIVoice(); return; }
+                    setVoiceState('processing');
+                    if (!aiOpen) toggleAI();
+                    addAIMessage('user', transcript);
+                    aiHistory.push({ role: 'user', content: transcript });
+                    await sendAIVoice(transcript);
+                    setVoiceState('idle');
+                };
+
+                aiVoiceRec.onerror = (err) => { if (err.error !== 'no-speech') console.warn(err.error); stopAIVoice(); };
+                aiVoiceRec.onend = () => stopAIVoice();
+                aiVoiceRec.start();
+            }
+
+            function stopAIVoice() {
+                aiVoiceActive = false;
+                if (aiVoiceRec) { try { aiVoiceRec.stop(); } catch(e){} aiVoiceRec = null; }
+                setVoiceState('idle');
+            }
+
+            function setVoiceState(state) {
+                const btn = document.getElementById('aiVoiceBtn');
+                const bar = document.getElementById('aiVoiceStatus');
+                const dot = document.getElementById('vsStatusDot');
+                const txt = document.getElementById('vsStatusText');
+                btn.classList.remove('voice-on','voice-processing');
+                bar.classList.remove('show');
+                if (state === 'listening') {
+                    btn.classList.add('voice-on'); btn.textContent = '🔴';
+                    bar.classList.add('show'); dot.className = 'vs-dot';
+                    txt.textContent = 'Listening… speak now';
+                } else if (state === 'processing') {
+                    btn.classList.add('voice-processing'); btn.textContent = '⏳';
+                    bar.classList.add('show'); dot.className = 'vs-dot processing';
+                    txt.textContent = 'ProdAI is thinking…';
+                } else {
+                    btn.textContent = '🎙️';
+                }
+            }
+
+            async function sendAIVoice(msg) {
+                const thinkId = addAIMessage('bot', '<div class="typing-dots"><span></span><span></span><span></span></div>', true);
+                document.getElementById('aiSendBtn').disabled = true;
+
+                const systemPrompt = `You are ProdAI, a warm AI assistant on the Prodify homepage. Keep your reply to 1-2 short natural sentences (no markdown, no bullets) since this is a voice conversation. Prodify helps users manage tasks with AI, reminders, scheduling, and more. Encourage users to try tasks.html for full task management.`;
+
+                try {
+                    const messages = [
+                        { role: 'system', content: systemPrompt },
+                        ...aiHistory.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content }))
+                    ];
+                    const res = await fetch(GROQ_API, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                        body: JSON.stringify({
+                            model: GROQ_MODEL,
+                            messages,
+                            max_tokens: 150,
+                            temperature: 0.8
+                        })
+                    });
+                    const data = await res.json();
+                    if (data.error) throw new Error(data.error.message);
+                    const reply = data.choices?.[0]?.message?.content?.trim() || "Sorry, I had a hiccup. Could you say that again?";
+                    document.getElementById(thinkId)?.remove();
+                    addAIMessage('bot', reply);
+                    aiHistory.push({ role: 'model', content: reply });
+                    ProdAISpeak(null, reply);
+                } catch(err) {
+                    document.getElementById(thinkId)?.remove();
+                    const errMsg = "I hit a connection issue. Let's try again!";
+                    addAIMessage('bot', errMsg);
+                    ProdAISpeak(null, errMsg);
+                } finally {
+                    document.getElementById('aiSendBtn').disabled = false;
+                }
+            }
+
+            window.ProdAISpeak = function(btnEl, overrideText) {
+                if (!window.speechSynthesis) return;
+                window.speechSynthesis.cancel();
+                const text = overrideText || (btnEl && btnEl.getAttribute('data-text')) || '';
+                if (!text) return;
+                const utt = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g,'').replace(/\*\*/g,''));
+                utt.rate = 1.05; utt.pitch = 1.05; utt.volume = 1;
+                const voices = window.speechSynthesis.getVoices();
+                const preferred = voices.find(v => /google uk english female|samantha|karen|victoria|moira|fiona|zira/i.test(v.name))
+                    || voices.find(v => v.lang.startsWith('en')) || null;
+                if (preferred) utt.voice = preferred;
+                window.speechSynthesis.speak(utt);
+                if (btnEl) {
+                    btnEl.textContent = '🔇 Stop';
+                    btnEl.onclick = () => { window.speechSynthesis.cancel(); btnEl.textContent = '🔊 Speak'; btnEl.onclick = () => ProdAISpeak(btnEl); };
+                }
+            };
+
+            if (window.speechSynthesis) {
+                window.speechSynthesis.getVoices();
+                window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+            }
+        })();
     </script>
 
     <script>
-        // const cursorEl=document.getElementById('cursor'),ringEl=document.getElementById('cursor-ring');
-        let cx=0,cy=0,rx=0,ry=0;
-        document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cursorEl.style.left=cx+'px';cursorEl.style.top=cy+'px';});
-        (function animCursor(){rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;ringEl.style.left=rx+'px';ringEl.style.top=ry+'px';requestAnimationFrame(animCursor);})();
-        window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50);});
+        // ── Custom cursor ──
+        const cursorEl = document.getElementById('cursor');
+        const ringEl = document.getElementById('cursor-ring');
+        let cx = 0, cy = 0, rx = 0, ry = 0;
 
-        const QUOTES_FALLBACK=[{content:"The secret of getting ahead is getting started.",author:"Mark Twain"},{content:"Done is better than perfect.",author:"Sheryl Sandberg"}];
-        const textEl=document.getElementById('heroQuoteText'),authEl=document.getElementById('heroQuoteAuthor');
-        textEl.textContent=`"${QUOTES_FALLBACK[0].content}"`;
-        authEl.textContent=`— ${QUOTES_FALLBACK[0].author}`;
+        document.addEventListener('mousemove', e => {
+            cx = e.clientX; cy = e.clientY;
+            cursorEl.style.left = cx + 'px';
+            cursorEl.style.top  = cy + 'px';
+        });
+
+        (function animCursor() {
+            rx += (cx - rx) * 0.12;
+            ry += (cy - ry) * 0.12;
+            ringEl.style.left = rx + 'px';
+            ringEl.style.top  = ry + 'px';
+            requestAnimationFrame(animCursor);
+        })();
+
+        // Hide default cursor only after JS confirms elements exist
+        // document.body.style.cursor = 'none';
+
+        // ── Navbar scroll effect ──
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ── Hero quote ──
+        const QUOTES_FALLBACK = [
+            { content: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+            { content: "Done is better than perfect.", author: "Sheryl Sandberg" }
+        ];
+        const textEl = document.getElementById('heroQuoteText');
+        const authEl = document.getElementById('heroQuoteAuthor');
+        textEl.textContent = `"${QUOTES_FALLBACK[0].content}"`;
+        authEl.textContent = `— ${QUOTES_FALLBACK[0].author}`;
     </script>
 </body>
 </html>
