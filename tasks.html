@@ -586,7 +586,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // ================================================================
-        //  🔧  SUPABASE CONFIG
+        //      SUPABASE CONFIG
         //      Supabase Dashboard → Project → Settings → API
         // ================================================================
 
@@ -599,7 +599,7 @@
 
         // ── EmailJS ──────────────────────────────────────────────────────
         // ================================================================
-        //  🔧  EMAILJS CONFIG (replace if needed)
+        //    EMAILJS CONFIG (replace if needed)
         // ================================================================
         const EJS_PUBLIC_KEY  = '0Ud5h7LBwcvc3zSqZ';
         const EJS_SERVICE_ID  = 'service_vrt3fw9';
@@ -1100,7 +1100,6 @@
             updateStats();
         }
 
-        // ── Kanban ────────────────────────────────────────────────────
         // ── Subtasks ──────────────────────────────────────────────────
         function addSubtask(taskId) {
             const inp = document.getElementById(`subtask-input-${taskId}`);
@@ -1326,10 +1325,8 @@
         // ── Google Calendar ───────────────────────────────────────────
         function addToGoogleCalendar(task) {
             const start = new Date(task.scheduledTime);
-            // Default event duration: 1 hour
             const end   = new Date(start.getTime() + 60 * 60 * 1000);
 
-            // Google Calendar needs dates in YYYYMMDDTHHmmssZ format
             const fmt = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
             const tags    = (task.tags || []).join(', ');
@@ -1355,7 +1352,7 @@
     </script>
 
     <!-- ══════════════════════════════════════════════════════════════ -->
-    <!--  🎨  FEATURE 1: BACKGROUND THEME SYSTEM                      -->
+    <!--    FEATURE 1: BACKGROUND THEME SYSTEM                      -->
     <!-- ══════════════════════════════════════════════════════════════ -->
     <!-- <script>
         const THEMES = [
@@ -1451,7 +1448,7 @@
     </script> -->
 
     <!-- ══════════════════════════════════════════════════════════════ -->
-    <!--  🎙️  FEATURE 2: VOICE COMMANDS                               -->
+    <!--    FEATURE 2: VOICE COMMANDS                               -->
     <!-- ══════════════════════════════════════════════════════════════ -->
     <script>
         let voiceActive = false;
@@ -1578,7 +1575,7 @@
     </script>
 
     <!-- ══════════════════════════════════════════════════════════════ -->
-    <!--  🤖  FEATURE 3: AI ASSISTANT (Groq-powered — fully live)     -->
+    <!--    FEATURE 3: AI ASSISTANT (Groq-powered — fully live)     -->
     <!-- ══════════════════════════════════════════════════════════════ -->
     <script>
     const GROQ_API_KEY = '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';
@@ -1887,7 +1884,7 @@ function addAIMessage(sender, text, isThinking = false) {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  🎙️  VOICE CONVERSATION with Nova (Groq-powered)
+//    VOICE CONVERSATION with Nova (Groq-powered)
 // ══════════════════════════════════════════════════════════════
 (function() {
     let aiVoiceActive = false;
