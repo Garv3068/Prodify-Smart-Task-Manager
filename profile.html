@@ -452,7 +452,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     // ================================================================
-    //  🔧  SUPABASE CONFIG — replace with your credentials
+    //    SUPABASE CONFIG — replace with your credentials
     //      Supabase Dashboard → Project → Settings → API
     // ================================================================
     const SUPABASE_URL  = 'https://ejjyhlwbkpnmrytuqgug.supabase.co';         // e.g. https://xyzxyz.supabase.co
@@ -664,12 +664,8 @@
         });
     }
 
-    /* ── LINE CHART: last 14 days ── */
 
-    // Converts any date/string to a local-timezone YYYY-MM-DD key.
-    // Using toISOString() gives UTC dates which breaks for IST (UTC+5:30)
-    // and any timezone that's ahead of UTC — tasks added "today" locally
-    // could appear as "yesterday" in UTC before 05:30 AM IST.
+    
     function localDateKey(d) {
         const dt = (d instanceof Date) ? d : new Date(d);
         const y  = dt.getFullYear();
@@ -681,7 +677,6 @@
     function buildLineChart(tasks) {
         if (lineChartInst) { lineChartInst.destroy(); lineChartInst = null; }
 
-        // Build last-14-days date keys using LOCAL timezone
         const labels = [], addedCounts = [];
         for (let i = 13; i >= 0; i--) {
             const d = new Date(); d.setDate(d.getDate() - i); d.setHours(0,0,0,0);
@@ -723,7 +718,6 @@
         });
     }
 
-    /* ── DAY OF WEEK BAR ── */
     function buildDayBar(tasks) {
         if (dayBarInst) { dayBarInst.destroy(); dayBarInst = null; }
         const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -758,7 +752,7 @@
         });
     }
 
-    /* ── ACTIVITY HEATMAP (last 26 weeks) ── */
+    /* ── ACTIVITY HEATMAP  ── */
     function buildHeatmap(tasks) {
         const dayMap = {};
         tasks.forEach(t => {
@@ -770,7 +764,6 @@
 
         const WEEKS = 26;
         const today = new Date(); today.setHours(0,0,0,0);
-        // Go back to last Sunday
         const start = new Date(today);
         start.setDate(today.getDate() - today.getDay() - (WEEKS - 1) * 7);
 
@@ -876,7 +869,6 @@
         showToastProfile('🗑️ All tasks cleared.', '#ff4d4d');
     }
     function showToastProfile(msg, color='#58a6ff') {
-        // Simple reuse of the DOM if a toast container exists, otherwise just log
         const c = document.getElementById('toastContainer');
         if (!c) { console.log(msg); return; }
         const t = document.createElement('div');
